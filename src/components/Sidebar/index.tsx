@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Toolbar, Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import { Dashboard, People, Inventory2 } from '@mui/icons-material'
+import { Drawer, Box, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import { Dashboard, People, Inventory2, ManageAccountsOutlined } from '@mui/icons-material'
 
 export const Sidebar = () => {
 
@@ -16,14 +16,38 @@ export const Sidebar = () => {
 
     return (
         <Drawer variant='permanent'>
-            <Toolbar />
-            <List component='nav' sx={{ mt: 8, width: `${drawerWidth}px` }}>
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'end',
+                px: 2,
+                mt: 2,
+                gap: 1
+            }}
+            >
+                <ManageAccountsOutlined sx={{ fontSize: 35 }} />
+                <Typography 
+                    variant='h6'
+                    sx={{
+                        fontSize: 18,
+                        fontWeight: 'bold'
+                    }}
+                    >
+                    AdminAssistant
+                </Typography>
+            </Box>
+            <List 
+                component='nav'
+                sx={{
+                     mt: 8,
+                     width: `${drawerWidth}px`
+                    }}
+                    >
                 {menuItems.map(({ text, icon, path }) => (
-                    <ListItemButton 
+                    <ListItemButton
                         key={text}
                         component={Link}
                         to={path}
-                        selected = {location.pathname === path}
+                        selected={location.pathname === path}
                         sx={{
                             '&.Mui-selected': {
                                 backgroundColor: '#1976d2',
@@ -36,8 +60,8 @@ export const Sidebar = () => {
                             pt: 2,
                             pb: 2
                         }}
-                        >
-                        
+                    >
+
                         <ListItemIcon>{icon}</ListItemIcon>
                         <ListItemText primary={text} />
                     </ListItemButton>

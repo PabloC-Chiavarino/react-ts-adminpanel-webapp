@@ -1,18 +1,40 @@
-import { AppBar, Toolbar, Typography, Box, IconButton, Avatar } from '@mui/material'
-import { Brightness4, Notifications, Settings } from '@mui/icons-material'
+import { AppBar, Toolbar, Box, IconButton, Avatar, InputBase } from '@mui/material'
+import { Brightness4, Notifications, Settings, Search } from '@mui/icons-material'
 
 const Topbar = () => {
+
+    const drawerWidth = 240
+
     return(
         <AppBar 
-            position='fixed' 
+            position='fixed'
             sx={{
-                zIndex: (theme) => theme.zIndex.drawer + 1,
+                width: `calc(100% - ${drawerWidth}px)`,
             }}
             >
-            <Toolbar sx={{ justifyContent: 'space-between' }}>
-                <Typography variant='h6' component='div'>
-                    AdminAssistant
-                </Typography>
+            <Toolbar 
+                sx={{ 
+                    justifyContent: 'space-between',
+                    backgroundColor: '',
+                }}
+                >
+                <Box 
+                    sx={{ 
+                        display: 'flex',
+                        alignItems: 'center',
+                        border: '1px solid #ccc',
+                        borderRadius: '5px',
+                        width: '215px',
+                        height: '35px',
+                        backgroundColor: '#fff',
+                        padding: '0px 8px 0px 16px',
+                    }}
+                    >
+                    <InputBase placeholder='Search...' />
+                    <IconButton>
+                        <Search />
+                    </IconButton>
+                </Box>
                 <Box>
                     <IconButton>
                         <Brightness4 />
