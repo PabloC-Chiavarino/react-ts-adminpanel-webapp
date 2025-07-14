@@ -1,17 +1,22 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { Box, Toolbar } from '@mui/material'
 import { Sidebar, Topbar } from '../../components'
+import '../../index.css'
 
 const Layout = () => {
+
+    const {pathname} = useLocation()
 
     const drawerWidth = 240
     const topBarHeight = 64
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box className='fade-in' sx={{ display: 'flex' }}>
             <Topbar />
             <Sidebar />
             <Box 
+                key={pathname}
+                className='fade-in'
                 component="main"
                 sx={{
                     flexGrow: 1,
