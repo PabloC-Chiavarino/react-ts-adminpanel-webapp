@@ -46,7 +46,7 @@ const Topbar = () => {
                         <Settings />
                     </IconButton>
                     <IconButton>
-                        <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
+                        <Avatar alt='admin' src='/static/images/avatar/1.jpg' />
                     </IconButton>
                 </Box>
             </Toolbar>
