@@ -22,7 +22,6 @@ const Layout = () => {
                     flexGrow: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'center',
                     alignItems: 'center',
                     width: `calc(100% - ${drawerWidth}px)`,
                     height: `calc(100vh - ${topBarHeight}px)`,
