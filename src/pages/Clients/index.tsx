@@ -1,19 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
+import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
 import { Typography } from '@mui/material'
 import type { User } from '../../types'
 export const Clients = () => {
 
-    const fetchUsers = async (): Promise<User[]> => {
-        const response = await fetch('https://mock-data-api-vntk.onrender.com/users')
-        const data = await response.json()
-        return data
-    }
+    const USERS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/users'
 
-    const { data, isLoading, error } = useQuery<User[], Error>({
-        queryKey: ['users'],
-        queryFn: fetchUsers
-    })
+    const { data, isLoading, error } = useDynamicQuery<User[]>(USERS_ENDPOINT)
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
@@ -25,12 +18,12 @@ export const Clients = () => {
         { field: 'createdAt', headerName: 'Created At', width: 130 },
     ]
 
-    if (isLoading) return <Typography variant='h4'>Loading...</Typography>
-    if (error) return <Typography variant='h4'>{error.message}</Typography>
+    if (isLoading) return <Typography variant='h5'>Loading...</Typography>
+    if (error) return <Typography variant='h5'>{error.message}</Typography>
 
     return (
         <>
-            <Typography variant='h4'>Clients</Typography>
+            <Typography variant='h5'>Clients</Typography>
             <DataGrid rows={data} columns={columns} />
         </>
     )

@@ -1,20 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
+import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
 import { Typography } from '@mui/material'
 import type { Product } from '../../types'
 export const Products = () => {
 
-    const fetchProducts = async (): Promise<Product[]> => {
-        const response = await fetch('https://mock-data-api-vntk.onrender.com/products')
-        const data = await response.json()
-        return data
-    }
+    const PRODUCTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/products'
 
-    const { data, isLoading, error } = useQuery<Product[], Error>({
-        queryKey: ['products'],
-        queryFn: fetchProducts
-    })
-
+    const { data, isLoading, error } = useDynamicQuery<Product[]>(PRODUCTS_ENDPOINT)
+    
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'name', headerName: 'Product', width: 130 },
