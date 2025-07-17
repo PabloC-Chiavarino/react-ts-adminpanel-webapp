@@ -1,3 +1,7 @@
 export { default as Sidebar } from './Sidebar'
 export { default as Topbar } from './Topbar'
 export { default as Layout } from './Layout'
+export { default as AddBtn } from './AddBtn'
+export { default as ProductForm } from './ProductForm'
+export { default as UserForm } from './UserForm'
+export { default as DynamicForm } from './DynamicForm'
