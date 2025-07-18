@@ -1,7 +1,17 @@
-import type { Field } from '../../types'
+import type { Field, User } from '../../types'
 import { DynamicForm } from '../index'
 
-const UserForm = () => {
+const UserForm = (
+    {
+        handleChange,
+        handleSubmit,
+        formData
+    }: {
+        handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+        handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+        formData: User
+    }
+) => {
 
     const fields: Field[] = [
         { title: 'Name', field: 'name', label: 'Name', type: 'text', required: true },
@@ -12,7 +22,7 @@ const UserForm = () => {
     ]
 
     return (
-        <DynamicForm fields={fields} title='User'/>
+        <DynamicForm fields={fields} title='User' handleChange={handleChange} handleSubmit={handleSubmit} formData={formData} />
     )
 }
 

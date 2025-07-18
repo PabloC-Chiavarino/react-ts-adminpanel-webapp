@@ -9,13 +9,28 @@ const groupByPairs = <T,>(arr: T[]): T[][] => {
     return pairs
 }
 
-const DynamicForm = ({ fields, title }: { fields: Field[]; title: string }) => {
+const DynamicForm = <T extends Record<string, unknown>>(
+    {
+        fields,
+        title,
+        handleChange,
+        handleSubmit,
+        formData
+    }: {
+        fields: Field[];
+        title: string;
+        handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+        handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+        formData: T;
+    }
+) => {
 
     const fieldPairs = groupByPairs(fields)
 
     return (
         <Box
             component="form"
+            onSubmit={handleSubmit}
             sx={{
                 width: '650px',
                 display: 'flex',
@@ -32,7 +47,6 @@ const DynamicForm = ({ fields, title }: { fields: Field[]; title: string }) => {
                 boxShadow: 3,
                 backgroundColor: '#fff',
                 zIndex: 100,
-                animation: 'fadeIn ease-in .2s forwards'
             }}
         >
             <Typography variant="h6" sx={{ alignSelf: 'center', mb: 1.5, fontWeight: 'bold', fontSize: 22 }}>
@@ -51,14 +65,18 @@ const DynamicForm = ({ fields, title }: { fields: Field[]; title: string }) => {
                     {pair.map((field, key) => (
                         <TextField
                             key={key}
+                            name={field.field}
                             size='small'
                             label={field.label}
+                            onChange={handleChange}
+                            required={true}
+                            value={formData[field.field] ?? ''}
                             sx={{ flex: 1 }}
                         />
                     ))}
                 </Box>
             ))}
-            <Button variant="contained" sx={{ width: '120px', height: '45px', mt: 1 }}>
+            <Button type='submit' variant="contained" sx={{ width: '120px', height: '45px', mt: 1 }}>
                 AGREGAR
             </Button>
         </Box>
