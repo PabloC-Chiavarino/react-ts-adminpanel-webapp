@@ -5,10 +5,12 @@ const UserForm = (
     {
         handleChange,
         handleSubmit,
+        handleUpdate,
         formData
     }: {
         handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
         handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+        handleUpdate: (e: React.FormEvent<HTMLFormElement>) => void;
         formData: User
     }
 ) => {
@@ -22,7 +24,7 @@ const UserForm = (
     ]
 
     return (
-        <DynamicForm fields={fields} title='User' handleChange={handleChange} handleSubmit={handleSubmit} formData={formData} />
+        <DynamicForm fields={fields} title='User' handleChange={handleChange} handleSubmit={handleSubmit} formData={formData} handleUpdate={handleUpdate} />
     )
 }
 

@@ -5,11 +5,13 @@ const ProductForm = (
     {
         handleChange,
         handleSubmit,
+        handleUpdate,
         formData
     }
         : {
             handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
             handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+            handleUpdate: (e: React.FormEvent<HTMLFormElement>) => void;
             formData: Product
         }) => {
 
@@ -21,7 +23,7 @@ const ProductForm = (
     ]
 
     return (
-        <DynamicForm fields={fields} title='Product' handleChange={handleChange} handleSubmit={handleSubmit} formData={formData} />
+        <DynamicForm fields={fields} title='Product' handleChange={handleChange} handleSubmit={handleSubmit} formData={formData} handleUpdate={handleUpdate} />
     )
 }
 

@@ -15,22 +15,26 @@ const DynamicForm = <T extends Record<string, unknown>>(
         title,
         handleChange,
         handleSubmit,
+        handleUpdate,
         formData
     }: {
         fields: Field[];
         title: string;
         handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
         handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+        handleUpdate: (e: React.FormEvent<HTMLFormElement>) => void;
         formData: T;
     }
 ) => {
 
     const fieldPairs = groupByPairs(fields)
 
+    const existingUser = formData.id !== 0 
+
     return (
         <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={existingUser ? handleUpdate : handleSubmit}
             sx={{
                 width: '650px',
                 display: 'flex',
@@ -50,7 +54,7 @@ const DynamicForm = <T extends Record<string, unknown>>(
             }}
         >
             <Typography variant="h6" sx={{ alignSelf: 'center', mb: 1.5, fontWeight: 'bold', fontSize: 22 }}>
-                Nuevo {title}
+                New {title}
             </Typography>
             {fieldPairs.map((pair, key) => (
                 <Box
@@ -77,7 +81,7 @@ const DynamicForm = <T extends Record<string, unknown>>(
                 </Box>
             ))}
             <Button type='submit' variant="contained" sx={{ width: '120px', height: '45px', mt: 1 }}>
-                AGREGAR
+                { existingUser ? 'UPDATE' : 'ADD'}
             </Button>
         </Box>
     )
