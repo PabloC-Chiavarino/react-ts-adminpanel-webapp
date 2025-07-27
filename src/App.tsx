@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import { SnackbarProvider } from 'notistack'
 import { BrowserRouter } from 'react-router-dom'
 import Router from './routes'
 import { CssBaseline } from '@mui/material'
@@ -11,11 +12,13 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Router />
-        </BrowserRouter>
-      </QueryClientProvider>
+      <SnackbarProvider maxSnack={1}>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <Router />
+          </BrowserRouter>
+        </QueryClientProvider>
+      </SnackbarProvider>
     </>
   )
 }

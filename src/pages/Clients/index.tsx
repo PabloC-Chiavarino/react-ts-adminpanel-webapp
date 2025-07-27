@@ -1,14 +1,16 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
 import type { User } from '../../types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
 import { Box, Typography, Modal, IconButton } from '@mui/material'
 import { Edit, Delete } from '@mui/icons-material'
-import { AddBtn, UserForm } from '../../components'
+import { AddBtn, UserForm, ConfirmDialog } from '../../components'
 export const Clients = () => {
     const [open, setOpen] = useState(false)
+    const [openDialog, setOpenDialog] = useState(false)
     const [selectedRow, setSelectedRow] = useState<User | null>(null)
     const [formData, setFormData] = useState<User>({
         id: 0,
@@ -20,42 +22,37 @@ export const Clients = () => {
         createdAt: ''
     })
 
+    let requestAction = useRef<(() => void) | null>(null)
+    
     const USERS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/users'
-
     const queryClient = useQueryClient()
-
+    const { enqueueSnackbar } = useSnackbar()
     const { data, isLoading, error } = useDynamicQuery<User[]>(USERS_ENDPOINT)
 
-    const columns = [
-        {
-            field: 'id', headerName: 'ID', width: 100, flex: .5, renderCell: (params: GridRenderCellParams<User>) => (
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <span>{params.row.id}</span>
-                    <Box sx={{ display: selectedRow?.id === params.row.id ? 'block' : 'none' }}>
-                        <IconButton onClick={() => handleEdit()}>
-                            <Edit />
-                        </IconButton>
-                        <IconButton onClick={() => handleDelete(params.row.id)}>
-                            <Delete />
-                        </IconButton>
-                    </Box>
-                </Box>
-            )
-        },
-        { field: 'name', headerName: 'First name', width: 130, flex: 1 },
-        { field: 'lastname', headerName: 'Last name', width: 130, flex: 1 },
-        { field: 'email', headerName: 'Email', width: 130, flex: 1 },
-        { field: 'address', headerName: 'Address', width: 130, flex: 1 },
-        { field: 'phone', headerName: 'Phone', width: 130, flex: .5 },
-        { field: 'createdAt', headerName: 'Created At', width: 130, flex: .5 }
-    ]
-
     const handleOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
+    const handleClose = () => {
+        setOpen(false)
+        setFormData({
+            id: 0,
+            name: '',
+            email: '',
+            lastname: '',
+            phone: '',
+            address: '',
+            createdAt: ''
+        })
+    }
+
+    const handleOpenDialogPayload = (action: () => void) => {
+        requestAction.current = action
+        setOpenDialog(true)
+    }
+
+    const handleCloseDialog = () => setOpenDialog(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
-        const updated = { ...formData, [name]: name === 'phone' ? Number(value) : value }
+        const updated = { ...formData, [name]: value }
 
         setFormData(updated)
 
@@ -139,9 +136,31 @@ export const Clients = () => {
         }
     })
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        mutation.mutate(formData)
+    const handleSubmit = async () => {
+        try {
+            await mutation.mutate(formData)
+            enqueueSnackbar('Created successfully', { variant: 'success' })
+        } catch (error) {
+            enqueueSnackbar('Error', { variant: 'error' })
+        }
+    }
+
+    const handleUpdate = async () => {
+        try {
+            await updateMutation.mutate(formData)
+            enqueueSnackbar('Updated successfully', { variant: 'success' })
+        } catch (error) {
+            enqueueSnackbar('Error', { variant: 'error' })
+        }
+    }
+
+    const handleDelete = () => {
+        try {
+            deleteMutation.mutate(selectedRow!.id)
+            enqueueSnackbar('Deleted successfully', { variant: 'success' })
+        } catch (error) {
+            enqueueSnackbar('Error', { variant: 'error' })
+        }
     }
 
     const handleEdit = () => {
@@ -151,14 +170,29 @@ export const Clients = () => {
         }
     }
 
-    const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        updateMutation.mutate(formData)
-    }
-
-    const handleDelete = (id: number) => {
-        deleteMutation.mutate(id)
-    }
+    const columns = [
+        {
+            field: 'id', headerName: 'ID', width: 100, flex: .5, renderCell: (params: GridRenderCellParams<User>) => (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <span>{params.row.id}</span>
+                    <Box sx={{ display: selectedRow?.id === params.row.id ? 'block' : 'none' }}>
+                        <IconButton onClick={() => handleEdit()}>
+                            <Edit />
+                        </IconButton>
+                        <IconButton onClick={() => handleOpenDialogPayload(handleDelete)}>
+                            <Delete />
+                        </IconButton>
+                    </Box>
+                </Box>
+            )
+        },
+        { field: 'name', headerName: 'First name', width: 130, flex: 1 },
+        { field: 'lastname', headerName: 'Last name', width: 130, flex: 1 },
+        { field: 'email', headerName: 'Email', width: 130, flex: 1 },
+        { field: 'address', headerName: 'Address', width: 130, flex: 1 },
+        { field: 'phone', headerName: 'Phone', width: 130, flex: .5 },
+        { field: 'createdAt', headerName: 'Created At', width: 130, flex: .5 }
+    ]
 
     if (isLoading) return <Typography variant='h5'>Loading...</Typography>
     if (!data) return <Typography variant='h5'>No users</Typography>
@@ -166,12 +200,25 @@ export const Clients = () => {
 
     return (
         <>
+            <ConfirmDialog
+                open={openDialog}
+                onConfirm={() => {
+                    requestAction!.current!()
+                    handleCloseDialog()
+                }}
+                onCancel={handleCloseDialog} />
             <Modal open={open} onClose={handleClose} >
                 <UserForm
                     handleChange={handleChange}
-                    handleSubmit={handleSubmit}
+                    handleSubmit={(e) => {
+                        e.preventDefault();
+                        handleOpenDialogPayload(handleSubmit)
+                    }}
                     formData={formData}
-                    handleUpdate={handleUpdate}
+                    handleUpdate={(e) => {
+                        e.preventDefault();
+                        handleOpenDialogPayload(handleUpdate)
+                    }}
                 />
             </Modal>
             <Box sx={{
