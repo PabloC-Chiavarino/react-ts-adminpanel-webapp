@@ -2,7 +2,7 @@ export type User = {
   id: number;
   name: string;
   email: string;
-  lastname: string;
+  lastName: string;
   phone: string;
   address: string;
   createdAt: string;
@@ -20,6 +20,16 @@ export type Field = {
   title: string;
   field: string;
   label: string;
-  type?: 'text' | 'number' | 'boolean' | 'password' | 'email';
+  type?: 'text' | 'number' | 'boolean' | 'password' | 'email' | 'select';
   required?: boolean;
+  options?: {value: number, label: string}[]
+  multiple?: boolean
+}
+
+export type Invoice = {
+  id: number;
+  clientId: number | null;
+  productIds: number[];
+  totalPrice: number;
+  createdAt: string;
 }

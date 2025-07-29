@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Drawer, Box, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material'
-import { Dashboard, People, Inventory2, ManageAccountsOutlined } from '@mui/icons-material'
+import { Dashboard, People, Inventory2, ManageAccountsOutlined, Receipt } from '@mui/icons-material'
 
 export const Sidebar = () => {
 
@@ -10,6 +10,7 @@ export const Sidebar = () => {
         { text: 'Dashboard', icon: <Dashboard />, path: '/' },
         { text: 'Products', icon: <Inventory2 />, path: '/products' },
         { text: 'Clients/Users', icon: <People />, path: '/clients' },
+        { text: 'Invoices', icon: <Receipt />, path: '/invoices' },
     ]
 
     const drawerWidth = 240

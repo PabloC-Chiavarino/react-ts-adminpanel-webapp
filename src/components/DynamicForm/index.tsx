@@ -1,5 +1,6 @@
+import { type SelectChangeEvent } from '@mui/material';
 import type { Field } from '../../types';
-import { Box, TextField, Button, Typography } from '@mui/material'
+import { Box, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel } from '@mui/material'
 
 const groupByPairs = <T,>(arr: T[]): T[][] => {
     const pairs: T[][] = []
@@ -13,29 +14,32 @@ const DynamicForm = <T extends Record<string, unknown>>(
     {
         fields,
         title,
-        handleChange,
+        handleInputChange,
+        handleSelectChange,
         handleSubmit,
         handleUpdate,
         formData
     }: {
         fields: Field[];
         title: string;
-        handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+        handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+        handleSelectChange?: (e: SelectChangeEvent<string | string[]>, field: Field) => void;
         handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-        handleUpdate: (e: React.FormEvent<HTMLFormElement>) => void;
+        handleUpdate?: (e: React.FormEvent<HTMLFormElement>) => void;
         formData: T;
     }
 ) => {
 
     const fieldPairs = groupByPairs(fields)
 
-    const existingUser = formData.id !== 0 
+    const existingUser = formData.id !== 0
 
     return (
         <Box
             component="form"
-            onSubmit={existingUser ? handleUpdate : handleSubmit}
+            onSubmit={existingUser && handleUpdate ? handleUpdate : handleSubmit}
             sx={{
+                pointerEvents: 'all',
                 width: '650px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -56,9 +60,9 @@ const DynamicForm = <T extends Record<string, unknown>>(
             <Typography variant="h6" sx={{ alignSelf: 'center', mb: 1.5, fontWeight: 'bold', fontSize: 22 }}>
                 New {title}
             </Typography>
-            {fieldPairs.map((pair, key) => (
+            {fieldPairs.map((pair, pairIndex) => (
                 <Box
-                    key={key}
+                    key={`pair-${pairIndex}`}
                     sx={{
                         display: 'flex',
                         width: '100%',
@@ -66,22 +70,59 @@ const DynamicForm = <T extends Record<string, unknown>>(
                         px: 4
                     }}
                 >
-                    {pair.map((field, key) => (
-                        <TextField
-                            key={key}
-                            name={field.field}
-                            size='small'
-                            label={field.label}
-                            onChange={handleChange}
-                            required={true}
-                            value={formData[field.field] ?? ''}
-                            sx={{ flex: 1 }}
-                        />
+                    {pair.map((field, fieldIndex) => (
+                        field.type === 'select' ? (
+                            <FormControl sx={{ flex: 1, }} key={`field-${fieldIndex}`}>
+                                <InputLabel>{field.label}</InputLabel>
+                                <Select
+                                    labelId={field.label}
+                                    required={true}
+                                    multiple={field.multiple}
+                                    name={field.field}
+                                    size='small'
+                                    label={field.label}
+                                onChange={(e) => handleSelectChange!(e, field)}
+                                    value={
+                                        field.multiple
+                                            ? Array.isArray(formData[field.field])
+                                                ? (formData[field.field] as number[]).map(String)
+                                                : []
+                                            : typeof formData[field.field] === 'number'
+                                                ? String(formData[field.field])
+                                                : ''
+                                    }
+                                    sx={{
+                                        flex: 1,
+                                        textAlign: 'center',
+                                        '& .MuiSelect-select': {
+                                            textAlign: 'center',
+                                        }
+                                    }}
+                                >
+                                    {field.options!.map((option, optionIndex) => (
+                                        <MenuItem key={optionIndex} value={String(option.value)}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        ) : (
+                            <TextField
+                                key={`pair-${fieldIndex}`}
+                                name={field.field}
+                                size='small'
+                                label={field.label}
+                                onChange={handleInputChange}
+                                required={true}
+                                value={formData[field.field] ?? ''}
+                                sx={{ flex: 1 }}
+                            />
+                        )
                     ))}
                 </Box>
             ))}
             <Button type='submit' variant="contained" sx={{ width: '120px', height: '45px', mt: 1 }}>
-                { existingUser ? 'UPDATE' : 'ADD'}
+                {existingUser ? 'UPDATE' : 'ADD'}
             </Button>
         </Box>
     )

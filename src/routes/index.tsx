@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from '../components'
-import { Dashboard, Clients, Products } from '../pages'
+import { Dashboard, Clients, Products, Invoices } from '../pages'
 
 const Router = () => {
     return (
@@ -11,6 +11,7 @@ const Router = () => {
                 <Route path='main' element={<Dashboard />} />
                 <Route path='clients' element={<Clients />} />
                 <Route path='products' element={<Products />} />
+                <Route path='invoices' element={<Invoices />} />
             </Route>
         </Routes>
     )

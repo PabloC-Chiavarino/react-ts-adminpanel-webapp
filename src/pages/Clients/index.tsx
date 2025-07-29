@@ -16,7 +16,7 @@ export const Clients = () => {
         id: 0,
         name: '',
         email: '',
-        lastname: '',
+        lastName: '',
         phone: '',
         address: '',
         createdAt: ''
@@ -36,7 +36,7 @@ export const Clients = () => {
             id: 0,
             name: '',
             email: '',
-            lastname: '',
+            lastName: '',
             phone: '',
             address: '',
             createdAt: ''
@@ -82,7 +82,7 @@ export const Clients = () => {
                 id: 0,
                 name: '',
                 email: '',
-                lastname: '',
+                lastName: '',
                 phone: '',
                 address: '',
                 createdAt: ''
@@ -187,7 +187,7 @@ export const Clients = () => {
             )
         },
         { field: 'name', headerName: 'First name', width: 130, flex: 1 },
-        { field: 'lastname', headerName: 'Last name', width: 130, flex: 1 },
+        { field: 'lastName', headerName: 'Last name', width: 130, flex: 1 },
         { field: 'email', headerName: 'Email', width: 130, flex: 1 },
         { field: 'address', headerName: 'Address', width: 130, flex: 1 },
         { field: 'phone', headerName: 'Phone', width: 130, flex: .5 },
