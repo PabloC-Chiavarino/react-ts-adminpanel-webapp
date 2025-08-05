@@ -3,13 +3,13 @@ import { DynamicForm } from '../index'
 
 const ProductForm = (
     {
-        handleChange,
+        handleInputChange,
         handleSubmit,
         handleUpdate,
         formData
     }
         : {
-            handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+            handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
             handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
             handleUpdate: (e: React.FormEvent<HTMLFormElement>) => void;
             formData: Product
@@ -23,7 +23,7 @@ const ProductForm = (
     ]
 
     return (
-        <DynamicForm fields={fields} title='Product' handleChange={handleChange} handleSubmit={handleSubmit} formData={formData} handleUpdate={handleUpdate} />
+        <DynamicForm fields={fields} title='Product' handleInputChange={handleInputChange} handleSubmit={handleSubmit} formData={formData} handleUpdate={handleUpdate} />
     )
 }
 

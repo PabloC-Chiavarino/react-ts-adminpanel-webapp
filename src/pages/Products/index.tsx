@@ -11,49 +11,22 @@ export const Products = () => {
 
     const [open, setOpen] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
-    const [selectedRow, setSelectedRow] = useState<Product | null>(null)
-    const [formData, setFormData] = useState<Product>({
+    const [productData, setProductData] = useState<Product | null>(null)
+
+    let requestAction = useRef<(() => void) | null>(null)
+
+    const emptyProduct: Product = {
         id: 0,
         name: '',
         category: '',
         price: 0,
         stock: 0
-    })
-
-    let requestAction = useRef<(() => void) | null>(null)
+    }
 
     const PRODUCTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/products'
     const queryClient = useQueryClient()
     const { data, isLoading, error } = useDynamicQuery<Product[]>(PRODUCTS_ENDPOINT)
     const { enqueueSnackbar } = useSnackbar()
-
-    const handleOpen = () => setOpen(true)
-    const handleClose = () => {
-        setOpen(false)
-        setFormData({
-            id: 0,
-            name: '',
-            category: '',
-            price: 0,
-            stock: 0
-        })
-    }
-
-    const handleOpenDialogPayload = (action: () => void) => {
-        requestAction.current = action
-        setOpenDialog(true)
-    }
-        
-    const handleCloseDialog = () => setOpenDialog(false)
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        const updated = { ...formData, [name]: value }
-
-        setFormData(updated)
-
-        // console.log(updated) // debug
-    }
 
     const mutation = useMutation({
         mutationFn: async (product: Product) => {
@@ -74,13 +47,7 @@ export const Products = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [PRODUCTS_ENDPOINT] })
-            setFormData({
-                id: 0,
-                name: '',
-                category: '',
-                price: 0,
-                stock: 0
-            });
+            setProductData(emptyProduct);
         },
         onError: (error) => {
             console.error(error)
@@ -130,9 +97,33 @@ export const Products = () => {
         }
     })
 
+    const handleOpen = () => setOpen(true)
+
+    const handleClose = () => {
+        setOpen(false)
+        setProductData(emptyProduct)
+    }
+
+    const handleOpenDialogPayload = (action: () => void) => {
+        requestAction.current = action
+        setOpenDialog(true)
+    }
+
+    const handleCloseDialog = () => setOpenDialog(false)
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target
+
+        if (!productData) return
+
+        const updated = { ...productData, [name]: value }
+        setProductData(updated)
+    }
+
     const handleSubmit = async () => {
+        if (!productData) return
         try {
-            await mutation.mutate(formData)
+            await mutation.mutate(productData)
             enqueueSnackbar('Created successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -140,8 +131,9 @@ export const Products = () => {
     }
 
     const handleUpdate = async () => {
+        if (!productData) return
         try {
-            await updateMutation.mutate(formData)
+            await updateMutation.mutate(productData)
             enqueueSnackbar('Updated successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -150,18 +142,16 @@ export const Products = () => {
 
     const handleDelete = () => {
         try {
-            deleteMutation.mutate(selectedRow!.id)
+            deleteMutation.mutate(productData!.id)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
 
-    const handleEdit = () => {
-        if (selectedRow) {
-            setFormData(selectedRow)
-            handleOpen()
-        }
+    const handleAddProduct = () => {
+        setProductData(emptyProduct)
+        handleOpen()
     }
 
     const columns = [
@@ -169,8 +159,8 @@ export const Products = () => {
             field: 'id', headerName: 'ID', width: 70, flex: .25, renderCell: (params: GridRenderCellParams<Product>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <span>{params.row.id}</span>
-                    <Box sx={{ display: selectedRow?.id === params.row.id ? 'block' : 'none' }}>
-                        <IconButton onClick={() => handleEdit()}>
+                    <Box sx={{ display: productData?.id === params.row.id ? 'block' : 'none' }}>
+                        <IconButton onClick={() => handleOpen()}>
                             <Edit />
                         </IconButton>
                         <IconButton onClick={() => handleOpenDialogPayload(handleDelete)}>
@@ -203,8 +193,8 @@ export const Products = () => {
                 open={open}
                 onClose={handleClose} >
                 <ProductForm
-                    formData={formData}
-                    handleChange={handleChange}
+                    formData={productData ?? emptyProduct}
+                    handleInputChange={handleInputChange}
                     handleSubmit={(e) => {
                         e.preventDefault();
                         handleOpenDialogPayload(handleSubmit)
@@ -223,12 +213,12 @@ export const Products = () => {
                 <Typography variant='h4'>
                     Products
                 </Typography>
-                <AddBtn onClick={handleOpen} />
+                <AddBtn onClick={handleAddProduct} />
             </Box>
             <DataGrid
                 rows={data}
                 columns={columns}
-                onRowClick={(params) => setSelectedRow(params.row)}
+                onRowClick={(params) => setProductData(params.row)}
                 sx={{
                     width: '90%',
                     maxHeight: '80%',

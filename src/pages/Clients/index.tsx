@@ -8,11 +8,20 @@ import { DataGrid } from '@mui/x-data-grid'
 import { Box, Typography, Modal, IconButton } from '@mui/material'
 import { Edit, Delete } from '@mui/icons-material'
 import { AddBtn, UserForm, ConfirmDialog } from '../../components'
-export const Clients = () => {
+
+const Clients = () => {
     const [open, setOpen] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
-    const [selectedRow, setSelectedRow] = useState<User | null>(null)
-    const [formData, setFormData] = useState<User>({
+    const [clientData, setClientData] = useState<User | null>(null)
+
+    let requestAction = useRef<(() => void) | null>(null)
+
+    const USERS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/users'
+    const queryClient = useQueryClient()
+    const { enqueueSnackbar } = useSnackbar()
+    const { data, isLoading, error } = useDynamicQuery<User[]>(USERS_ENDPOINT)
+
+    const emptyClient: User = {
         id: 0,
         name: '',
         email: '',
@@ -20,43 +29,6 @@ export const Clients = () => {
         phone: '',
         address: '',
         createdAt: ''
-    })
-
-    let requestAction = useRef<(() => void) | null>(null)
-    
-    const USERS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/users'
-    const queryClient = useQueryClient()
-    const { enqueueSnackbar } = useSnackbar()
-    const { data, isLoading, error } = useDynamicQuery<User[]>(USERS_ENDPOINT)
-
-    const handleOpen = () => setOpen(true)
-    const handleClose = () => {
-        setOpen(false)
-        setFormData({
-            id: 0,
-            name: '',
-            email: '',
-            lastName: '',
-            phone: '',
-            address: '',
-            createdAt: ''
-        })
-    }
-
-    const handleOpenDialogPayload = (action: () => void) => {
-        requestAction.current = action
-        setOpenDialog(true)
-    }
-
-    const handleCloseDialog = () => setOpenDialog(false)
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        const updated = { ...formData, [name]: value }
-
-        setFormData(updated)
-
-        // console.log(updated) // debug
     }
 
     const mutation = useMutation({
@@ -78,15 +50,7 @@ export const Clients = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [USERS_ENDPOINT] })
-            setFormData({
-                id: 0,
-                name: '',
-                email: '',
-                lastName: '',
-                phone: '',
-                address: '',
-                createdAt: ''
-            });
+            setClientData(emptyClient);
         },
         onError: (error) => {
             console.error(error)
@@ -136,9 +100,33 @@ export const Clients = () => {
         }
     })
 
+    const handleOpen = () => setOpen(true)
+
+    const handleClose = () => {
+        setOpen(false)
+        setClientData(emptyClient)
+    }
+
+    const handleOpenDialogPayload = (action: () => void) => {
+        requestAction.current = action
+        setOpenDialog(true)
+    }
+
+    const handleCloseDialog = () => setOpenDialog(false)
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target
+
+        if (!clientData) return
+
+        const updated = { ...clientData, [name]: value }
+        setClientData(updated)
+    }
+
     const handleSubmit = async () => {
+        if (!clientData) return
         try {
-            await mutation.mutate(formData)
+            await mutation.mutate(clientData)
             enqueueSnackbar('Created successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -147,7 +135,8 @@ export const Clients = () => {
 
     const handleUpdate = async () => {
         try {
-            await updateMutation.mutate(formData)
+            if (!clientData) return
+            await updateMutation.mutate(clientData)
             enqueueSnackbar('Updated successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -156,18 +145,16 @@ export const Clients = () => {
 
     const handleDelete = () => {
         try {
-            deleteMutation.mutate(selectedRow!.id)
+            deleteMutation.mutate(clientData!.id)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
 
-    const handleEdit = () => {
-        if (selectedRow) {
-            setFormData(selectedRow)
-            handleOpen()
-        }
+    const handleAddClient = () => {
+        setClientData(emptyClient)
+        handleOpen()
     }
 
     const columns = [
@@ -175,8 +162,8 @@ export const Clients = () => {
             field: 'id', headerName: 'ID', width: 100, flex: .5, renderCell: (params: GridRenderCellParams<User>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <span>{params.row.id}</span>
-                    <Box sx={{ display: selectedRow?.id === params.row.id ? 'block' : 'none' }}>
-                        <IconButton onClick={() => handleEdit()}>
+                    <Box sx={{ display: clientData?.id === params.row.id ? 'block' : 'none' }}>
+                        <IconButton onClick={() => handleOpen()}>
                             <Edit />
                         </IconButton>
                         <IconButton onClick={() => handleOpenDialogPayload(handleDelete)}>
@@ -209,12 +196,12 @@ export const Clients = () => {
                 onCancel={handleCloseDialog} />
             <Modal open={open} onClose={handleClose} >
                 <UserForm
-                    handleChange={handleChange}
+                    handleInputChange={handleInputChange}
                     handleSubmit={(e) => {
                         e.preventDefault();
                         handleOpenDialogPayload(handleSubmit)
                     }}
-                    formData={formData}
+                    formData={clientData ?? emptyClient}
                     handleUpdate={(e) => {
                         e.preventDefault();
                         handleOpenDialogPayload(handleUpdate)
@@ -230,12 +217,14 @@ export const Clients = () => {
                 <Typography variant='h4'>
                     Clients
                 </Typography>
-                <AddBtn onClick={handleOpen} />
+                <AddBtn onClick={handleAddClient} />
             </Box>
             <DataGrid
                 rows={data}
                 columns={columns}
-                onRowClick={(params) => setSelectedRow(params.row)}
+                onRowClick={(params) => {
+                    setClientData(params.row)
+                }}
                 sx={{
                     width: '90%',
                     maxHeight: '80%',
