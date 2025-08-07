@@ -10,3 +10,7 @@
 .fade-in {
     animation: fadeIn ease-in .3s forwards;
 }
+
+body,html {
+    user-select: none;
+}
