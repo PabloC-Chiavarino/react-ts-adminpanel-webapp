@@ -1,155 +1,311 @@
-import type { Task } from "../../types"
-import { Grid, styled, Paper, Typography, Box } from "@mui/material";
-import { ForwardSharp, TaskAltSharp, FormatListBulleted } from "@mui/icons-material";
+import { type DragStartEvent, type DragEndEvent, DndContext, DragOverlay, closestCenter } from "@dnd-kit/core";
+import { TaskAltSharp, ForwardSharp, FormatListBulleted, DeleteSweep } from "@mui/icons-material";
+import { Typography, Box, Grid, Modal, Paper } from "@mui/material";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useSnackbar } from "notistack";
+import { useState, useRef } from "react";
+import { ConfirmDialog, AddBtn, TaskContainer, DraggableTask, TaskForm } from "../../components";
+import { useDynamicQuery } from "../../hooks";
+import type { Task } from "../../types";
 
 const Tasker = () => {
+    const [open, setOpen] = useState(false);
+    const [optionsTaskID, setOptionsTaskID] = useState<number | null>(null);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [taskData, setTaskData] = useState<Task | null>(null);
+    const [activeTaskID, setActiveTaskID] = useState<string | null>(null);
+    const requestAction = useRef<(() => void) | null>(null);
 
-    const TaskItem = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.grey[100],
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        flexShrink: .8,
-        cursor: 'pointer',
-        transition: 'background-color 0.2s ease',
-        '&:hover': {
-            backgroundColor: theme.palette.grey[300]
-        },
-    }))
+    const TASKS_ENDPOINT = "https://mock-data-api-vntk.onrender.com/tasks";
+    const queryClient = useQueryClient();
+    const { enqueueSnackbar } = useSnackbar();
+    const { data, isLoading, error } = useDynamicQuery<Task[]>(TASKS_ENDPOINT);
 
+    const emptyTask: Task = {
+        id: 0,
+        title: "",
+        description: "",
+        completed: false,
+    };
 
-    const TaskList: Task[] = [
-        {
-            id: 1,
-            title: 'TaskItem 1',
-            description: 'Description 1',
-            completed: false
+    const todo = data?.filter(task => !task.completed && String(task.id) !== activeTaskID) || [];
+    const done = data?.filter(task => task.completed && String(task.id) !== activeTaskID) || [];
+
+    const mutation = useMutation({
+        mutationFn: async (task: Task) => {
+            const response = await fetch(TASKS_ENDPOINT, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(task),
+            });
+            if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+            return response.json();
         },
-        {
-            id: 2,
-            title: 'TaskItem 2',
-            description: 'Description 2',
-            completed: false
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [TASKS_ENDPOINT] });
+            setTaskData(emptyTask);
         },
-        {
-            id: 3,
-            title: 'TaskItem 3',
-            description: 'Description 3',
-            completed: true
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: async (task: Task) => {
+            const response = await fetch(`${TASKS_ENDPOINT}/${task.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(task),
+            });
+            if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+            return response.json();
         },
-        {
-            id: 4,
-            title: 'TaskItem 4',
-            description: 'Description 4',
-            completed: false
+        onSuccess: (data) => {
+            queryClient.setQueryData<Task[]>([TASKS_ENDPOINT], oldCache => {
+                if (!oldCache) return [];
+                return oldCache.map(task =>
+                    task.id === data.id ? data : task
+                );
+            });
+            enqueueSnackbar('Updated successfully', { variant: 'success' });
         },
-        {
-            id: 5,
-            title: 'TaskItem 5',
-            description: 'Description 5',
-            completed: false
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: async (id: number) => {
+            const response = await fetch(`${TASKS_ENDPOINT}/${id}`, {
+                method: "DELETE",
+            });
+            if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [TASKS_ENDPOINT] });
+        },
+    });
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false);
+        setTaskData(emptyTask);
+    };
+
+    const handleOptionsTaskID = (taskID: number | null) => setOptionsTaskID(taskID);
+
+    const handleOpenDialogPayload = (action: () => void) => {
+        requestAction.current = action
+        setOpenDialog(true)
+    }
+
+    const handleCloseDialog = () => setOpenDialog(false)
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target
+        if (!taskData) return
+        const updated = { ...taskData, [name]: value }
+        setTaskData(updated)
+    }
+
+    const handleEdit = (taskID: number) => {
+        const task = handleTaskFind(taskID)
+        if (!task) return
+        setTaskData(task)
+        handleOpen()
+    }
+
+    const handleSubmit = async () => {
+        if (!taskData) return
+        try {
+            await mutation.mutateAsync(taskData)
+            enqueueSnackbar('Created successfully', { variant: 'success' })
+        } catch (error) {
+            enqueueSnackbar('Error', { variant: 'error' })
         }
-    ]
+    }
 
-    const todo = TaskList.filter(task => !task.completed)
-    const done = TaskList.filter(task => task.completed)
+    const handleUpdate = async () => {
+        try {
+            if (!taskData) return
+            await updateMutation.mutateAsync(taskData)
+            enqueueSnackbar('Updated successfully', { variant: 'success' })
+        } catch (error) {
+            enqueueSnackbar('Error', { variant: 'error' })
+        }
+    }
+
+    const handleDelete = (taskID: number) => {
+        try {
+            deleteMutation.mutate(taskID)
+            enqueueSnackbar('Deleted successfully', { variant: 'success' })
+        } catch (error) {
+            enqueueSnackbar('Error', { variant: 'error' })
+        }
+    }
+
+
+    const handleCompleteAll = async () => {
+        try {
+            await Promise.all(
+                todo.map(task =>
+                    fetch(`${TASKS_ENDPOINT}/${task.id}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ ...task, completed: true }),
+                    }).then(res => {
+                        if (!res.ok) throw new Error('Error actualizando tarea');
+                        return res.json();
+                    })
+                )
+            );
+            queryClient.invalidateQueries({ queryKey: [TASKS_ENDPOINT] });
+            enqueueSnackbar("Todas las tareas completadas", { variant: "success" });
+        } catch (error) {
+            enqueueSnackbar("Error completando tareas", { variant: "error" });
+        }
+    };
+
+
+    const handleDeleteCompleted = async () => {
+        try {
+            await Promise.all(done.map(task => deleteMutation.mutateAsync(task.id)));
+            queryClient.invalidateQueries({ queryKey: [TASKS_ENDPOINT] });
+            enqueueSnackbar('Tareas completadas eliminadas', { variant: 'success' });
+        } catch {
+            enqueueSnackbar('Error eliminando tareas', { variant: 'error' });
+        }
+    };
+
+    const handleDragStart = (e: DragStartEvent) => {
+        const { active } = e;
+        setActiveTaskID(String(active.id));
+    };
+
+    const handleDragEnd = (e: DragEndEvent) => {
+        const { active, over } = e;
+
+        if (!over || active.id === over.id) return;
+
+        const isMovingToDone = over.id === "done";
+        const movedTask = data?.find(t => t.id === Number(active.id));
+
+        if (!movedTask) return;
+
+        setActiveTaskID(null);
+
+        queryClient.setQueryData<Task[]>([TASKS_ENDPOINT], oldCache => {
+            if (!oldCache) return [];
+            return oldCache.map(task =>
+                task.id === movedTask.id ? { ...task, completed: isMovingToDone } : task
+            );
+        });
+
+        updateMutation.mutate({
+            ...movedTask,
+            completed: isMovingToDone ? true : false,
+        });
+    };
+
+    const handleTaskFind = (id: number) => {
+        return data?.find(task => task.id === id);
+    };
+
+    if (isLoading) return <Typography variant="h5">Loading...</Typography>;
+    if (error) return <Typography variant="h5">{(error as Error).message}</Typography>;
 
     return (
-        <>
-            <Typography variant="h4">Tasker</Typography>
-            <Grid container sx={{
-                width: '100%',
-                height: '100%',
-                justifyContent: 'space-evenly',
-                alignItems: 'center'
-            }}>
-                <Box sx={{ height: '80%', flex: 0.25, textAlign: 'center' }}>
+        <Box sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+        }}
+        >
+            <ConfirmDialog
+                open={openDialog}
+                onConfirm={() => {
+                    requestAction.current?.();
+                    handleCloseDialog();
+                }}
+                onCancel={() => setOpenDialog(false)}
+            />
+            <Modal open={open} onClose={handleClose} >
+                <TaskForm
+                    handleInputChange={handleInputChange}
+                    handleSubmit={(e) => {
+                        e.preventDefault();
+                        handleOpenDialogPayload(handleSubmit)
+                    }}
+                    formData={taskData ?? emptyTask}
+                    handleUpdate={(e) => {
+                        e.preventDefault();
+                        handleOpenDialogPayload(handleUpdate)
+                    }}
+                />
+            </Modal>
+            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
+                <Box sx={{ mb: 6, width: "90%", display: "flex", justifyContent: "space-between" }}>
+                    <Typography variant="h3">Tasker</Typography>
+                    <AddBtn onClick={() => { setTaskData(emptyTask); handleOpen(); }} />
+                </Box>
+                <Grid container sx={{ width: "90%", height: "100%", justifyContent: "space-between", alignItems: "center" }}>
+                    <TaskContainer
+                        id="todo"
+                        title="To Do"
+                        icon={<TaskAltSharp sx={{ fontSize: 30 }} />}
+                        tasks={todo}
+                        button={<ForwardSharp sx={{ fontSize: 50, cursor: "pointer" }} />}
+                        action={() => handleOpenDialogPayload(handleCompleteAll)}
+                        handleDelete={(id) => handleOpenDialogPayload(() => handleDelete(id))}
+                        handleEdit={(taskID) => handleEdit(taskID)}
+                        optionsTaskID={optionsTaskID}
+                        handleOptionsTaskID={(id) => handleOptionsTaskID(id)}
+                    />
                     <Box sx={{
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        gap: 1
-                        }}>
-                        <FormatListBulleted sx={{ fontSize: 40 }} />
-                        <Typography variant="h5">TO DO</Typography>
-                    </Box>
-                    <Paper sx={{
-                        height: '100%',
-                        pt: 4,
-                        pb: 4,
-                        px: 0,
-                        mt: 4,
-                        overflowY: 'scroll',
-                        display: 'flex',
-                        justifyContent: 'center'
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        flex: 0.25,
+                        textAlign: "center",
+                        color: "grey",
+                        opacity: 0.3,
+                        fontWeight: "lighter",
+                        gap: 4,
+                        p: 10,
+                        transition: "opacity 1s ease",
+                        '&:hover': { opacity: 1 }
                     }}>
-                        <Grid size={9} sx={{
-                            flex: .85,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 2
-                        }}>
-                            {todo.map((task, index) => (
-                                <TaskItem>
-                                    <Typography key={index} variant="h6">{task.title}</Typography>
-                                    <Typography key={index} variant="body1">{task.description}</Typography>
-                                </TaskItem>
-                            ))}
-                        </Grid>
-                    </Paper>
-                </Box>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 4,
-                    height: '100%',
-                    justifyContent: 'center',
-                }}>
-                    <ForwardSharp sx={{fontSize: 70}} />
-                    <ForwardSharp sx={{transform: 'rotate(180deg)', fontSize: 70}} />
-                </Box>
-                <Box sx={{ 
-                    height: '80%', 
-                    flex: 0.25, 
-                    textAlign: 'center' 
-                }}>
-                    <Box sx={{
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        gap: 1
-                        }}>
-                        <TaskAltSharp sx={{ fontSize: 40 }} />
-                        <Typography variant="h5">COMPLETED</Typography>
+                        <Typography variant="h6" fontSize={16}>
+                            Drag and drop tasks to move them between the completed or to do section
+                        </Typography>
+                        <Typography variant="h6" fontSize={16}>
+                            Press the <ForwardSharp sx={{ fontSize: 25, verticalAlign: 'bottom' }} /> button to complete all tasks
+                        </Typography>
+                        <Typography variant="h6" fontSize={16}>
+                            Press the <DeleteSweep sx={{ fontSize: 25, verticalAlign: 'bottom' }} /> button to delete all completed tasks
+                        </Typography>
                     </Box>
-                    <Paper sx={{
-                        height: '100%',
-                        pt: 4,
-                        pb: 4,
-                        px: 0,
-                        mt: 4,
-                        overflowY: 'scroll',
-                        display: 'flex',
-                        justifyContent: 'center'
-                    }}>
-                        <Grid size={9} sx={{
-                            flex: .85,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 2
-                        }}>
-                            {done.map((task, index) => (
-                                <TaskItem>
-                                    <Typography key={index} variant="h6">{task.title}</Typography>
-                                    <Typography key={index} variant="body1">{task.description}</Typography>
-                                </TaskItem>
-                            ))}
-                        </Grid>
+                    <TaskContainer
+                        id="done"
+                        title="Completed"
+                        icon={<FormatListBulleted sx={{ fontSize: 30 }} />}
+                        tasks={done}
+                        button={<DeleteSweep sx={{ fontSize: 50, cursor: "pointer" }} />}
+                        action={() => handleOpenDialogPayload(handleDeleteCompleted)}
+                        handleDelete={(taskID) => handleOpenDialogPayload(() => handleDelete(taskID))}
+                        handleEdit={(taskID) => handleEdit(taskID)}
+                        optionsTaskID={optionsTaskID}
+                        handleOptionsTaskID={(id) => handleOptionsTaskID(id)}
+                    />
+                </Grid>
+
+                <DragOverlay>
+                    <Paper sx={{ cursor: "grabbing" }}>
+                        {activeTaskID && <DraggableTask task={handleTaskFind(Number(activeTaskID))!} />}
                     </Paper>
-                </Box>
-            </Grid>
-        </>
+                </DragOverlay>
+            </DndContext>
+        </Box>
     );
 };
 
-export default Tasker;
+
+export default Tasker

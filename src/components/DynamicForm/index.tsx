@@ -81,7 +81,7 @@ const DynamicForm = <T extends Record<string, unknown>>(
                                     name={field.field}
                                     size='small'
                                     label={field.label}
-                                onChange={(e) => handleSelectChange!(e, field)}
+                                    onChange={(e) => handleSelectChange!(e, field)}
                                     value={
                                         field.multiple
                                             ? Array.isArray(formData[field.field])

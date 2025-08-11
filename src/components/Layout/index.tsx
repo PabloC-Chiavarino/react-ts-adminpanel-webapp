@@ -24,7 +24,7 @@ const Layout = () => {
                     flexDirection: 'column',
                     alignItems: 'center',
                     width: `calc(100% - ${drawerWidth}px)`,
-                    height: `calc(100vh - ${topBarHeight}px)`,
+                    height: `calc(100dvh - ${topBarHeight}px)`,
                     marginLeft: `${drawerWidth}px`,
                     paddingTop: `${topBarHeight}px`,
                 }}
