@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from '../components'
-import { Dashboard, Clients, Products, Invoices, Tasker } from '../pages'
+import { Dashboard, Clients, Products, Invoices, Tasker, Calendar } from '../pages'
 
 const Router = () => {
     return (
@@ -13,6 +13,7 @@ const Router = () => {
                 <Route path='products' element={<Products />} />
                 <Route path='invoices' element={<Invoices />} />
                 <Route path='tasker' element={<Tasker/>} />
+                <Route path='calendar' element={<Calendar />} />
             </Route>
         </Routes>
     )
