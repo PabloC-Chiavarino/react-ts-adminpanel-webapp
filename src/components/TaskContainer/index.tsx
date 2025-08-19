@@ -38,7 +38,7 @@ const TaskContainer = ({
             }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     {icon}
-                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{title}</Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 'bold', fontSize: '1.7rem' }}>{title}</Typography>
                 </Box>
                 <IconButton onClick={action} sx={{ transition: 'all .25s ease-in-out', '&:hover': { color: 'var(--primary)', backgroundColor: 'transparent' } }}>
                     {button}
@@ -46,7 +46,7 @@ const TaskContainer = ({
             </Box>
             <Paper sx={{
                 height: '85%',
-                overflowY: 'scroll',
+                overflowY: 'auto',
                 display: 'flex',
                 justifyContent: 'center'
             }}
@@ -59,7 +59,6 @@ const TaskContainer = ({
                     gap: 2,
                     padding: 2,
                     height: '100%',
-                    overflowY: 'scroll',
                     overflowX: 'hidden'
                 }}>
                     {tasks.map((task) => (

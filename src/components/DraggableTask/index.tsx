@@ -17,20 +17,15 @@ const DraggableTask = ({
     handleOptionsTaskID?: (taskID: number | null) => void
 }) => {
 
-    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
         id: task.id
     })
-
-    const position = {
-        transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined
-    }
 
     const TaskItem = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.grey[100],
         padding: theme.spacing(1),
         textAlign: 'center',
         flexShrink: 1,
-        transition: 'background-color 0.2s ease',
         '&:hover': {
             backgroundColor: theme.palette.grey[300],
         },
@@ -39,16 +34,15 @@ const DraggableTask = ({
     return (
         <TaskItem
             sx={{
-                opacity: isDragging ? 0 : 1,
+                opacity: isDragging ? 0.5 : 1,
                 position: 'relative',
-                transition: 'all 0.3s ease',
+                transition: 'opacity 0.3s ease, background-color 0.3s ease',
                 '&:hover .MuiIconButton-root': {
                     opacity: 1,
                     backgroundColor: 'transparent'
                 }
             }}
             ref={setNodeRef}
-            style={position}
             {...attributes}
             {...listeners}
         >
@@ -58,7 +52,7 @@ const DraggableTask = ({
                     left: 0,
                     top: 0,
                     opacity: 0,
-                    transition: 'all 0.3s ease',
+                    transition: 'color 0.3s ease',
                     '&:hover': {
                         color: 'black'
                     }

@@ -28,8 +28,8 @@ const Tasker = () => {
         completed: false,
     };
 
-    const todo = data?.filter(task => !task.completed && String(task.id) !== activeTaskID) || [];
-    const done = data?.filter(task => task.completed && String(task.id) !== activeTaskID) || [];
+    const todo = data?.filter(task => !task.completed) || [];
+    const done = data?.filter(task => task.completed) || [];
 
     const mutation = useMutation({
         mutationFn: async (task: Task) => {
@@ -298,7 +298,7 @@ const Tasker = () => {
                 </Grid>
 
                 <DragOverlay>
-                    <Paper sx={{ cursor: "grabbing" }}>
+                    <Paper sx={{ cursor: "grabbing", opacity: 0.5 }}>
                         {activeTaskID && <DraggableTask task={handleTaskFind(Number(activeTaskID))!} />}
                     </Paper>
                 </DragOverlay>
