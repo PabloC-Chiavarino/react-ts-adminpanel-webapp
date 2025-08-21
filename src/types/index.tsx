@@ -51,3 +51,11 @@ export type Event = {
   allDay?: boolean;
   color?: string;
 }
+
+export type ChartTypes = {
+  revenue: { month: string; revenue: number; cumulative: number }[];
+  orders: { month: string; orders: number }[];
+  clients: { month: string; clients: number }[];
+  mostSold: { product: string; quantity: number }[];
+  pendingTasks: { task: string; count: number }[];
+}
