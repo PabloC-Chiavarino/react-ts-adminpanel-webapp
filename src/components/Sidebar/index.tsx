@@ -34,8 +34,8 @@ export const Sidebar = () => {
 
     const analyticsMenuItems = [
         { text: 'Revenue', icon: <AttachMoney />, path: '/analytics/revenue' },
-        { text: 'Orders per Month', icon: <ShoppingBag />, path: '/analytics/orders-per-month' },
-        { text: 'Clients per Month', icon: <People />, path: '/analytics/clients-per-month' },
+        { text: 'Orders', icon: <ShoppingBag />, path: '/analytics/orders-per-month' },
+        { text: 'Clients', icon: <People />, path: '/analytics/clients-per-month' },
         { text: 'Most Sold', icon: <Star />, path: '/analytics/most-sold' },
         { text: 'Pending Tasks', icon: <PendingActions />, path: '/analytics/pending-tasks' },
     ]
