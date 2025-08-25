@@ -14,7 +14,6 @@ import {
     AttachMoney,
     Star,
     BarChart,
-    PendingActions,
     ShoppingBag,
     Badge
 } from '@mui/icons-material'
@@ -34,10 +33,9 @@ export const Sidebar = () => {
 
     const analyticsMenuItems = [
         { text: 'Revenue', icon: <AttachMoney />, path: '/analytics/revenue' },
-        { text: 'Orders', icon: <ShoppingBag />, path: '/analytics/orders-per-month' },
+        { text: 'Invoices', icon: <ShoppingBag />, path: '/analytics/invoices-per-month' },
         { text: 'Clients', icon: <People />, path: '/analytics/clients-per-month' },
         { text: 'Most Sold', icon: <Star />, path: '/analytics/most-sold' },
-        { text: 'Pending Tasks', icon: <PendingActions />, path: '/analytics/pending-tasks' },
     ]
 
     const drawerWidth = 240

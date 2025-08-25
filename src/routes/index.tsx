@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from '../components'
-import { Dashboard, Clients, Products, Invoices, Tasker, Calendar, Revenue, ClientsChart, Orders, MostSold, PendingTasks } from '../pages'
+import { Dashboard, Clients, Products, Invoices, Tasker, Calendar, Revenue, ClientsChart, InvoicesChart, MostSold } from '../pages'
 
 const Router = () => {
     return (
@@ -15,10 +15,9 @@ const Router = () => {
                 <Route path='tasker' element={<Tasker/>} />
                 <Route path='calendar' element={<Calendar />} />
                 <Route path='/analytics/revenue' element={<Revenue />} />
-                <Route path='/analytics/orders-per-month' element={<Orders />} />
+                <Route path='/analytics/invoices-per-month' element={<InvoicesChart />} />
                 <Route path='/analytics/clients-per-month' element={<ClientsChart />} />
                 <Route path='/analytics/most-sold' element={<MostSold />} />
-                <Route path='/analytics/pending-tasks' element={<PendingTasks />} />
             </Route>
         </Routes>
     )

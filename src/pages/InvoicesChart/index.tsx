@@ -3,14 +3,14 @@ import { useDynamicQuery } from "../../hooks"
 import type { ChartTypes } from "../../types"
 import { DynamicChart } from "../../components"
 
-const PendingTasks = () => {
+const InvoicesChart = () => {
     const CHARTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/charts'
     const { data, isLoading, error } = useDynamicQuery<ChartTypes>(CHARTS_ENDPOINT)
 
-    const chartData = { type: "pendingTasks", title: "Pending Tasks", data: data?.pendingTasks }
+    const chartData = { type: "invoices", title: "Monthly Invoices", data: data?.invoices }
 
     if (isLoading) return <Typography variant='h5'>Loading...</Typography>
-    if (!data) return <Typography variant='h5'>No products data</Typography>
+    if (!data) return <Typography variant='h5'>No orders data</Typography>
     if (error) return <Typography variant='h5'>{error.message}</Typography>
 
     return (
@@ -32,4 +32,4 @@ const PendingTasks = () => {
     )
 }
 
-export default PendingTasks
+export default InvoicesChart

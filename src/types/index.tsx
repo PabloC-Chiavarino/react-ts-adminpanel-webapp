@@ -53,9 +53,54 @@ export type Event = {
 }
 
 export type ChartTypes = {
-  revenue: { month: string; revenue: number; cumulative: number }[];
-  orders: { month: string; orders: number }[];
-  clients: { month: string; clients: number }[];
-  mostSold: { product: string; quantity: number }[];
-  pendingTasks: { task: string; count: number }[];
+  revenue: {
+    month: string;
+    revenue: number;
+    cumulative: number
+  }[];
+  products: {
+    month: string;
+    products: number
+  }[];
+  invoices: {
+    month: string;
+    orders: number
+  }[];
+  clients: {
+    month: string;
+    clients: number
+  }[];
+  mostSold: {
+    product: string;
+    quantity: number
+  }[];
 }
+
+export type DashCardTypes = {
+  clientsChange: {
+    value: number,
+    percent: number,
+    direction: "up" | "down" | "stable";
+  };
+  revenueChange: {
+    value: number,
+    percent: number,
+    direction: "up" | "down" | "stable";
+  };
+  invoicesChange: {
+    value: number,
+    percent: number,
+    direction: "up" | "down" | "stable";
+  };
+  productsInfo: {
+    total: number;
+  };
+  eventsInfo: {
+    upcoming: number;
+    next: string
+  }
+  topProducts: {
+    product: string;
+    quantity: number;
+  }[];
+};
