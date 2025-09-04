@@ -6,7 +6,7 @@ import type { Invoice, User, Product, Field } from '../../types'
 import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
-import { Box, Typography, Modal, IconButton, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText } from '@mui/material'
+import { Box, Typography, Modal, IconButton, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, CircularProgress } from '@mui/material'
 import { Delete, Visibility, PictureAsPdf } from '@mui/icons-material'
 import { ConfirmDialog, InvoiceForm, AddBtn } from '../../components'
 export const Invoices = () => {
@@ -194,7 +194,7 @@ export const Invoices = () => {
         { field: 'createdAt', headerName: 'Created At', width: 130, flex: .5 }
     ]
 
-    if (isLoading) return <Typography variant='h5'>Loading...</Typography>
+    if (isLoading) return <Typography variant='h5'><CircularProgress /></Typography>
     if (!data) return <Typography variant='h5'>No Invoices</Typography>
     if (error) return <Typography variant='h5'>{error.message}</Typography>
 

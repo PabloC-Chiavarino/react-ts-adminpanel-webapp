@@ -1,6 +1,6 @@
 import { type DragStartEvent, type DragEndEvent, DndContext, DragOverlay, closestCenter } from "@dnd-kit/core";
 import { TaskAltSharp, ForwardSharp, FormatListBulleted, DeleteSweep } from "@mui/icons-material";
-import { Typography, Box, Grid, Modal, Paper } from "@mui/material";
+import { Typography, Box, Grid, Modal, Paper, CircularProgress } from "@mui/material";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { useState, useRef } from "react";
@@ -206,7 +206,7 @@ const Tasker = () => {
         return data?.find(task => task.id === id);
     };
 
-    if (isLoading) return <Typography variant="h5">Loading...</Typography>;
+    if (isLoading) return <Typography variant="h5"><CircularProgress /></Typography>;
     if (error) return <Typography variant="h5">{(error as Error).message}</Typography>;
 
     return (

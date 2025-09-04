@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material"
+import { Box, Typography, CircularProgress } from "@mui/material"
 import { useDynamicQuery } from "../../hooks"
 import type { ChartTypes } from "../../types"
 import { DynamicChart } from "../../components"
@@ -11,7 +11,7 @@ const ClientsChart= () => {
 
     const chartData = { type: "clients", title: "Clients", data: data.clients }
 
-    if (isLoading) return <Typography variant='h5'>Loading...</Typography>
+    if (isLoading) return <Typography variant='h5'><CircularProgress /></Typography>
     if (!data) return <Typography variant='h5'>No clients data</Typography>
     if (error) return <Typography variant='h5'>{error.message}</Typography>
 

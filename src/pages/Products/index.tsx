@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid, type GridRenderCellParams } from '@mui/x-data-grid'
-import { Box, Typography, Modal, IconButton } from '@mui/material'
+import { Box, Typography, Modal, IconButton, CircularProgress } from '@mui/material'
 import { AddBtn, ConfirmDialog, ProductForm } from '../../components'
 import { Edit, Delete } from '@mui/icons-material'
 export const Products = () => {
@@ -176,7 +176,7 @@ export const Products = () => {
         { field: 'stock', headerName: 'Stock', width: 130, flex: .25 },
     ]
 
-    if (isLoading) return <Typography variant='h5'>Loading...</Typography>
+    if (isLoading) return <Typography variant='h5'><CircularProgress /></Typography>
     if (!data) return <Typography variant='h5'>No products</Typography>
     if (error) return <Typography variant='h5'>{error.message}</Typography>
 

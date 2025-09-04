@@ -2,6 +2,7 @@ import type { DashCardTypes, ChartTypes, Task } from "../../types";
 import { useDynamicQuery } from "../../hooks"
 import { Box, Paper, Typography, CircularProgress } from "@mui/material"
 import { ResponsiveContainer, LineChart, Line, Tooltip, XAxis, AreaChart, Area } from "recharts";
+import { TrendingDown, TrendingFlat, TrendingUp } from "@mui/icons-material";
 export const Dashboard = () => {
 
     const DASHCALCS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/dashCalcs';
@@ -88,8 +89,8 @@ export const Dashboard = () => {
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </Box>
-                                <Typography sx={{ mt: "auto", mb: "5px", mr: "10px", alignSelf: "end" }} variant="body1" color={dashData?.clientsChange.direction === "up" ? "green" : dashData?.clientsChange.direction === "down" ? "red" : "grey"}>
-                                    {dashData?.clientsChange.percent}% {dashData?.clientsChange.direction === "up" ? "⬆️" : dashData?.clientsChange.direction === "down" ? "⬇️" : "➡️"} last month
+                                <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px" }} variant="body1" color={dashData?.clientsChange.direction === "up" ? "green" : dashData?.clientsChange.direction === "down" ? "red" : "grey"}>
+                                    {dashData?.clientsChange.percent}% {dashData?.clientsChange.direction === "up" ? <TrendingUp /> : dashData?.clientsChange.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
                                 </Typography>
                             </>
                         )}
@@ -123,8 +124,8 @@ export const Dashboard = () => {
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </Box>
-                                <Typography sx={{ mt: "auto", mb: "5px", mr: "10px", alignSelf: "end" }} variant="body1" color={dashData?.invoicesChange.direction === "up" ? "green" : dashData?.invoicesChange.direction === "down" ? "red" : "grey"}>
-                                    {dashData?.invoicesChange.percent}% {dashData?.invoicesChange.direction === "up" ? "⬆️" : dashData?.invoicesChange.direction === "down" ? "⬇️" : "➡️"} last month
+                                <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px" }} variant="body1" color={dashData?.invoicesChange.direction === "up" ? "green" : dashData?.invoicesChange.direction === "down" ? "red" : "grey"}>
+                                    {dashData?.invoicesChange.percent}% {dashData?.invoicesChange.direction === "up" ? <TrendingUp /> : dashData?.invoicesChange.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
                                 </Typography>
                             </>
                         )}
@@ -147,8 +148,8 @@ export const Dashboard = () => {
                                         />
                                     </AreaChart>
                                 </ResponsiveContainer>
-                                <Typography sx={{ mt: "auto", mb: "5px", mr: "10px", alignSelf: "end" }} variant="body1" color={dashData?.revenueChange.direction === "up" ? "green" : dashData?.revenueChange.direction === "down" ? "red" : "grey"}>
-                                    {dashData?.revenueChange.percent} % {dashData?.revenueChange.direction === "up" ? "⬆️" : dashData?.revenueChange.direction === "down" ? "⬇️" : "➡️"} last month
+                                <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px" }} variant="body1" color={dashData?.revenueChange.direction === "up" ? "green" : dashData?.revenueChange.direction === "down" ? "red" : "grey"}>
+                                    {dashData?.revenueChange.percent} % {dashData?.revenueChange.direction === "up" ? <TrendingUp /> : dashData?.revenueChange.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
                                 </Typography>
                             </>
                         )}

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { Box, Grid, Modal, Typography } from "@mui/material";
-import { type SelectChangeEvent } from '@mui/material';
+import { type SelectChangeEvent, CircularProgress } from '@mui/material';
 import type { EventDropArg } from "@fullcalendar/core";
 import type { Event } from "../../types";
 import { useDynamicQuery } from "../../hooks";
@@ -220,7 +220,7 @@ const Calendar = () => {
         });
     };
 
-    if (isLoading) return <Typography variant="h5">Loading...</Typography>;
+    if (isLoading) return <Typography variant="h5"><CircularProgress /></Typography>;
     if (error) return <Typography variant="h5">{(error as Error).message}</Typography>;
 
     return (

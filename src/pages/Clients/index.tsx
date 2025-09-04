@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
-import { Box, Typography, Modal, IconButton } from '@mui/material'
+import { Box, Typography, Modal, IconButton, CircularProgress } from '@mui/material'
 import { Edit, Delete } from '@mui/icons-material'
 import { AddBtn, UserForm, ConfirmDialog } from '../../components'
 
@@ -181,7 +181,7 @@ const Clients = () => {
         { field: 'createdAt', headerName: 'Created At', width: 130, flex: .5 }
     ]
 
-    if (isLoading) return <Typography variant='h5'>Loading...</Typography>
+    if (isLoading) return <Typography variant='h5'><CircularProgress /></Typography>
     if (!data) return <Typography variant='h5'>No users</Typography>
     if (error) return <Typography variant='h5'>{error.message}</Typography>
 
