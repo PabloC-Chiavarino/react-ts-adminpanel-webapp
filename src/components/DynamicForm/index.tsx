@@ -53,7 +53,7 @@ const DynamicForm = <T extends Record<string, unknown>>(
                 pb: 5,
                 borderRadius: 2,
                 boxShadow: 3,
-                backgroundColor: '#fff',
+                backgroundColor: 'background.paper',
                 zIndex: 100,
             }}
         >
