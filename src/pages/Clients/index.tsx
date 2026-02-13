@@ -19,7 +19,7 @@ const Clients = () => {
     const USERS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/users'
     const queryClient = useQueryClient()
     const { enqueueSnackbar } = useSnackbar()
-    const { data, isLoading, error } = useDynamicQuery<User[]>(USERS_ENDPOINT)
+    const { data, isLoading, error } = useDynamicQuery<User[]>(['users'], USERS_ENDPOINT)
 
     const emptyClient: User = {
         id: 0,
@@ -32,13 +32,13 @@ const Clients = () => {
     }
 
     const mutation = useMutation({
-        mutationFn: async (product: User) => {
+        mutationFn: async (user: User) => {
             const response = await fetch(USERS_ENDPOINT, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(product)
+                body: JSON.stringify(user)
             })
 
             if (!response.ok) {
@@ -49,7 +49,7 @@ const Clients = () => {
 
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [USERS_ENDPOINT] })
+            queryClient.invalidateQueries({ queryKey: ['users'] })
             setClientData(emptyClient);
         },
         onError: (error) => {
@@ -58,13 +58,13 @@ const Clients = () => {
     })
 
     const updateMutation = useMutation({
-        mutationFn: async (product: User) => {
-            const response = await fetch(`${USERS_ENDPOINT}/${product.id}`, {
+        mutationFn: async (user: User) => {
+            const response = await fetch(`${USERS_ENDPOINT}/${user.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(product)
+                body: JSON.stringify(user)
             })
 
             if (!response.ok) {
@@ -75,7 +75,7 @@ const Clients = () => {
 
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [USERS_ENDPOINT] })
+            queryClient.invalidateQueries({ queryKey: ['users'] })
         },
         onError: (error) => {
             console.error(error)
@@ -93,7 +93,7 @@ const Clients = () => {
             return response.json()
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [USERS_ENDPOINT] })
+            queryClient.invalidateQueries({ queryKey: ['users'] })
         },
         onError: (error) => {
             console.error(error)
@@ -126,7 +126,8 @@ const Clients = () => {
     const handleSubmit = async () => {
         if (!clientData) return
         try {
-            await mutation.mutate(clientData)
+            await mutation.mutateAsync(clientData)
+            handleClose()
             enqueueSnackbar('Created successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -136,16 +137,17 @@ const Clients = () => {
     const handleUpdate = async () => {
         try {
             if (!clientData) return
-            await updateMutation.mutate(clientData)
+            await updateMutation.mutateAsync(clientData)
+            handleClose()
             enqueueSnackbar('Updated successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         try {
-            deleteMutation.mutate(clientData!.id)
+            await deleteMutation.mutateAsync(clientData!.id)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -209,7 +211,7 @@ const Clients = () => {
                 />
             </Modal>
             <Box sx={{
-                mb: 6,
+                mb: 3,
                 width: '90%',
                 display: 'flex',
                 justifyContent: 'space-between'
@@ -229,6 +231,11 @@ const Clients = () => {
                     width: '90%',
                     maxHeight: '80%',
                     userSelect: 'none',
+                    backgroundColor: 'background.paper',
+                    '& .MuiDataGrid-row:hover': {
+                        backgroundColor: 'secondary.main',
+                        color: 'primary.contrastText',
+                    },
                     '& .MuiDataGrid-cell:focus': {
                         outline: 'none',
                     },
@@ -236,10 +243,11 @@ const Clients = () => {
                         outline: 'none',
                     },
                     '& .MuiDataGrid-row.Mui-selected': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        backgroundColor: 'primary.main',
+                        color: 'primary.contrastText',
                     },
                     '& .MuiDataGrid-row.Mui-selected:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        backgroundColor: 'primary.main',
                     },
                 }}
             />

@@ -1,43 +1,32 @@
-import { AppBar, Toolbar, Box, IconButton, Avatar, InputBase } from '@mui/material'
-import { Brightness4, Notifications, Settings, Search } from '@mui/icons-material'
+import { SearchBox } from '../../components'
+import { AppBar, Toolbar, Box, IconButton, Avatar } from '@mui/material'
+import { Brightness4, Brightness7, Notifications, Settings } from '@mui/icons-material'
+import { useColorMode } from '../../context/ColorModeContext'
 
 const Topbar = () => {
-
+    const { mode, toggleColorMode } = useColorMode()
     const drawerWidth = 240
 
-    return(
-        <AppBar 
+    return (
+        <AppBar
             position='fixed'
             sx={{
                 width: `calc(100% - ${drawerWidth}px)`,
             }}
-            >
-            <Toolbar 
-                sx={{ 
+        >
+            <Toolbar
+                sx={{
                     justifyContent: 'space-between',
-                    backgroundColor: '',
+                    backgroundColor: 'background.default',
+                    transition: 'background-color 0.25s ease',
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
                 }}
-                >
-                <Box 
-                    sx={{ 
-                        display: 'flex',
-                        alignItems: 'center',
-                        border: '1px solid #ccc',
-                        borderRadius: '5px',
-                        width: '215px',
-                        height: '35px',
-                        backgroundColor: '#fff',
-                        padding: '0px 8px 0px 16px',
-                    }}
-                    >
-                    <InputBase placeholder='Search...' />
-                    <IconButton>
-                        <Search />
-                    </IconButton>
-                </Box>
+            >
+                <SearchBox />
                 <Box>
-                    <IconButton>
-                        <Brightness4 />
+                    <IconButton onClick={toggleColorMode}>
+                        {mode === 'dark' ? <Brightness4 /> : <Brightness7 />}
                     </IconButton>
                     <IconButton>
                         <Notifications />
@@ -50,7 +39,7 @@ const Topbar = () => {
                     </IconButton>
                 </Box>
             </Toolbar>
-        </AppBar>
+        </AppBar >
     )
 }
 

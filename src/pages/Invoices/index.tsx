@@ -24,9 +24,9 @@ export const Invoices = () => {
 
     const { enqueueSnackbar } = useSnackbar()
 
-    const { data, isLoading, error } = useDynamicQuery<Invoice[]>(INVOICES_ENDPOINT)
-    const { data: productsData, isLoading: productsIsLoading, error: productsError } = useDynamicQuery<Product[]>(PRODUCTS_ENDPOINT)
-    const { data: usersData, isLoading: usersIsLoading, error: usersError } = useDynamicQuery<User[]>(USERS_ENDPOINT)
+    const { data, isLoading, error } = useDynamicQuery<Invoice[]>(['invoices'], INVOICES_ENDPOINT)
+    const { data: productsData, isLoading: productsIsLoading, error: productsError } = useDynamicQuery<Product[]>(['products'], PRODUCTS_ENDPOINT)
+    const { data: usersData, isLoading: usersIsLoading, error: usersError } = useDynamicQuery<User[]>(['users'], USERS_ENDPOINT)
 
     const emptyInvoice: Invoice = {
         id: 0,
@@ -65,17 +65,17 @@ export const Invoices = () => {
     const handleSelectChange = (e: SelectChangeEvent<string | string[]>, field: Field) => {
         const { name, value } = e.target;
         const isMultiple = field?.multiple || false
-        
-        
+
+
         setInvoiceData(prev => {
             if (!prev) return prev;
             return {
                 ...prev,
                 [name]: isMultiple ? (
                     Array.isArray(value) ?
-                    value.map(Number)
-                    :
-                    [Number(value)]
+                        value.map(Number)
+                        :
+                        [Number(value)]
                 ) : (
                     Number(value)
                 ),
@@ -100,7 +100,7 @@ export const Invoices = () => {
             return response.json()
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [INVOICES_ENDPOINT] })
+            queryClient.invalidateQueries({ queryKey: ['invoices'] })
         },
         onError: (error) => {
             console.error(error)
@@ -125,7 +125,7 @@ export const Invoices = () => {
 
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [INVOICES_ENDPOINT] })
+            queryClient.invalidateQueries({ queryKey: ['invoices'] })
             setInvoiceData(emptyInvoice);
         },
         onError: (error) => {
@@ -137,7 +137,7 @@ export const Invoices = () => {
         if (!invoiceData) return
 
         try {
-            await mutation.mutate(invoiceData)
+            await mutation.mutateAsync(invoiceData)
             enqueueSnackbar('Created successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -145,9 +145,9 @@ export const Invoices = () => {
     }
 
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         try {
-            deleteMutation.mutate(invoiceData!.id)
+            await deleteMutation.mutateAsync(invoiceData!.id)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -283,7 +283,7 @@ export const Invoices = () => {
                 )}
             </Modal>
             <Box sx={{
-                mb: 6,
+                mb: 3,
                 width: '90%',
                 display: 'flex',
                 justifyContent: 'space-between'
@@ -301,6 +301,11 @@ export const Invoices = () => {
                     width: '90%',
                     maxHeight: '80%',
                     userSelect: 'none',
+                    backgroundColor: 'background.paper',
+                    '& .MuiDataGrid-row:hover': {
+                        backgroundColor: 'secondary.main',
+                        color: 'primary.contrastText',
+                    },
                     '& .MuiDataGrid-cell:focus': {
                         outline: 'none',
                     },
@@ -308,10 +313,11 @@ export const Invoices = () => {
                         outline: 'none',
                     },
                     '& .MuiDataGrid-row.Mui-selected': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        backgroundColor: 'primary.main',
+                        color: 'primary.contrastText',
                     },
                     '& .MuiDataGrid-row.Mui-selected:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        backgroundColor: 'primary.main',
                     },
                 }}
             />

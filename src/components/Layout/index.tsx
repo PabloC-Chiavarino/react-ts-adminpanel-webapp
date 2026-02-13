@@ -5,16 +5,16 @@ import '../../index.css'
 
 const Layout = () => {
 
-    const {pathname} = useLocation()
+    const { pathname } = useLocation()
 
     const drawerWidth = 240
-    const topBarHeight = 64
+    const topBarHeight = 35
 
     return (
         <Box className='fade-in' sx={{ display: 'flex' }}>
             <Topbar />
             <Sidebar />
-            <Box 
+            <Box
                 key={pathname}
                 className='fade-in'
                 component="main"

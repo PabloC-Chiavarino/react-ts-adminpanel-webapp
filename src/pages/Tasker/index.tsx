@@ -19,7 +19,7 @@ const Tasker = () => {
     const TASKS_ENDPOINT = "https://mock-data-api-vntk.onrender.com/tasks";
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
-    const { data, isLoading, error } = useDynamicQuery<Task[]>(TASKS_ENDPOINT);
+    const { data, isLoading, error } = useDynamicQuery<Task[]>(['tasks'], TASKS_ENDPOINT);
 
     const emptyTask: Task = {
         id: 0,
@@ -42,13 +42,14 @@ const Tasker = () => {
             return response.json();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [TASKS_ENDPOINT] });
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
             setTaskData(emptyTask);
         },
     });
 
     const updateMutation = useMutation({
-        mutationFn: async (task: Task) => {
+
+    mutationFn: async (task: Task) => {
             const response = await fetch(`${TASKS_ENDPOINT}/${task.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -57,16 +58,31 @@ const Tasker = () => {
             if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
             return response.json();
         },
-        onSuccess: (data) => {
-            queryClient.setQueryData<Task[]>([TASKS_ENDPOINT], oldCache => {
-                if (!oldCache) return [];
-                return oldCache.map(task =>
-                    task.id === data.id ? data : task
-                );
-            });
-            enqueueSnackbar('Updated successfully', { variant: 'success' });
-        },
-    });
+
+    onMutate: async (updatedTask) => {
+
+        await queryClient.cancelQueries({ queryKey: ['tasks'] });
+        
+        const previousTasks = queryClient.getQueryData<Task[]>(['tasks']);
+
+        queryClient.setQueryData<Task[]>(['tasks'], old =>
+            old?.map(task =>
+                task.id === updatedTask.id ? updatedTask : task
+            )
+        );
+
+        return { previousTasks };
+    },
+    onError: (_err, _updatedTask, context) => {
+        if (context?.previousTasks) {
+            queryClient.setQueryData(['tasks'], context.previousTasks);
+        }
+    },
+    onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    }
+});
+
 
     const deleteMutation = useMutation({
         mutationFn: async (id: number) => {
@@ -77,7 +93,7 @@ const Tasker = () => {
             return response.json();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [TASKS_ENDPOINT] });
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
         },
     });
 
@@ -130,9 +146,9 @@ const Tasker = () => {
         }
     }
 
-    const handleDelete = (taskID: number) => {
+    const handleDelete = async (taskID: number) => {
         try {
-            deleteMutation.mutate(taskID)
+            await deleteMutation.mutateAsync(taskID)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -154,7 +170,7 @@ const Tasker = () => {
                     })
                 )
             );
-            queryClient.invalidateQueries({ queryKey: [TASKS_ENDPOINT] });
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
             enqueueSnackbar("Todas las tareas completadas", { variant: "success" });
         } catch (error) {
             enqueueSnackbar("Error completando tareas", { variant: "error" });
@@ -165,7 +181,7 @@ const Tasker = () => {
     const handleDeleteCompleted = async () => {
         try {
             await Promise.all(done.map(task => deleteMutation.mutateAsync(task.id)));
-            queryClient.invalidateQueries({ queryKey: [TASKS_ENDPOINT] });
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
             enqueueSnackbar('Tareas completadas eliminadas', { variant: 'success' });
         } catch {
             enqueueSnackbar('Error eliminando tareas', { variant: 'error' });
@@ -180,25 +196,27 @@ const Tasker = () => {
     const handleDragEnd = (e: DragEndEvent) => {
         const { active, over } = e;
 
-        if (!over || active.id === over.id) return;
+        setActiveTaskID(null);
+        
+        if (!over) return;
 
-        const isMovingToDone = over.id === "done";
+        const newCompletedState = over.id === "done";
         const movedTask = data?.find(t => t.id === Number(active.id));
 
         if (!movedTask) return;
 
-        setActiveTaskID(null);
+        if (movedTask.completed === newCompletedState) return
 
-        queryClient.setQueryData<Task[]>([TASKS_ENDPOINT], oldCache => {
+        queryClient.setQueryData<Task[]>(['tasks'], oldCache => {
             if (!oldCache) return [];
             return oldCache.map(task =>
-                task.id === movedTask.id ? { ...task, completed: isMovingToDone } : task
+                task.id === movedTask.id ? { ...task, completed: newCompletedState } : task
             );
         });
 
         updateMutation.mutate({
             ...movedTask,
-            completed: isMovingToDone ? true : false,
+            completed: newCompletedState,
         });
     };
 

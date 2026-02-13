@@ -5,7 +5,7 @@ import { DynamicChart } from "../../components"
 
 const ClientsChart= () => {
     const CHARTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/charts'
-    const { data, isLoading, error } = useDynamicQuery<ChartTypes>(CHARTS_ENDPOINT)
+    const { data, isLoading, error } = useDynamicQuery<ChartTypes>(['charts'], CHARTS_ENDPOINT)
 
     if (!data) return
 

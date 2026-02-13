@@ -16,12 +16,12 @@ const DraggableEvent = ({
     handleOptionsEventID?: (EventID: number | null) => void,
 }) => {
     const DraggableEvent = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.grey[100],
+        backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(1),
         textAlign: 'center',
         flexShrink: 1,
         '&:hover': {
-            backgroundColor: theme.palette.grey[300],
+            backgroundColor: theme.palette.secondary.main,
         },
     }))
     return (
@@ -37,11 +37,18 @@ const DraggableEvent = ({
                 flexDirection: 'column',
                 alignItems: 'center',
                 position: 'relative',
-                transition: 'opacity 0.3s ease, background-color 0.3s ease',
+                transition: 'opacity 0.25s ease, background-color 0.25s ease',
+                cursor: 'grab',
+                '&:hover': {
+                    color: 'primary.contrastText'
+                },
                 '&:hover .MuiIconButton-root': {
                     opacity: 1,
-                    backgroundColor: 'transparent'
-                }
+                    backgroundColor: 'transparent',
+                    color: 'primary.contrastText'
+                },
+                boxShadow: '2px 2px 0px 1px rgba(0,0,0,0.6)',
+                border: '1px solid rgba(255,255,255,0.05)',
             }}
             className='draggableEl'
         >
@@ -51,7 +58,7 @@ const DraggableEvent = ({
                     left: 0,
                     top: 0,
                     opacity: 0,
-                    transition: 'color 0.2s ease',
+                    transition: 'color 0.25s ease',
                     '&:hover': {
                         color: 'black'
                     }

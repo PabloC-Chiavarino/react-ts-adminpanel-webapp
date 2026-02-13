@@ -75,13 +75,17 @@ export const Sidebar = () => {
                         to={path}
                         selected={location.pathname === path}
                         sx={{
-                            '&.Mui-selected': {
-                                backgroundColor: '#1976d2',
-                                color: '#fff'
+                            letterSpacing: 1,
+                            '&:hover': {
+                                backgroundColor: 'secondary.main',
+                                color: 'primary.contrastText',
                             },
-                            '&.Mui-selected:hover': {
-                                backgroundColor: '#1976d2',
-                                color: '#fff'
+                            '&.Mui-selected': {
+                                backgroundColor: 'primary.main',
+                                color: 'primary.contrastText',
+                                '&:hover': {
+                                    backgroundColor: 'primary.main',
+                                },
                             },
                             pt: 2,
                             pb: 2
@@ -92,7 +96,20 @@ export const Sidebar = () => {
                     </ListItemButton>
                 ))}
 
-                <ListItemButton onClick={() => setAnalyticsOpen(!analyticsOpen)}>
+                <ListItemButton
+                    onClick={() => setAnalyticsOpen(!analyticsOpen)}
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: 'secondary.main',
+                            color: 'primary.contrastText',
+                            '& .MuiListItemIcon-root': {
+                                color: 'primary.contrastText'
+                            }
+                        },
+                        pt: 2,
+                        pb: 2
+                    }}
+                >
                     <ListItemIcon><BarChart /></ListItemIcon>
                     <ListItemText primary='Analytics' />
                     {analyticsOpen ? <ExpandLess /> : <ExpandMore />}
@@ -108,7 +125,26 @@ export const Sidebar = () => {
                                 sx={{
                                     pl: 4,
                                     pt: 2,
-                                    pb: 2
+                                    pb: 2,
+                                    '&:hover': {
+                                        backgroundColor: 'secondary.main',
+                                        color: 'primary.contrastText',
+                                        '& .MuiListItemIcon-root': {
+                                            color: 'primary.contrastText'
+                                        }
+                                    },
+                                    '&.Mui-selected': {
+                                        backgroundColor: 'primary.main',
+                                        color: 'primary.contrastText',
+                                        fontWeight: 'bold',
+                                        '&:hover': {
+                                            backgroundColor: 'secondary.main',
+                                            color: 'primary.contrastText',
+                                        },
+                                        '& .MuiListItemIcon-root': {
+                                            color: 'primary.contrastText'
+                                        }
+                                    },
                                 }}
                             >
                                 <ListItemIcon>{icon}</ListItemIcon>

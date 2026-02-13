@@ -22,7 +22,7 @@ const Calendar = () => {
     const EVENTS_ENDPOINT = "https://mock-data-api-vntk.onrender.com/events";
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
-    const { data, isLoading, error } = useDynamicQuery<Event[]>(EVENTS_ENDPOINT);
+    const { data, isLoading, error } = useDynamicQuery<Event[]>(['events'], EVENTS_ENDPOINT);
 
     const emptyEvent: Event = {
         id: 0,
@@ -73,7 +73,7 @@ const Calendar = () => {
             return response.json();
         },
         onSuccess: (data) => {
-            queryClient.setQueryData<Event[]>([EVENTS_ENDPOINT], oldCache => {
+            queryClient.setQueryData<Event[]>(['events'], oldCache => {
                 if (!oldCache) return [];
                 return oldCache.map(task =>
                     task.id === data.id ? data : task
@@ -92,7 +92,7 @@ const Calendar = () => {
             return response.json();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [EVENTS_ENDPOINT] });
+            queryClient.invalidateQueries({ queryKey: ['events'] });
         },
     });
 
@@ -203,7 +203,7 @@ const Calendar = () => {
             endDate,
         };
 
-        queryClient.setQueryData<Event[]>([EVENTS_ENDPOINT], oldCache => {
+        queryClient.setQueryData<Event[]>(['events'], oldCache => {
             if (!oldCache) return [];
             return oldCache.map(event =>
                 event.id === eventID ? { ...event, startDate, endDate } : event
@@ -215,7 +215,7 @@ const Calendar = () => {
                 // Solo tiene revert si es EventDropArg
                 if ("revert" in info) info.revert();
                 enqueueSnackbar('Error', { variant: 'error' });
-                queryClient.setQueryData<Event[]>([EVENTS_ENDPOINT], previousEvents);
+                queryClient.setQueryData<Event[]>(['events'], previousEvents);
             }
         });
     };

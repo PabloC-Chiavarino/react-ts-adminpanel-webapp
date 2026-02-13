@@ -1,17 +1,26 @@
 import type { DashCardTypes, ChartTypes, Task } from "../../types";
 import { useDynamicQuery } from "../../hooks"
-import { Box, Paper, Typography, CircularProgress } from "@mui/material"
+import { Box, Paper, Typography, CircularProgress, List, ListItem, ListItemIcon } from "@mui/material"
 import { ResponsiveContainer, LineChart, Line, Tooltip, XAxis, AreaChart, Area } from "recharts";
-import { TrendingDown, TrendingFlat, TrendingUp } from "@mui/icons-material";
+import { TrendingDown, TrendingFlat, TrendingUp, Inventory, EmojiEvents, People, Receipt, MonetizationOn, Event, Assignment, FiberManualRecord, CircleOutlined } from "@mui/icons-material";
 export const Dashboard = () => {
 
     const DASHCALCS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/dashCalcs';
     const CHARTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/charts';
     const TASKS_ENDPOINT = "https://mock-data-api-vntk.onrender.com/tasks";
 
-    const { data: dashData, isLoading: dashLoading, error: dashError } = useDynamicQuery<DashCardTypes>(DASHCALCS_ENDPOINT)
-    const { data: chartsData, isLoading: chartsLoading, error: chartsdashError } = useDynamicQuery<ChartTypes>(CHARTS_ENDPOINT)
-    const { data: tasksData, isLoading: tasksLoading, error: tasksError } = useDynamicQuery<Task[]>(TASKS_ENDPOINT)
+    const { data: dashData, isLoading: dashLoading, error: dashError } = useDynamicQuery<DashCardTypes>(['calcs'], DASHCALCS_ENDPOINT)
+    const { data: chartsData, isLoading: chartsLoading, error: chartsdashError } = useDynamicQuery<ChartTypes>(['charts'], CHARTS_ENDPOINT)
+    const { data: tasksData, isLoading: tasksLoading, error: tasksError } = useDynamicQuery<Task[]>(['tasks'], TASKS_ENDPOINT)
+
+    const commonCardStyle = {
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: "16px",
+        bgcolor: "background.paper",
+        boxShadow: "5px 5px 5px 0 rgba(0, 0, 0, 0.36)",
+        border: "1px solid rgba(255, 255, 255, 0.05)"
+    };
 
     return (
         <Box sx={{
@@ -23,7 +32,7 @@ export const Dashboard = () => {
             alignItems: "center",
         }}>
             <Box sx={{ width: "90%", mb: 6 }}>
-                <Typography variant="h3" sx={{ fontWeight: "bold" }}>Dashboard</Typography>
+                <Typography variant="h4" sx={{ fontWeight: "bold" }}>Dashboard</Typography>
                 {dashError && <Typography variant="h5">{dashError.message}</Typography>}
                 {chartsdashError && <Typography variant="h5">{chartsdashError.message}</Typography>}
                 {tasksError && <Typography variant="h5">{tasksError.message}</Typography>}
@@ -37,40 +46,90 @@ export const Dashboard = () => {
                     gridTemplateColumns: "1fr 1fr 1fr 1fr",
                     gridTemplateRows: "1fr 1fr 1fr",
                 }}>
-                <Paper sx={{ gridColumn: "1", gridRow: "1", display: "flex", flexDirection: "column" }}>
-                    <Typography variant="h4" sx={{ fontWeight: "bold", mt: "15px", alignSelf: "center" }}>Total Products</Typography>
+                <Paper sx={{ ...commonCardStyle, gridColumn: "1", gridRow: "1" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingInline: "20px", mt: "15px" }}>
+                        <Typography variant="h5" sx={{ fontSize: "24px", fontWeight: "bold", letterSpacing: "1px" }}>
+                            Total Products
+                        </Typography>
+                        <Inventory sx={{ fontSize: "30px", color: "#00e5ff" }} />
+                    </Box>
                     {chartsLoading || dashLoading ?
                         <CircularProgress sx={{ mt: "40px", alignSelf: "center" }} />
                         : (
-                            <Typography variant="h6" sx={{ mt: "0px", ml: "15px", alignSelf: "center" }}>
-                                {dashData?.productsInfo.total === 0 ? 'No listed products' : <Typography sx={{ fontWeight: "bold", fontSize: "80px" }}>{dashData?.productsInfo.total}</Typography>}
-                            </Typography>
-                        )}
-                </Paper>
-                <Paper sx={{ gridColumn: "2", gridRow: "1", display: "flex", flexDirection: "column" }}>
-                    <Typography variant="h4" sx={{ fontWeight: "bold", mt: "15px", alignSelf: "center" }}>TOP 3</Typography>
-                    {dashLoading ?
-                        <CircularProgress sx={{ mt: "40px", alignSelf: "center" }} />
-                        : (
-                            <Box sx={{ mt: "20px", ml: "15px", position: "relative" }}>
-                                {dashData?.productsInfo.total === 0 ? 'No listed products' : dashData?.topProducts.slice(0, 3)
-                                    .map((prod, i) => (
-                                        <Typography key={i} variant="h6" sx={{ position: "relative" }}>
-                                            {prod.product}: <Typography sx={{ fontWeight: "bold", fontSize: "28px", position: "absolute", right: "50px", top: "-8px" }}>{prod.quantity}</Typography>
-                                        </Typography>
-                                    ))}
+                            <Box sx={{ mt: "5px", ml: "15px", alignSelf: "center" }}>
+                                {dashData?.productsInfo.total === 0 ? 'No listed products' : <Typography sx={{ fontWeight: "bold", fontSize: "65px" }}>{dashData?.productsInfo.total}</Typography>}
                             </Box>
                         )}
                 </Paper>
-                <Paper sx={{ gridColumn: "3", gridRow: "1", display: "flex", flexDirection: "column" }}>
-                    <Typography variant="h4" sx={{ fontWeight: "bold", mt: "15px", alignSelf: "center" }}>Clients</Typography>
+                <Paper sx={{ ...commonCardStyle, gridColumn: "2", gridRow: "1" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingInline: "20px", mt: "15px" }}>
+                        <Typography variant="h5" sx={{ fontSize: "24px", fontWeight: "bold", letterSpacing: "1px" }}>
+                            TOP 3
+                        </Typography>
+                        <EmojiEvents sx={{ fontSize: "30px", color: "#ffd700" }} />
+                    </Box>
+                    {dashLoading ?
+                        <CircularProgress sx={{ mt: "40px", alignSelf: "center" }} />
+                        : (
+                            <Box sx={{ paddingInline: "10px", mt: "10px" }}>
+                                <List dense>
+                                    {dashData?.productsInfo.total === 0 ? 'No listed products' : dashData?.topProducts.slice(0, 3)
+                                        .map((prod, i) => (
+                                            <ListItem key={i}>
+                                                <ListItemIcon>
+                                                    <FiberManualRecord sx={{ color: 'primary.main', fontSize: "15px" }} />
+                                                </ListItemIcon>
+                                                <Box sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    width: '100%'
+                                                }}>
+                                                    <Typography fontSize="18px">
+                                                        {prod.product}
+                                                    </Typography>
+                                                    <Typography fontWeight="bold" fontSize="22px">
+                                                        {prod.quantity}
+                                                    </Typography>
+                                                </Box>
+                                            </ListItem>
+                                        ))}
+                                </List>
+                            </Box>
+                        )}
+                </Paper>
+                <Paper sx={{ ...commonCardStyle, gridColumn: "3", gridRow: "1" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingInline: "20px", mt: "15px" }}>
+                        <Typography variant="h5" sx={{ fontSize: "24px", fontWeight: "bold", letterSpacing: "1px" }}>
+                            Clients
+                        </Typography>
+                        <People sx={{ fontSize: "30px", color: "#d500f9" }} />
+                    </Box>
                     {chartsLoading || dashLoading ?
                         <CircularProgress sx={{ mt: "40px", alignSelf: "center" }} />
                         : (
                             <>
-                                <Typography variant="h6" sx={{ mt: "20px", ml: "15px", position: "relative" }}>
-                                    New clients: {dashData?.clientsChange.value === 0 ? 'No new clients' : <Typography sx={{ fontWeight: "bold", fontSize: "80px", position: "absolute", right: "50px", top: "-25px" }}>{dashData?.clientsChange.value}</Typography>}
-                                </Typography>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        width: "100%",
+                                        paddingInline: "20px",
+                                    }}
+                                >
+                                    <Box sx={{ gap: "10px", display: "flex", alignItems: "center" }}>
+                                        <FiberManualRecord sx={{ color: 'primary.main', fontSize: "12px" }} />
+                                        <Typography fontSize="18px">
+                                            New clients
+                                        </Typography>
+                                    </Box>
+                                    <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                        {dashData?.clientsChange.value === 0
+                                            ? "No new clients"
+                                            : dashData?.clientsChange.value}
+                                    </Typography>
+                                </Box>
                                 <Box
                                     sx={{
                                         mt: "auto",
@@ -78,7 +137,6 @@ export const Dashboard = () => {
                                         width: "45%",
                                         height: "100%",
                                         position: "relative",
-                                        top: "16px",
                                     }}
                                 >
                                     <ResponsiveContainer width="100%" height="100%">
@@ -89,21 +147,46 @@ export const Dashboard = () => {
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </Box>
-                                <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px" }} variant="body1" color={dashData?.clientsChange.direction === "up" ? "green" : dashData?.clientsChange.direction === "down" ? "red" : "grey"}>
-                                    {dashData?.clientsChange.percent}% {dashData?.clientsChange.direction === "up" ? <TrendingUp /> : dashData?.clientsChange.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
-                                </Typography>
+                                <Box sx={{ alignSelf: "end" }}>
+                                    <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px", fontSize: "15px" }} variant="body1" color={dashData?.clientsChange.direction === "up" ? "green" : dashData?.clientsChange.direction === "down" ? "red" : "grey"}>
+                                        {dashData?.clientsChange.percent}% {dashData?.clientsChange.direction === "up" ? <TrendingUp /> : dashData?.clientsChange.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
+                                    </Typography>
+                                </Box>
                             </>
                         )}
                 </Paper>
-                <Paper sx={{ gridColumn: "4", gridRow: "1", display: "flex", flexDirection: "column" }}>
-                    <Typography variant="h4" sx={{ fontWeight: "bold", mt: "15px", alignSelf: "center" }}>Invoices</Typography>
+                <Paper sx={{ ...commonCardStyle, gridColumn: "4", gridRow: "1" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingInline: "20px", mt: "15px" }}>
+                        <Typography variant="h5" sx={{ fontSize: "24px", fontWeight: "bold", letterSpacing: "1px" }}>
+                            Invoices
+                        </Typography>
+                        <Receipt sx={{ fontSize: "30px", color: "#ff9100" }} />
+                    </Box>
                     {chartsLoading || dashLoading ?
                         <CircularProgress sx={{ mt: "40px", alignSelf: "center" }} />
                         : (
                             <>
-                                <Typography variant="h6" sx={{ mt: "20px", ml: "15px", position: "relative" }}>
-                                    New invoices: {dashData?.invoicesChange.value === 0 ? 'No new invoices' : <Typography sx={{ fontWeight: "bold", fontSize: "80px", position: "absolute", right: "50px", top: "-25px" }}>{dashData?.invoicesChange.value}</Typography>}
-                                </Typography>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        width: "100%",
+                                        paddingInline: "20px",
+                                    }}
+                                >
+                                    <Box sx={{ gap: "10px", display: "flex", alignItems: "center" }}>
+                                        <FiberManualRecord sx={{ color: 'primary.main', fontSize: "12px" }} />
+                                        <Typography fontSize="18px">
+                                            New invoices
+                                        </Typography>
+                                    </Box>
+                                    <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                        {dashData?.invoicesChange.value === 0
+                                            ? "No new invoices"
+                                            : dashData?.invoicesChange.value}
+                                    </Typography>
+                                </Box>
                                 <Box
                                     sx={{
                                         mt: "auto",
@@ -111,7 +194,6 @@ export const Dashboard = () => {
                                         width: "45%",
                                         height: "100%",
                                         position: "relative",
-                                        top: "16px",
                                     }}
                                 >
                                     <ResponsiveContainer width="100%" height="100%">
@@ -124,21 +206,48 @@ export const Dashboard = () => {
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </Box>
-                                <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px" }} variant="body1" color={dashData?.invoicesChange.direction === "up" ? "green" : dashData?.invoicesChange.direction === "down" ? "red" : "grey"}>
-                                    {dashData?.invoicesChange.percent}% {dashData?.invoicesChange.direction === "up" ? <TrendingUp /> : dashData?.invoicesChange.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
-                                </Typography>
+                                <Box sx={{ alignSelf: "end" }}>
+                                    <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px", fontSize: "15px" }} variant="body1" color={dashData?.invoicesChange.direction === "up" ? "green" : dashData?.invoicesChange.direction === "down" ? "red" : "grey"}>
+                                        {dashData?.invoicesChange.percent}% {dashData?.invoicesChange.direction === "up" ? <TrendingUp /> : dashData?.invoicesChange.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
+                                    </Typography>
+                                </Box>
                             </>
                         )}
                 </Paper>
-                <Paper sx={{ gridColumn: "1 / span 2", gridRow: "2 / span 3", display: "flex", flexDirection: "column" }}>
-                    <Typography variant="h4" sx={{ fontWeight: "bold", mt: "15px", alignSelf: "center" }}>Revenues</Typography>
+                <Paper sx={{ ...commonCardStyle, gridColumn: "1 / span 2", gridRow: "2 / span 3" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingInline: "20px", mt: "15px" }}>
+                        <Typography variant="h5" sx={{ fontSize: "24px", fontWeight: "bold", letterSpacing: "1px" }}>
+                            Revenues
+                        </Typography>
+                        <MonetizationOn sx={{ fontSize: "30px", color: "#00e676" }} />
+                    </Box>
                     {chartsLoading || dashLoading ?
                         <CircularProgress sx={{ mt: "150px", alignSelf: "center" }} />
                         : (
                             <>
-                                <Typography variant="h5" sx={{ mt: "50px", ml: "30px", mb: "55px", position: "relative" }}>
-                                    Month Revenue: {dashData?.revenueChange.value === 0 ? 'No revenues this month' : <Typography sx={{ fontWeight: "bold", fontSize: "80px", position: "absolute", right: "50px", top: "-30px" }}>{dashData?.revenueChange.value}</Typography>}
-                                </Typography>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        width: "100%",
+                                        paddingInline: "20px",
+                                        mt: "15px",
+                                        mb: "15px"
+                                    }}
+                                >
+                                    <Box sx={{ gap: "10px", display: "flex", alignItems: "center" }}>
+                                        <FiberManualRecord sx={{ color: 'primary.main', fontSize: "12px" }} />
+                                        <Typography fontSize="18px">
+                                            Month Revenue
+                                        </Typography>
+                                    </Box>
+                                    <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                        {dashData?.revenueChange.value === 0
+                                            ? "No revenues this month"
+                                            : `$${dashData?.revenueChange.value}`}
+                                    </Typography>
+                                </Box>
                                 <ResponsiveContainer width="100%" height="100%">
                                     <AreaChart data={chartsData?.revenue}>
                                         <XAxis dataKey="month" hide />
@@ -148,9 +257,11 @@ export const Dashboard = () => {
                                         />
                                     </AreaChart>
                                 </ResponsiveContainer>
-                                <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px" }} variant="body1" color={dashData?.revenueChange.direction === "up" ? "green" : dashData?.revenueChange.direction === "down" ? "red" : "grey"}>
-                                    {dashData?.revenueChange.percent} % {dashData?.revenueChange.direction === "up" ? <TrendingUp /> : dashData?.revenueChange.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
-                                </Typography>
+                                <Box sx={{ alignSelf: "end" }}>
+                                    <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px", fontSize: "15px" }} variant="body1" color={dashData?.revenueChange.direction === "up" ? "green" : dashData?.revenueChange.direction === "down" ? "red" : "grey"}>
+                                        {dashData?.revenueChange.percent} % {dashData?.revenueChange.direction === "up" ? <TrendingUp /> : dashData?.revenueChange.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
+                                    </Typography>
+                                </Box>
                             </>
                         )}
                 </Paper>
@@ -162,45 +273,92 @@ export const Dashboard = () => {
                         gridTemplateRows: "1fr 1fr",
                         gap: 2,
                     }}>
-                    <Paper sx={{ display: "flex", flexDirection: "column" }}>
-                        <Typography variant="h4" sx={{ fontWeight: "bold", mt: "15px", alignSelf: "center" }}>Events</Typography>
+                    <Paper sx={{ ...commonCardStyle }}>
+                        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingInline: "20px", mt: "15px" }}>
+                            <Typography variant="h5" sx={{ fontSize: "24px", fontWeight: "bold", letterSpacing: "1px" }}>
+                                Events
+                            </Typography>
+                            <Event sx={{ fontSize: "30px", color: "#f50057" }} />
+                        </Box>
                         {dashLoading ? (
                             <CircularProgress sx={{ mt: "40px", alignSelf: "center" }} />
                         ) : (
                             dashData?.eventsInfo.upcoming === 0 ? (
-                                <Typography variant="h5" >
+                                <Typography variant="h6" >
                                     No upcoming events
                                 </Typography>
 
                             ) : (
                                 <>
-                                    <Typography variant="h5" sx={{ mt: "15px", ml: "30px", position: "relative" }}>
-                                        Upcoming Events: {dashData?.eventsInfo.upcoming === 0 ? 'No upcoming events' : <Typography sx={{ fontWeight: "bold", fontSize: "80px", position: "absolute", right: "50px", top: "-30px" }}>{dashData?.eventsInfo.upcoming}</Typography>}
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            width: "100%",
+                                            paddingInline: "20px",
+                                        }}
+                                    >
+                                        <Box sx={{ gap: "10px", display: "flex", alignItems: "center" }}>
+                                            <FiberManualRecord sx={{ color: 'primary.main', fontSize: "12px" }} />
+                                            <Typography fontSize="18px">
+                                                Upcoming Events
+                                            </Typography>
+                                        </Box>
+                                        <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                            {dashData?.eventsInfo.upcoming === 0
+                                                ? "No upcoming events"
+                                                : dashData?.eventsInfo.upcoming}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="h6" sx={{ position: "relative", alignSelf: "center" }}>
+                                        Next
                                     </Typography>
-                                    <Typography variant="h5" sx={{ mt: "15px", ml: "30px", position: "relative" }}>
-                                        Next:
-                                    </Typography>
-                                    <Typography sx={{ fontWeight: "bold", fontSize: "18px", alignSelf: "center", textAlign: "center", textTransform: "uppercase" }}>{dashData?.eventsInfo.next}</Typography>
+                                    <Typography sx={{ fontSize: "16px", alignSelf: "center", textAlign: "center", textTransform: "uppercase" }}>{dashData?.eventsInfo.next}</Typography>
                                 </>
                             )
                         )}
                     </Paper>
-                    <Paper sx={{ display: "flex", flexDirection: "column" }}>
-                        <Typography variant="h4" sx={{ fontWeight: "bold", mt: "15px", alignSelf: "center" }}>Tasks</Typography>
+                    <Paper sx={{ ...commonCardStyle }}>
+                        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingInline: "20px", mt: "15px" }}>
+                            <Typography variant="h5" sx={{ fontSize: "24px", fontWeight: "bold", letterSpacing: "1px" }}>
+                                Tasks
+                            </Typography>
+                            <Assignment sx={{ fontSize: "30px", color: "#2979ff" }} />
+                        </Box>
                         {tasksLoading ?
                             <CircularProgress sx={{ mt: "40px", alignSelf: "center" }} />
                             :
                             tasksData?.length === 0 ? "No pending tasks" : (
                                 <>
-                                    <Typography variant="h5" sx={{ mt: "15px", ml: "30px", position: "relative" }} >
-                                        Pending Tasks:
-                                    </Typography>
-                                    <Box sx={{ width: "fit-content", display: "flex", flexDirection: "column", gap: 0, overflowY: "scroll", maxHeight: "85px", alignSelf: "center" }}>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            width: "100%",
+                                            paddingInline: "20px",
+                                        }}
+                                    >
+                                        <Box sx={{ gap: "10px", display: "flex", alignItems: "center" }}>
+                                            <FiberManualRecord sx={{ color: 'primary.main', fontSize: "12px" }} />
+                                            <Typography fontSize="18px">
+                                                Pending Tasks
+                                            </Typography>
+                                        </Box>
+                                        <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                            {tasksData?.filter(t => !t.completed).length}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 1, maxHeight: "85px", overflowY: "scroll", paddingInline: "20px", bottom: "25px", position: "relative" }}>
                                         {tasksData?.filter((task) => task.completed === false)
                                             .map((task) => (
-                                                <Typography key={task.id} sx={{ fontWeight: "bold", fontSize: "18px", paddingInline: 4, textAlign: "center", textTransform: "uppercase" }}>
-                                                    {task.title}
-                                                </Typography>
+                                                <Box key={task.id} sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <CircleOutlined sx={{ color: 'text.secondary', fontSize: '10px' }} />
+                                                    <Typography>
+                                                        {task.title}
+                                                    </Typography>
+                                                </Box>
                                             ))}
                                     </Box>
                                 </>

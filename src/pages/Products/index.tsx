@@ -25,7 +25,7 @@ export const Products = () => {
 
     const PRODUCTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/products'
     const queryClient = useQueryClient()
-    const { data, isLoading, error } = useDynamicQuery<Product[]>(PRODUCTS_ENDPOINT)
+    const { data, isLoading, error } = useDynamicQuery<Product[]>(['products'], PRODUCTS_ENDPOINT)
     const { enqueueSnackbar } = useSnackbar()
 
     const mutation = useMutation({
@@ -46,7 +46,7 @@ export const Products = () => {
 
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [PRODUCTS_ENDPOINT] })
+            queryClient.invalidateQueries({ queryKey: ['products'] })
             setProductData(emptyProduct);
         },
         onError: (error) => {
@@ -72,7 +72,7 @@ export const Products = () => {
 
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [PRODUCTS_ENDPOINT] })
+            queryClient.invalidateQueries({ queryKey: ['products'] })
         },
         onError: (error) => {
             console.error(error)
@@ -90,7 +90,7 @@ export const Products = () => {
             return response.json()
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [PRODUCTS_ENDPOINT] })
+            queryClient.invalidateQueries({ queryKey: ['products'] })
         },
         onError: (error) => {
             console.error(error)
@@ -123,7 +123,7 @@ export const Products = () => {
     const handleSubmit = async () => {
         if (!productData) return
         try {
-            await mutation.mutate(productData)
+            await mutation.mutateAsync(productData)
             enqueueSnackbar('Created successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -133,7 +133,7 @@ export const Products = () => {
     const handleUpdate = async () => {
         if (!productData) return
         try {
-            await updateMutation.mutate(productData)
+            await updateMutation.mutateAsync(productData)
             enqueueSnackbar('Updated successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -142,7 +142,7 @@ export const Products = () => {
 
     const handleDelete = () => {
         try {
-            deleteMutation.mutate(productData!.id)
+            deleteMutation.mutateAsync(productData!.id)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
         } catch (error) {
             enqueueSnackbar('Error', { variant: 'error' })
@@ -205,7 +205,7 @@ export const Products = () => {
                     }} />
             </Modal>
             <Box sx={{
-                mb: 6,
+                mb: 3,
                 width: '90%',
                 display: 'flex',
                 justifyContent: 'space-between'
@@ -222,8 +222,12 @@ export const Products = () => {
                 sx={{
                     width: '90%',
                     maxHeight: '80%',
-                    justifyContent: 'space-between',
                     userSelect: 'none',
+                    backgroundColor: 'background.paper',
+                    '& .MuiDataGrid-row:hover': {
+                        backgroundColor: 'secondary.main',
+                        color: 'primary.contrastText',
+                    },
                     '& .MuiDataGrid-cell:focus': {
                         outline: 'none',
                     },
@@ -231,10 +235,11 @@ export const Products = () => {
                         outline: 'none',
                     },
                     '& .MuiDataGrid-row.Mui-selected': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        backgroundColor: 'primary.main',
+                        color: 'primary.contrastText',
                     },
                     '& .MuiDataGrid-row.Mui-selected:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        backgroundColor: 'primary.main',
                     },
                 }}
             />

@@ -1,8 +1,8 @@
-import { QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SnackbarProvider } from 'notistack'
 import { BrowserRouter } from 'react-router-dom'
 import Router from './routes'
-import { CssBaseline } from '@mui/material'
+import { ColorModeProvider } from './context/ColorModeContext'
 import './App.css'
 
 function App() {
@@ -10,8 +10,7 @@ function App() {
   const queryClient = new QueryClient()
 
   return (
-    <>
-      <CssBaseline />
+    <ColorModeProvider>
       <SnackbarProvider maxSnack={1}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
@@ -19,7 +18,7 @@ function App() {
           </BrowserRouter>
         </QueryClientProvider>
       </SnackbarProvider>
-    </>
+    </ColorModeProvider>
   )
 }
 
