@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import type { Product } from '../../types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
@@ -12,6 +13,8 @@ export const Products = () => {
     const [open, setOpen] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
     const [productData, setProductData] = useState<Product | null>(null)
+    const location = useLocation()
+    const foundProduct = location.state?.product
 
     let requestAction = useRef<(() => void) | null>(null)
 
@@ -27,6 +30,12 @@ export const Products = () => {
     const queryClient = useQueryClient()
     const { data, isLoading, error } = useDynamicQuery<Product[]>(['products'], PRODUCTS_ENDPOINT)
     const { enqueueSnackbar } = useSnackbar()
+
+    useEffect(() => {
+        if (foundProduct) {
+            setProductData(foundProduct)
+        }
+    }, [foundProduct])
 
     const mutation = useMutation({
         mutationFn: async (product: Product) => {
@@ -156,10 +165,10 @@ export const Products = () => {
 
     const columns = [
         {
-            field: 'id', headerName: 'ID', width: 70, flex: .25, renderCell: (params: GridRenderCellParams<Product>) => (
+            field: 'id', headerName: 'ID', width: 70, flex: .20, renderCell: (params: GridRenderCellParams<Product>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <span>{params.row.id}</span>
-                    <Box sx={{ display: productData?.id === params.row.id ? 'block' : 'none' }}>
+                    <Box sx={{ display: productData?.id === params.row.id ? 'block' : 'none', paddingLeft: "20px" }}>
                         <IconButton onClick={() => handleOpen()}>
                             <Edit />
                         </IconButton>
@@ -170,8 +179,8 @@ export const Products = () => {
                 </Box>
             )
         },
-        { field: 'name', headerName: 'Product', width: 130, flex: 1 },
-        { field: 'category', headerName: 'Category', width: 130, flex: 1 },
+        { field: 'name', headerName: 'Product', width: 130, flex: .5 },
+        { field: 'category', headerName: 'Category', width: 130, flex: .5 },
         { field: 'price', headerName: 'Price', width: 130, flex: .25 },
         { field: 'stock', headerName: 'Stock', width: 130, flex: .25 },
     ]
@@ -219,6 +228,11 @@ export const Products = () => {
                 rows={data}
                 columns={columns}
                 onRowClick={(params) => setProductData(params.row)}
+                rowSelectionModel={
+                    productData
+                        ? { type: 'include', ids: new Set([productData.id]) }
+                        : { type: 'include', ids: new Set() }
+                }
                 sx={{
                     width: '90%',
                     maxHeight: '80%',

@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
 import type { User } from '../../types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -20,6 +21,8 @@ const Clients = () => {
     const queryClient = useQueryClient()
     const { enqueueSnackbar } = useSnackbar()
     const { data, isLoading, error } = useDynamicQuery<User[]>(['users'], USERS_ENDPOINT)
+    const location = useLocation()
+    const foundUser = location.state?.foundUser as User | null
 
     const emptyClient: User = {
         id: 0,
@@ -30,6 +33,12 @@ const Clients = () => {
         address: '',
         createdAt: ''
     }
+
+    useEffect(() => {
+        if (foundUser) {
+            setClientData(foundUser)
+        }
+    }, [foundUser])
 
     const mutation = useMutation({
         mutationFn: async (user: User) => {
@@ -161,10 +170,10 @@ const Clients = () => {
 
     const columns = [
         {
-            field: 'id', headerName: 'ID', width: 100, flex: .5, renderCell: (params: GridRenderCellParams<User>) => (
+            field: 'id', headerName: 'ID', width: 70, flex: .20, renderCell: (params: GridRenderCellParams<User>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <span>{params.row.id}</span>
-                    <Box sx={{ display: clientData?.id === params.row.id ? 'block' : 'none' }}>
+                    <Box sx={{ display: clientData?.id === params.row.id ? 'block' : 'none', paddingLeft: "20px" }}>
                         <IconButton onClick={() => handleOpen()}>
                             <Edit />
                         </IconButton>
@@ -175,12 +184,12 @@ const Clients = () => {
                 </Box>
             )
         },
-        { field: 'name', headerName: 'First name', width: 130, flex: 1 },
-        { field: 'lastName', headerName: 'Last name', width: 130, flex: 1 },
-        { field: 'email', headerName: 'Email', width: 130, flex: 1 },
-        { field: 'address', headerName: 'Address', width: 130, flex: 1 },
-        { field: 'phone', headerName: 'Phone', width: 130, flex: .5 },
-        { field: 'createdAt', headerName: 'Created At', width: 130, flex: .5 }
+        { field: 'name', headerName: 'First name', width: 130, flex: .35 },
+        { field: 'lastName', headerName: 'Last name', width: 130, flex: .35 },
+        { field: 'email', headerName: 'Email', width: 130, flex: .35 },
+        { field: 'address', headerName: 'Address', width: 130, flex: .35 },
+        { field: 'phone', headerName: 'Phone', width: 130, flex: .35 },
+        { field: 'createdAt', headerName: 'Created At', width: 130, flex: .25 }
     ]
 
     if (isLoading) return <Typography variant='h5'><CircularProgress /></Typography>
@@ -227,6 +236,11 @@ const Clients = () => {
                 onRowClick={(params) => {
                     setClientData(params.row)
                 }}
+                rowSelectionModel={
+                    clientData
+                        ? { type: 'include', ids: new Set([clientData.id]) }
+                        : { type: 'include', ids: new Set() }
+                }
                 sx={{
                     width: '90%',
                     maxHeight: '80%',

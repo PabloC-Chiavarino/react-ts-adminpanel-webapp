@@ -46,7 +46,7 @@ export const Dashboard = () => {
                     gridTemplateColumns: "1fr 1fr 1fr 1fr",
                     gridTemplateRows: "1fr 1fr 1fr",
                 }}>
-                <Paper sx={{ ...commonCardStyle, gridColumn: "1", gridRow: "1" }}>
+                <Paper sx={{ ...commonCardStyle, gridColumn: "1", gridRow: "1", position: "relative" }}>
                     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingInline: "20px", mt: "15px" }}>
                         <Typography variant="h5" sx={{ fontSize: "24px", fontWeight: "bold", letterSpacing: "1px" }}>
                             Total Products
@@ -56,8 +56,19 @@ export const Dashboard = () => {
                     {chartsLoading || dashLoading ?
                         <CircularProgress sx={{ mt: "40px", alignSelf: "center" }} />
                         : (
-                            <Box sx={{ mt: "5px", ml: "15px", alignSelf: "center" }}>
-                                {dashData?.productsInfo.total === 0 ? 'No listed products' : <Typography sx={{ fontWeight: "bold", fontSize: "65px" }}>{dashData?.productsInfo.total}</Typography>}
+                            <Box
+                                sx={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    textAlign: "center"
+                                }}
+                            >
+                                {dashData?.productsInfo.total === 0
+                                    ? 'No listed products'
+                                    : <Typography sx={{ fontSize: "65px" }}>{dashData?.productsInfo.total}</Typography>
+                                }
                             </Box>
                         )}
                 </Paper>
@@ -124,7 +135,7 @@ export const Dashboard = () => {
                                             New clients
                                         </Typography>
                                     </Box>
-                                    <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                    <Typography fontSize="65px" paddingInlineEnd="50px">
                                         {dashData?.clientsChange.value === 0
                                             ? "No new clients"
                                             : dashData?.clientsChange.value}
@@ -181,7 +192,7 @@ export const Dashboard = () => {
                                             New invoices
                                         </Typography>
                                     </Box>
-                                    <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                    <Typography fontSize="65px" paddingInlineEnd="50px">
                                         {dashData?.invoicesChange.value === 0
                                             ? "No new invoices"
                                             : dashData?.invoicesChange.value}
@@ -242,7 +253,7 @@ export const Dashboard = () => {
                                             Month Revenue
                                         </Typography>
                                     </Box>
-                                    <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                    <Typography fontSize="65px" paddingInlineEnd="50px">
                                         {dashData?.revenueChange.value === 0
                                             ? "No revenues this month"
                                             : `$${dashData?.revenueChange.value}`}
@@ -305,7 +316,7 @@ export const Dashboard = () => {
                                                 Upcoming Events
                                             </Typography>
                                         </Box>
-                                        <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                        <Typography fontSize="65px" paddingInlineEnd="50px">
                                             {dashData?.eventsInfo.upcoming === 0
                                                 ? "No upcoming events"
                                                 : dashData?.eventsInfo.upcoming}
@@ -346,7 +357,7 @@ export const Dashboard = () => {
                                                 Pending Tasks
                                             </Typography>
                                         </Box>
-                                        <Typography fontWeight="bold" fontSize="65px" paddingInlineEnd="50px">
+                                        <Typography fontSize="65px" paddingInlineEnd="50px">
                                             {tasksData?.filter(t => !t.completed).length}
                                         </Typography>
                                     </Box>
@@ -365,8 +376,8 @@ export const Dashboard = () => {
                             )}
                     </Paper>
                 </Box>
-            </Box>
-        </Box>
+            </Box >
+        </Box >
     )
 }
 

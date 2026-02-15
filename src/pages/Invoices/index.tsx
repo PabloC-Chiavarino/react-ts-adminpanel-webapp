@@ -156,10 +156,10 @@ export const Invoices = () => {
 
     const columns = [
         {
-            field: 'id', headerName: 'ID', width: 100, flex: .5, renderCell: (params: GridRenderCellParams<Invoice>) => (
+            field: 'id', headerName: 'ID', width: 70, flex: .20, renderCell: (params: GridRenderCellParams<Invoice>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <span>{params.row.id}</span>
-                    <Box sx={{ display: invoiceData?.id === params.row.id ? 'block' : 'none' }}>
+                    <Box sx={{ display: invoiceData?.id === params.row.id ? 'block' : 'none', paddingLeft: "20px" }}>
                         <IconButton>
                             <Visibility onClick={() => handleOpen()} />
                         </IconButton>
@@ -171,7 +171,7 @@ export const Invoices = () => {
             )
         },
         {
-            field: 'clientId', headerName: 'Client', width: 130, flex: 1, renderCell: (params: GridRenderCellParams<Invoice>) => {
+            field: 'clientId', headerName: 'Client', width: 130, flex: .5, renderCell: (params: GridRenderCellParams<Invoice>) => {
 
                 const client = usersData?.find(user => user.id === params.row.clientId)
 
@@ -182,7 +182,7 @@ export const Invoices = () => {
             }
         },
         {
-            field: 'clientIdonly', headerName: 'Client ID', width: 130, flex: 1, renderCell: (params: GridRenderCellParams<Invoice>) => {
+            field: 'clientIdonly', headerName: 'Client ID', width: 130, flex: .5, renderCell: (params: GridRenderCellParams<Invoice>) => {
 
                 if (usersIsLoading) return <Typography variant='h6'>Loading...</Typography>
                 if (usersError) return <Typography variant='h6'>{usersError.message}</Typography>
@@ -190,8 +190,8 @@ export const Invoices = () => {
                 return <span>ID <strong>{params?.row.clientId}</strong></span>
             }
         },
-        { field: 'totalPrice', headerName: 'Total', width: 130, flex: 1 },
-        { field: 'createdAt', headerName: 'Created At', width: 130, flex: .5 }
+        { field: 'totalPrice', headerName: 'Total', width: 100, flex: .25 },
+        { field: 'createdAt', headerName: 'Created At', width: 100, flex: .25 }
     ]
 
     if (isLoading) return <Typography variant='h5'><CircularProgress /></Typography>

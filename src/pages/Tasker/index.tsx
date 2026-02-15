@@ -48,8 +48,7 @@ const Tasker = () => {
     });
 
     const updateMutation = useMutation({
-
-    mutationFn: async (task: Task) => {
+        mutationFn: async (task: Task) => {
             const response = await fetch(`${TASKS_ENDPOINT}/${task.id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -59,29 +58,34 @@ const Tasker = () => {
             return response.json();
         },
 
-    onMutate: async (updatedTask) => {
+        onMutate: async (updatedTask) => {
 
-        await queryClient.cancelQueries({ queryKey: ['tasks'] });
-        
-        const previousTasks = queryClient.getQueryData<Task[]>(['tasks']);
+            await queryClient.cancelQueries({ queryKey: ['tasks'] });
 
-        queryClient.setQueryData<Task[]>(['tasks'], old =>
-            old?.map(task =>
-                task.id === updatedTask.id ? updatedTask : task
-            )
-        );
+            const previousTasks = queryClient.getQueryData<Task[]>(['tasks']);
 
-        return { previousTasks };
-    },
-    onError: (_err, _updatedTask, context) => {
-        if (context?.previousTasks) {
-            queryClient.setQueryData(['tasks'], context.previousTasks);
+            queryClient.setQueryData<Task[]>(['tasks'], old =>
+                old?.map(task =>
+                    task.id === updatedTask.id ? updatedTask : task
+                )
+            );
+
+            return { previousTasks };
+        },
+        onError: (_err, _updatedTask, context) => {
+            if (context?.previousTasks) {
+                queryClient.setQueryData(['tasks'], context.previousTasks);
+            }
+            enqueueSnackbar("Error updating task", { variant: "error" });
+        },
+
+        onSuccess: () => {
+            enqueueSnackbar("Task updated successfully", { variant: "success" });
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
         }
-    },
-    onSettled: () => {
-        queryClient.invalidateQueries({ queryKey: ['tasks'] });
-    }
-});
+    });
 
 
     const deleteMutation = useMutation({
@@ -197,7 +201,7 @@ const Tasker = () => {
         const { active, over } = e;
 
         setActiveTaskID(null);
-        
+
         if (!over) return;
 
         const newCompletedState = over.id === "done";

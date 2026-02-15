@@ -37,12 +37,12 @@ const SearchBox = () => {
             if (productsIsLoading) return <Typography variant='h6'>Loading...</Typography>
             if (productsError) return <Typography variant='h6'>{productsError.message}</Typography>
             enqueueSnackbar(`Product: ${product.name}`, { variant: 'success' })
-            navigate(`/products/`)
+            navigate(`/products/`, { state: { foundProduct: product } })
         } else if (user) {
             if (usersIsLoading) return <Typography variant='h6'>Loading...</Typography>
             if (usersError) return <Typography variant='h6'>{usersError.message}</Typography>
             enqueueSnackbar(`User: ${user.name} ${user.lastName}`, { variant: 'success' })
-            navigate(`/clients/`)
+            navigate(`/clients/`, { state: { foundUser: user } })
         }
     }
 
@@ -52,7 +52,6 @@ const SearchBox = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                border: '1px solid transparent',
                 borderRadius: '5px',
                 width: '275px',
                 height: '35px',
