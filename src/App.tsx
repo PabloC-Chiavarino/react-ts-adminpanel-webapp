@@ -3,6 +3,7 @@ import { SnackbarProvider } from 'notistack'
 import { BrowserRouter } from 'react-router-dom'
 import Router from './routes'
 import { ColorModeProvider } from './context/ColorModeContext'
+import { AuthProvider } from './context/AuthContext'
 import './App.css'
 
 function App() {
@@ -14,7 +15,9 @@ function App() {
       <SnackbarProvider maxSnack={1}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <Router />
+            <AuthProvider>
+              <Router />
+            </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>
       </SnackbarProvider>

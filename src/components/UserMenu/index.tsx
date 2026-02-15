@@ -1,26 +1,9 @@
-import {
-    Menu,
-    MenuItem,
-    ListItemIcon,
-    Typography,
-    Divider,
-    Box,
-} from '@mui/material'
-import {
-    Person,
-    Settings,
-    Logout,
-} from '@mui/icons-material'
+import { Menu, MenuItem, ListItemIcon, Typography, Divider, Box } from '@mui/material'
+import { Person, Settings, Logout } from '@mui/icons-material'
+import { useAuth } from '../../context/AuthContext';
 
-const UserMenu = ({
-    anchorEl,
-    open,
-    onClose,
-}: {
-    anchorEl: HTMLElement | null
-    open: boolean
-    onClose: () => void
-}) => {
+const UserMenu = ({ anchorEl, open, onClose, }: { anchorEl: HTMLElement | null; open: boolean; onClose: () => void }) => {
+    const { user, logout } = useAuth()
     return (
         <Menu
             anchorEl={anchorEl}
@@ -61,10 +44,10 @@ const UserMenu = ({
         >
             <Box sx={{ px: 2, py: 1.5 }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
-                    Admin User
+                    {user?.username}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    admin@example.com
+                    {user?.email}
                 </Typography>
             </Box>
 
@@ -88,7 +71,7 @@ const UserMenu = ({
 
             <MenuItem
                 onClick={() => {
-                    console.log('Logout clicked')
+                    logout()
                     onClose()
                 }}
                 sx={{ color: 'error.main' }}
