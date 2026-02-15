@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 interface User {
     id: string,
     username: string,
-    email: string,
+    email?: string,
 }
 
 interface AuthContextType {

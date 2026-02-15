@@ -17,16 +17,16 @@ const Login = () => {
 
     }
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
             <Box
                 sx={{
-                    marginTop: 8,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
+                    width: '40%',
                 }}
             >
-                <Typography variant="h4" textAlign="center" mb={1}>
+                <Typography variant="h4" textAlign="center" mb={3}>
                     Admin Panel
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -58,7 +58,7 @@ const Login = () => {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
+                        sx={{ mt: 6, mb: 2, height: '50px' }}
                     >
                         Iniciar Sesión
                     </Button>

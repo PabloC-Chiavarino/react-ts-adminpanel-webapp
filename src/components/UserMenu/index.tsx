@@ -1,9 +1,10 @@
 import { Menu, MenuItem, ListItemIcon, Typography, Divider, Box } from '@mui/material'
-import { Person, Settings, Logout } from '@mui/icons-material'
+import { Logout } from '@mui/icons-material'
 import { useAuth } from '../../context/AuthContext';
 
 const UserMenu = ({ anchorEl, open, onClose, }: { anchorEl: HTMLElement | null; open: boolean; onClose: () => void }) => {
     const { user, logout } = useAuth()
+
     return (
         <Menu
             anchorEl={anchorEl}
@@ -12,6 +13,11 @@ const UserMenu = ({ anchorEl, open, onClose, }: { anchorEl: HTMLElement | null; 
             onClose={onClose}
             onClick={onClose}
             slotProps={{
+                list: {
+                    sx: {
+                        py: 0,
+                    },
+                },
                 paper: {
                     elevation: 10,
                     sx: {
@@ -46,35 +52,21 @@ const UserMenu = ({ anchorEl, open, onClose, }: { anchorEl: HTMLElement | null; 
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
                     {user?.username}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {user?.email}
-                </Typography>
             </Box>
 
-            <Divider />
-
-            <MenuItem onClick={onClose}>
-                <ListItemIcon>
-                    <Person fontSize="small" />
-                </ListItemIcon>
-                Mi Perfil
-            </MenuItem>
-
-            <MenuItem onClick={onClose}>
-                <ListItemIcon>
-                    <Settings fontSize="small" />
-                </ListItemIcon>
-                Ajustes
-            </MenuItem>
-
-            <Divider />
+            <Divider
+                sx={{
+                    marginTop: '0px !important',
+                    marginBottom: '0px !important',
+                }}
+            />
 
             <MenuItem
                 onClick={() => {
                     logout()
                     onClose()
                 }}
-                sx={{ color: 'error.main' }}
+                sx={{ color: 'error.main', py: 2.25 }}
             >
                 <ListItemIcon>
                     <Logout fontSize="small" color="error" />
