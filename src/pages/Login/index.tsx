@@ -57,6 +57,7 @@ const Login = () => {
                         autoFocus
                         autoComplete='new-password'
                         value={user}
+                        placeholder='user: admin'
                         onChange={(e) => setUser(e.target.value)}
                     />
                     <TextField
@@ -69,6 +70,7 @@ const Login = () => {
                         id="password"
                         autoComplete='new-password'
                         value={password}
+                        placeholder='password: admin'
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <Button
