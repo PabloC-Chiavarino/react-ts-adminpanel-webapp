@@ -1,21 +1,38 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { Container, Box, TextField, Button, Typography } from '@mui/material'
+import { useSnackbar } from 'notistack'
 
 const Login = () => {
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('')
     const { login } = useAuth()
+    const { enqueueSnackbar } = useSnackbar()
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        if (user === 'admin' && password === 'admin') {
-            login({ id: '1', username: user })
-        } else {
-            alert('Usuario o contraseña incorrectos')
-        }
+        try {
+            const response = await fetch('https://mock-data-api-vntk.onrender.com/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user, password }),
+            })
 
+            if (!response.ok) {
+                enqueueSnackbar('Usuario o contraseña incorrectos', { variant: 'error' })
+                return
+            }
+
+            const data = await response.json()
+            login(data.user)
+
+        } catch (error) {
+            enqueueSnackbar('Error al iniciar sesión', { variant: 'error' })
+        }
     }
+
     return (
         <Container component="main" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
             <Box
