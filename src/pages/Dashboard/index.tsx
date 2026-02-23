@@ -16,7 +16,7 @@ export const Dashboard = () => {
     const commonCardStyle = {
         display: "flex",
         flexDirection: "column",
-        borderRadius: "16px",
+        borderRadius: "8px",
         bgcolor: "background.paper",
         boxShadow: "5px 5px 5px 0 rgba(0, 0, 0, 0.36)",
         border: "1px solid rgba(255, 255, 255, 0.05)"
