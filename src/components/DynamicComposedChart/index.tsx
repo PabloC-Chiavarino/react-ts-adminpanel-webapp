@@ -20,15 +20,15 @@ const DynamicComposedChart = ({
             '& .recharts-default-legend': {
                 display: 'flex',
                 justifyContent: 'center',
-                gap: '50px',
+                gap: '100px',
                 position: 'relative',
-                top: '16px',
+                top: '50px',
                 fontSize: '18px',
             }
         }}
         >
             <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={data}>
+                <ComposedChart data={data} margin={{ left: -30 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />

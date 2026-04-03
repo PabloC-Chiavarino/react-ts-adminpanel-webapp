@@ -21,7 +21,7 @@ const EventForm = (
     const fields: Field[] = [
         { title: 'Title', field: 'title', label: 'Title', type: 'text', required: true },
         { title: 'Description', field: 'description', label: 'Description', type: 'text', required: true },
-        { title: 'Category', field: 'category', label: 'Category', type: 'select', required: true, options: [{ value: 1, label: 'Low' }, { value: 2, label: 'Medium' }, { value: 3, label: 'High' }] },
+        { title: 'Category', field: 'category', label: 'Category', type: 'select', required: true, options: [{ value: 'review', label: 'Review' }, { value: 'meeting', label: 'Meeting' }, { value: 'design', label: 'Design' }, { value: 'development', label: 'Development' }, { value: 'release', label: 'Release' }] },
     ]
 
     return (

@@ -1,21 +1,23 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Drawer, Box, List, ListItemButton, ListItemIcon, ListItemText, Typography, Collapse } from '@mui/material'
+import logo from '../../assets/icons/logo.png'
 import {
-    Dashboard,
+    DashboardOutlined,
     People,
-    Inventory2,
-    ManageAccountsOutlined,
-    Receipt,
-    Assignment,
-    CalendarMonth,
+    Inventory2Outlined,
+    DescriptionOutlined,
+    TaskOutlined,
+    CalendarTodayOutlined,
     ExpandLess,
     ExpandMore,
     AttachMoney,
     Star,
-    BarChart,
+    BarChartOutlined,
     ShoppingBag,
-    Badge
+    GroupOutlined,
+    ShoppingCartOutlined,
+
 } from '@mui/icons-material'
 
 export const Sidebar = () => {
@@ -23,12 +25,13 @@ export const Sidebar = () => {
     const location = useLocation()
 
     const menuItems = [
-        { text: 'Dashboard', icon: <Dashboard />, path: '/' },
-        { text: 'Products', icon: <Inventory2 />, path: '/products' },
-        { text: 'Clients/Users', icon: <Badge />, path: '/clients' },
-        { text: 'Invoices', icon: <Receipt />, path: '/invoices' },
-        { text: 'Tasks', icon: <Assignment />, path: '/tasker' },
-        { text: 'Calendar', icon: <CalendarMonth />, path: '/calendar' },
+        { text: 'Dashboard', icon: <DashboardOutlined />, path: '/dashboard' },
+        { text: 'Products', icon: <Inventory2Outlined />, path: '/products' },
+        { text: 'Clients', icon: <GroupOutlined />, path: '/clients' },
+        { text: 'Orders', icon: <ShoppingCartOutlined />, path: '/orders' },
+        { text: 'Invoices', icon: <DescriptionOutlined />, path: '/invoices' },
+        { text: 'Tasks', icon: <TaskOutlined />, path: '/tasker' },
+        { text: 'Calendar', icon: <CalendarTodayOutlined />, path: '/calendar' },
     ]
 
     const analyticsMenuItems = [
@@ -38,34 +41,60 @@ export const Sidebar = () => {
         { text: 'Most Sold', icon: <Star />, path: '/analytics/most-sold' },
     ]
 
-    const drawerWidth = 240
+    const drawerWidth = 256
 
     return (
-        <Drawer variant='permanent'>
+        <Drawer variant='permanent' sx={{
+            '& .MuiDrawer-paper': {
+                borderRight: 'none',
+                width: `${drawerWidth}px`,
+                backgroundColor: 'background.default',
+                boxShadow: '40px 0 60px -15px rgba(178, 161, 255, 0.06)',
+                zIndex: 1500,
+            },
+        }}>
             <Box sx={{
                 display: 'flex',
-                alignItems: 'end',
-                px: 2,
-                mt: 2,
+                marginLeft: 4,
+                marginTop: 4,
                 gap: 1
             }}
             >
-                <ManageAccountsOutlined sx={{ fontSize: 35 }} />
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '32px',
+                    height: '32px',
+                    backgroundColor: 'tertiary.main',
+                    borderRadius: '10px',
+                }}>
+                    <img src={logo} alt="Logo" style={{
+                        width: '22px',
+                        height: '22px',
+                        fill: 'background.default'
+                    }} />
+                </Box>
                 <Typography
                     variant='h6'
                     sx={{
-                        fontSize: 18,
-                        fontWeight: 'bold'
+                        fontSize: 20,
+                        fontWeight: '700',
+                        color: 'tertiary.main'
                     }}
                 >
-                    AdminAssistant
+                    Nexo
                 </Typography>
             </Box>
             <List
                 component='nav'
                 sx={{
-                    mt: 8,
-                    width: `${drawerWidth}px`
+                    mt: 6,
+                    ml: 1,
+                    mr: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1,
                 }}
             >
                 {menuItems.map(({ text, icon, path }) => (
@@ -75,47 +104,129 @@ export const Sidebar = () => {
                         to={path}
                         selected={location.pathname === path}
                         sx={{
-                            letterSpacing: 1,
+                            width: '100%',
+                            height: '48px',
+                            borderRadius: '12px',
+                            transition: 'all .6s ease',
                             '&:hover': {
-                                backgroundColor: 'secondary.main',
-                                color: 'primary.contrastText',
+                                backgroundColor: '#19191d',
+                                '& .MuiListItemIcon-root': {
+                                    color: 'text.primary',
+                                },
+
+                                '& .MuiTypography-root': {
+                                    color: 'text.primary',
+                                },
                             },
                             '&.Mui-selected': {
                                 backgroundColor: 'primary.main',
-                                color: 'primary.contrastText',
                                 '&:hover': {
                                     backgroundColor: 'primary.main',
                                 },
+                                '& .MuiListItemIcon-root': {
+                                    color: 'text.primary',
+                                },
+
+                                '& .MuiTypography-root': {
+                                    color: 'text.primary',
+                                },
                             },
-                            pt: 2,
-                            pb: 2
+                            '&:active': {
+                                transform: 'scale(0.98)',
+                                backgroundColor: 'primary.main',
+                                '& .MuiListItemIcon-root': {
+                                    color: 'text.primary',
+                                },
+
+                                '& .MuiTypography-root': {
+                                    color: 'text.primary',
+                                },
+                            },
+                            px: 2,
+                            gap: -.5,
                         }}
                     >
-                        <ListItemIcon>{icon}</ListItemIcon>
-                        <ListItemText primary={text} />
+                        <ListItemIcon sx={{ minWidth: '40px', color: 'text.secondary' }}>{icon}</ListItemIcon>
+                        <ListItemText
+                            primary={text}
+                            slotProps={{
+                                primary: {
+                                    sx: {
+                                        fontSize: 14,
+                                        color: 'text.secondary',
+                                        transition: 'all 0.2s ease',
+                                        '&:active': {
+                                            transform: 'translate(3px, -2px)',
+                                        },
+                                    },
+                                },
+                            }}
+                        />
                     </ListItemButton>
                 ))}
 
                 <ListItemButton
                     onClick={() => setAnalyticsOpen(!analyticsOpen)}
                     sx={{
+                        width: '100%',
+                        height: '48px',
+                        borderRadius: '12px',
+                        transition: 'all .6s ease',
                         '&:hover': {
-                            backgroundColor: 'secondary.main',
-                            color: 'primary.contrastText',
+                            backgroundColor: '#19191d',
                             '& .MuiListItemIcon-root': {
-                                color: 'primary.contrastText'
-                            }
+                                color: 'text.primary',
+                            },
+
+                            '& .MuiTypography-root': {
+                                color: 'text.primary',
+                            },
                         },
-                        pt: 2,
-                        pb: 2
+                        '&.Mui-selected': {
+                            backgroundColor: 'primary.main',
+                            '&:hover': {
+                                backgroundColor: 'primary.main',
+                            },
+                            '& .MuiListItemIcon-root': {
+                                color: 'text.primary',
+                            },
+
+                            '& .MuiTypography-root': {
+                                color: 'text.primary',
+                            },
+                        },
+                        '&:active': {
+                            transform: 'scale(0.98)',
+                            backgroundColor: 'primary.main',
+                            '& .MuiListItemIcon-root': {
+                                color: 'text.primary',
+                            },
+
+                            '& .MuiTypography-root': {
+                                color: 'text.primary',
+                            },
+                        },
+                        px: 2,
                     }}
                 >
-                    <ListItemIcon><BarChart /></ListItemIcon>
-                    <ListItemText primary='Analytics' />
+                    <ListItemIcon sx={{ minWidth: '40px', color: 'text.secondary' }}><BarChartOutlined /></ListItemIcon>
+                    <ListItemText primary='Analytics' slotProps={{
+                        primary: {
+                            sx: {
+                                fontSize: 14,
+                                color: 'text.secondary',
+                            },
+                        },
+                    }} />
                     {analyticsOpen ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
                 <Collapse in={analyticsOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
+                    <List component="div" sx={{
+                        ml: 1.5,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1,
+                    }}>
                         {analyticsMenuItems.map(({ text, icon, path }) => (
                             <ListItemButton
                                 key={text}
@@ -123,32 +234,56 @@ export const Sidebar = () => {
                                 to={path}
                                 selected={location.pathname === path}
                                 sx={{
-                                    pl: 4,
-                                    pt: 2,
-                                    pb: 2,
+                                    width: '95%',
+                                    height: '48px',
+                                    borderRadius: '12px',
+                                    transition: 'all .6s ease',
                                     '&:hover': {
-                                        backgroundColor: 'secondary.main',
-                                        color: 'primary.contrastText',
+                                        backgroundColor: '#19191d',
                                         '& .MuiListItemIcon-root': {
-                                            color: 'primary.contrastText'
-                                        }
+                                            color: 'text.primary',
+                                        },
+
+                                        '& .MuiTypography-root': {
+                                            color: 'text.primary',
+                                        },
                                     },
                                     '&.Mui-selected': {
                                         backgroundColor: 'primary.main',
-                                        color: 'primary.contrastText',
-                                        fontWeight: 'bold',
                                         '&:hover': {
-                                            backgroundColor: 'secondary.main',
-                                            color: 'primary.contrastText',
+                                            backgroundColor: 'primary.main',
                                         },
                                         '& .MuiListItemIcon-root': {
-                                            color: 'primary.contrastText'
-                                        }
+                                            color: 'text.primary',
+                                        },
+
+                                        '& .MuiTypography-root': {
+                                            color: 'text.primary',
+                                        },
                                     },
+                                    '&:active': {
+                                        transform: 'scale(0.98)',
+                                        backgroundColor: 'primary.main',
+                                        '& .MuiListItemIcon-root': {
+                                            color: 'text.primary',
+                                        },
+
+                                        '& .MuiTypography-root': {
+                                            color: 'text.primary',
+                                        },
+                                    },
+                                    px: 2,
                                 }}
                             >
-                                <ListItemIcon>{icon}</ListItemIcon>
-                                <ListItemText primary={text} />
+                                <ListItemIcon sx={{ minWidth: '40px', color: 'text.secondary' }}>{icon}</ListItemIcon>
+                                <ListItemText primary={text} slotProps={{
+                                    primary: {
+                                        sx: {
+                                            fontSize: 14,
+                                            color: 'text.secondary',
+                                        },
+                                    },
+                                }} />
                             </ListItemButton>
                         ))}
                     </List>

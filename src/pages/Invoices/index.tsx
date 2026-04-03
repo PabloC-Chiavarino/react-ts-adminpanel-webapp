@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { GridRenderCellParams } from '@mui/x-data-grid'
 import type { SelectChangeEvent } from '@mui/material'
@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
 import { Box, Typography, Modal, IconButton, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, CircularProgress } from '@mui/material'
-import { Delete, Visibility, PictureAsPdf } from '@mui/icons-material'
+import { DeleteOutlined, VisibilityOutlined, AddOutlined, PictureAsPdfOutlined } from '@mui/icons-material'
 import { ConfirmDialog, InvoiceForm, AddBtn } from '../../components'
 export const Invoices = () => {
     const [open, setOpen] = useState(false)
@@ -154,52 +154,65 @@ export const Invoices = () => {
         }
     }
 
+    //lookup O(1)
+    const usersMap = useMemo(() => {
+        const map = new Map()
+        usersData?.forEach(user => {
+            map.set(user.id, user)
+        })
+        return map
+    }, [usersData])
+
     const columns = [
+        { field: 'id', headerName: 'ID', width: 70, flex: .1 },
         {
-            field: 'id', headerName: 'ID', width: 70, flex: .20, renderCell: (params: GridRenderCellParams<Invoice>) => (
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            field: 'clientId', headerName: 'Client', width: 130, flex: .4, renderCell: (params: GridRenderCellParams<Invoice>) => {
+
+                const client = usersMap.get(params.row.clientId)
+
+                return <span>{client ? `${client.name} ${client.lastName}` : '—'}</span>
+            }
+        },
+        {
+            field: 'clientIdonly', headerName: 'Client ID', flex: .2, renderCell: (params: GridRenderCellParams<Invoice>) => {
+
+                return <span>ID <strong>{params?.row.clientId}</strong></span>
+
+            }
+        },
+        { field: 'totalPrice', headerName: 'Total', width: 100, flex: .2 },
+        {
+            field: 'createdAt', headerName: 'Created At', width: 100, flex: .2, renderCell: (params: GridRenderCellParams<Invoice>) => (
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                     <span>{params.row.id}</span>
                     <Box sx={{ display: invoiceData?.id === params.row.id ? 'block' : 'none', paddingLeft: "20px" }}>
-                        <IconButton>
-                            <Visibility onClick={() => handleOpen()} />
-                        </IconButton>
-                        <IconButton>
-                            <Delete onClick={() => handleOpenDialogPayload(handleDelete)} />
+                        <IconButton onClick={() => handleOpen()} sx={{ '&:hover .MuiSvgIcon-root': { transform: 'translateY(-2px)' }, }} >
+                            <Box display="flex" gap={0} >
+                                <VisibilityOutlined sx={{ color: 'text.primary', transition: 'transform 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
+                                <AddOutlined sx={{ fontSize: '15px', color: 'text.primary', transition: 'transform 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
+                            </Box>
+                        </IconButton >
+                        <IconButton onClick={() => handleOpenDialogPayload(handleDelete)} sx={{ '&:hover .MuiSvgIcon-root': { transform: 'translateY(-2px)' }, }}>
+                            <DeleteOutlined sx={{ color: 'text.primary', transition: 'transform 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
                         </IconButton>
                     </Box>
                 </Box>
             )
-        },
-        {
-            field: 'clientId', headerName: 'Client', width: 130, flex: .5, renderCell: (params: GridRenderCellParams<Invoice>) => {
-
-                const client = usersData?.find(user => user.id === params.row.clientId)
-
-                if (usersIsLoading) return <Typography variant='h6'>Loading...</Typography>
-                if (usersError) return <Typography variant='h6'>{usersError.message}</Typography>
-
-                return <span>{client?.name} {client?.lastName}</span>
-            }
-        },
-        {
-            field: 'clientIdonly', headerName: 'Client ID', width: 130, flex: .5, renderCell: (params: GridRenderCellParams<Invoice>) => {
-
-                if (usersIsLoading) return <Typography variant='h6'>Loading...</Typography>
-                if (usersError) return <Typography variant='h6'>{usersError.message}</Typography>
-
-                return <span>ID <strong>{params?.row.clientId}</strong></span>
-            }
-        },
-        { field: 'totalPrice', headerName: 'Total', width: 100, flex: .25 },
-        { field: 'createdAt', headerName: 'Created At', width: 100, flex: .25 }
+        }
     ]
 
-    if (isLoading) return <Typography variant='h5'><CircularProgress /></Typography>
-    if (!data) return <Typography variant='h5'>No Invoices</Typography>
-    if (error) return <Typography variant='h5'>{error.message}</Typography>
+    if (isLoading || usersIsLoading) return <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}><CircularProgress size={60} /></Box>
+    if (error || usersError) return <Typography variant='h1' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{error?.message}</Typography>
 
     return (
-        <>
+        <Box sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+        }}>
             <ConfirmDialog
                 open={openDialog}
                 onConfirm={() => {
@@ -223,7 +236,7 @@ export const Invoices = () => {
                         pb: 5,
                         borderRadius: 2,
                         boxShadow: 3,
-                        backgroundColor: '#fff',
+                        backgroundColor: 'background.paper',
                         zIndex: 100,
                     }}>
                         <DialogTitle>Invoice # {invoiceData?.id}</DialogTitle>
@@ -263,8 +276,8 @@ export const Invoices = () => {
                             </List>
                         </DialogContent>
                         <DialogActions>
-                            <IconButton>
-                                <PictureAsPdf />
+                            <IconButton sx={{ '&:hover .MuiSvgIcon-root': { transform: 'translateY(-2px)' }, }}>
+                                <PictureAsPdfOutlined sx={{ color: 'text.primary', transition: 'transform 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
                             </IconButton>
                         </DialogActions>
                     </Box>
@@ -283,45 +296,76 @@ export const Invoices = () => {
                 )}
             </Modal>
             <Box sx={{
-                mb: 3,
-                width: '90%',
+                mb: 5,
+                width: '100%',
                 display: 'flex',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                alignItems: "center"
             }}>
-                <Typography variant='h4'>
+                <Typography variant="h1">
                     Invoices
                 </Typography>
-                <AddBtn onClick={handleAddInvoice} />
+                <AddBtn onClick={handleAddInvoice} text="Invoice" />
             </Box>
-            <DataGrid
-                rows={data}
-                columns={columns}
-                onRowClick={(params) => { setInvoiceData(params.row) }}
-                sx={{
-                    width: '90%',
-                    maxHeight: '80%',
-                    userSelect: 'none',
-                    backgroundColor: 'background.paper',
-                    '& .MuiDataGrid-row:hover': {
-                        backgroundColor: 'secondary.main',
-                        color: 'primary.contrastText',
-                    },
-                    '& .MuiDataGrid-cell:focus': {
-                        outline: 'none',
-                    },
-                    '& .MuiDataGrid-cell:focus-within': {
-                        outline: 'none',
-                    },
-                    '& .MuiDataGrid-row.Mui-selected': {
-                        backgroundColor: 'primary.main',
-                        color: 'primary.contrastText',
-                    },
-                    '& .MuiDataGrid-row.Mui-selected:hover': {
-                        backgroundColor: 'primary.main',
-                    },
-                }}
-            />
-        </>
+            {!data ? (
+                <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No Invoices</Typography>
+            ) : (
+                <DataGrid
+                    rows={data}
+                    columns={columns}
+                    onRowClick={(params) => { setInvoiceData(params.row) }}
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: "8px",
+                        boxShadow: "3px 3px 3px 0 rgba(0, 0, 0, 0.3)",
+                        border: "1px solid rgba(255, 255, 255, 0.02)",
+                        userSelect: 'none',
+                        backgroundColor: 'background.paper',
+                        '& .MuiDataGrid-virtualScroller': {
+                            pb: 2,
+                            maskImage: `
+                            linear-gradient(
+                                to bottom,
+                                black 0%,
+                                black 93%,
+                                transparent 100%
+                            )
+                        `,
+                            WebkitMaskImage: `
+                            linear-gradient(
+                                to bottom,
+                                black 0%,
+                                black 93%,
+                                transparent 100%
+                            )
+                        `,
+                        },
+                        '& .MuiDataGrid-row': {
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        },
+                        '& .MuiDataGrid-row:hover': {
+                            backgroundColor: 'secondary.main',
+                            color: 'primary.contrastText',
+                            cursor: 'pointer'
+                        },
+                        '& .MuiDataGrid-cell:focus': {
+                            outline: 'none',
+                        },
+                        '& .MuiDataGrid-cell:focus-within': {
+                            outline: 'none',
+                        },
+                        '& .MuiDataGrid-row.Mui-selected': {
+                            backgroundColor: 'primary.main',
+                            color: 'primary.contrastText',
+                        },
+                        '& .MuiDataGrid-row.Mui-selected:hover': {
+                            backgroundColor: 'primary.main',
+                        },
+                    }}
+                />
+            )}
+        </Box>
     )
 }
 

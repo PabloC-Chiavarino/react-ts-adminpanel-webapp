@@ -48,16 +48,29 @@ const SearchBox = () => {
 
     return (
         <Box
+            tabIndex={0}
             sx={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                borderRadius: '5px',
-                width: '275px',
-                height: '35px',
+                width: '25%',
+                height: '40px',
+                padding: '0 12px 0 12px',
+                ml: 1,
+                fontSize: '14px',
+                lineHeight: '22px',
+                fontWeight: 400,
                 backgroundColor: 'background.paper',
-                paddingInlineStart: '16px',
-                paddingInlineEnd: '8px',
+                borderRadius: '9999px',
+                borderWidth: 2,
+                borderColor: 'background.paper',
+                borderStyle: 'solid',
+                '&:focus-within': {
+                    borderColor: 'primary.main',
+                },
+                '&:disabled': {
+                    borderColor: '#FFFFFFFF',
+                },
             }}
         >
             <InputBase
@@ -65,9 +78,18 @@ const SearchBox = () => {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 value={query}
+                sx={{
+                    width: '100%',
+                    height: '100%',
+                    padding: '0 12px 0 12px',
+                    color: 'text.secondary',
+                    '&:focus': {
+                        border: '1px solid primary.main',
+                    },
+                }}
             />
-            <IconButton onClick={() => handleSearch()}>
-                <Search />
+            <IconButton onClick={() => handleSearch()} sx={{ '&:hover': { backgroundColor: 'transparent' } }}>
+                <Search sx={{ color: 'text.secondary' }} />
             </IconButton>
         </Box>
     )

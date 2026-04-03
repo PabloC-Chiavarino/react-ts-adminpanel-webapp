@@ -3,11 +3,11 @@ import { useDynamicQuery } from "../../hooks"
 import type { ChartTypes } from "../../types"
 import { DynamicChart } from "../../components"
 
-const InvoicesChart = () => {
+const RevenueChart = () => {
     const CHARTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/charts'
     const { data, isLoading, error } = useDynamicQuery<ChartTypes>(['charts'], CHARTS_ENDPOINT)
 
-    const chartData = { type: "invoices", title: "Monthly Invoices", data: data?.invoices }
+    const chartData = { type: "revenue", title: "Revenue", data: data?.revenue }
 
     if (isLoading) return <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}><CircularProgress size={60} /></Box>
     if (error) return <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>{error.message}</Typography>
@@ -25,7 +25,7 @@ const InvoicesChart = () => {
                 <Typography variant="h1">{chartData.title}</Typography>
             </Box>
             {!data ? (
-                <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No orders data</Typography>
+                <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No revenue data</Typography>
             ) : (
                 <Box sx={{ width: "100%", height: "100%" }}>
                     <DynamicChart data={chartData.data} type={chartData.type} />
@@ -35,4 +35,4 @@ const InvoicesChart = () => {
     )
 }
 
-export default InvoicesChart
+export default RevenueChart

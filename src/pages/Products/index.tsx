@@ -7,7 +7,7 @@ import { useDynamicQuery } from '../../hooks'
 import { DataGrid, type GridRenderCellParams } from '@mui/x-data-grid'
 import { Box, Typography, Modal, IconButton, CircularProgress } from '@mui/material'
 import { AddBtn, ConfirmDialog, ProductForm } from '../../components'
-import { Edit, Delete } from '@mui/icons-material'
+import { EditOutlined, DeleteOutlined } from '@mui/icons-material'
 export const Products = () => {
 
     const [open, setOpen] = useState(false)
@@ -23,7 +23,8 @@ export const Products = () => {
         name: '',
         category: '',
         price: 0,
-        stock: 0
+        stock: 0,
+        createdAt: ''
     }
 
     const PRODUCTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/products'
@@ -164,33 +165,39 @@ export const Products = () => {
     }
 
     const columns = [
+        { field: 'id', headerName: 'ID', width: 70, flex: .1 },
+        { field: 'name', headerName: 'Product', width: 130, flex: .4 },
+        { field: 'category', headerName: 'Category', width: 130, flex: .2 },
+        { field: 'price', headerName: 'Price', width: 130, flex: .2 },
         {
-            field: 'id', headerName: 'ID', width: 70, flex: .20, renderCell: (params: GridRenderCellParams<Product>) => (
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <span>{params.row.id}</span>
-                    <Box sx={{ display: productData?.id === params.row.id ? 'block' : 'none', paddingLeft: "20px" }}>
-                        <IconButton onClick={() => handleOpen()}>
-                            <Edit />
+            field: 'stock', headerName: 'Stock', width: 130, flex: .2, renderCell: (params: GridRenderCellParams<Product>) => (
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                    <span>{params.row.stock}</span>
+                    <Box sx={{ display: productData?.id === params.row.id ? 'flex' : 'none', alignItems: 'center' }}>
+                        <IconButton onClick={() => handleOpen()} sx={{ '&:hover .MuiSvgIcon-root': { transform: 'translateY(-2px)' }, }}>
+                            <EditOutlined sx={{ color: 'text.primary', transition: 'transform 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
                         </IconButton>
-                        <IconButton onClick={() => handleOpenDialogPayload(handleDelete)}>
-                            <Delete />
+                        <IconButton onClick={() => handleOpenDialogPayload(handleDelete)} sx={{ '&:hover .MuiSvgIcon-root': { transform: 'translateY(-2px)' }, }}>
+                            <DeleteOutlined sx={{ color: 'text.primary', transition: 'transform 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />
                         </IconButton>
                     </Box>
                 </Box>
             )
         },
-        { field: 'name', headerName: 'Product', width: 130, flex: .5 },
-        { field: 'category', headerName: 'Category', width: 130, flex: .5 },
-        { field: 'price', headerName: 'Price', width: 130, flex: .25 },
-        { field: 'stock', headerName: 'Stock', width: 130, flex: .25 },
     ]
 
-    if (isLoading) return <Typography variant='h5'><CircularProgress /></Typography>
-    if (!data) return <Typography variant='h5'>No products</Typography>
-    if (error) return <Typography variant='h5'>{error.message}</Typography>
+    if (isLoading) return <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}><CircularProgress size={60} /></Box>
+    if (error) return <Typography variant='h1' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{error.message}</Typography>
 
     return (
-        <>
+        <Box sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+        }}>
             <ConfirmDialog
                 open={openDialog}
                 onConfirm={() => {
@@ -214,50 +221,81 @@ export const Products = () => {
                     }} />
             </Modal>
             <Box sx={{
-                mb: 3,
-                width: '90%',
+                mb: 5,
+                width: '100%',
                 display: 'flex',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                alignItems: "center"
             }}>
-                <Typography variant='h4'>
+                <Typography variant="h1">
                     Products
                 </Typography>
-                <AddBtn onClick={handleAddProduct} />
+                <AddBtn onClick={handleAddProduct} text="Product" />
             </Box>
-            <DataGrid
-                rows={data}
-                columns={columns}
-                onRowClick={(params) => setProductData(params.row)}
-                rowSelectionModel={
-                    productData
-                        ? { type: 'include', ids: new Set([productData.id]) }
-                        : { type: 'include', ids: new Set() }
-                }
-                sx={{
-                    width: '90%',
-                    maxHeight: '80%',
-                    userSelect: 'none',
-                    backgroundColor: 'background.paper',
-                    '& .MuiDataGrid-row:hover': {
-                        backgroundColor: 'secondary.main',
-                        color: 'primary.contrastText',
-                    },
-                    '& .MuiDataGrid-cell:focus': {
-                        outline: 'none',
-                    },
-                    '& .MuiDataGrid-cell:focus-within': {
-                        outline: 'none',
-                    },
-                    '& .MuiDataGrid-row.Mui-selected': {
-                        backgroundColor: 'primary.main',
-                        color: 'primary.contrastText',
-                    },
-                    '& .MuiDataGrid-row.Mui-selected:hover': {
-                        backgroundColor: 'primary.main',
-                    },
-                }}
-            />
-        </>
+            {!data ? (
+                <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No Products</Typography>
+            ) : (
+                <DataGrid
+                    rows={data}
+                    columns={columns}
+                    onRowClick={(params) => setProductData(params.row)}
+                    rowSelectionModel={
+                        productData
+                            ? { type: 'include', ids: new Set([productData.id]) }
+                            : { type: 'include', ids: new Set() }
+                    }
+                    sx={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: "8px",
+                        boxShadow: "3px 3px 3px 0 rgba(0, 0, 0, 0.3)",
+                        border: "1px solid rgba(255, 255, 255, 0.02)",
+                        userSelect: 'none',
+                        backgroundColor: 'background.paper',
+                        '& .MuiDataGrid-virtualScroller': {
+                            pb: 2,
+                            maskImage: `
+                            linear-gradient(
+                                to bottom,
+                                black 0%,
+                                black 93%,
+                                transparent 100%
+                            )
+                        `,
+                            WebkitMaskImage: `
+                            linear-gradient(
+                                to bottom,
+                                black 0%,
+                                black 93%,
+                                transparent 100%
+                            )
+                        `,
+                        },
+                        '& .MuiDataGrid-row': {
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        },
+                        '& .MuiDataGrid-row:hover': {
+                            backgroundColor: 'secondary.main',
+                            color: 'primary.contrastText',
+                            cursor: 'pointer'
+                        },
+                        '& .MuiDataGrid-cell:focus': {
+                            outline: 'none',
+                        },
+                        '& .MuiDataGrid-cell:focus-within': {
+                            outline: 'none',
+                        },
+                        '& .MuiDataGrid-row.Mui-selected': {
+                            backgroundColor: 'primary.main',
+                            color: 'primary.contrastText',
+                        },
+                        '& .MuiDataGrid-row.Mui-selected:hover': {
+                            backgroundColor: 'primary.main',
+                        },
+                    }}
+                />
+            )}
+        </Box>
     )
 }
 

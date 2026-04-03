@@ -34,21 +34,22 @@ const Login = () => {
     }
 
     return (
-        <Container component="main" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+        <Container component="main" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    width: '40%',
+                    width: '35%',
+                    transform: 'translateY(-30%)'
                 }}
             >
-                <Typography variant="h4" textAlign="center" mb={3}>
-                    Admin Panel
+                <Typography variant="h1" fontSize={34} textAlign="center" mb={5}>
+                    Nexo
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                <Box component="form" onSubmit={handleSubmit} noValidate>
                     <TextField
                         margin="normal"
+                        size='small'
                         required
                         fullWidth
                         id="user"
@@ -62,6 +63,7 @@ const Login = () => {
                     />
                     <TextField
                         margin="normal"
+                        size='small'
                         required
                         fullWidth
                         name="password"
@@ -77,7 +79,7 @@ const Login = () => {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 6, mb: 2, height: '50px' }}
+                        sx={{ mt: 6, height: '48px', backgroundColor: 'primary.main', '&:hover': { backgroundColor: 'secondary.main' } }}
                     >
                         Iniciar Sesión
                     </Button>

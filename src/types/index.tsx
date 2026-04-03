@@ -14,6 +14,7 @@ export type Product = {
   category: string;
   price: number;
   stock: number;
+  createdAt: string;
 }
 
 export type Field = {
@@ -22,8 +23,16 @@ export type Field = {
   label: string;
   type?: 'text' | 'number' | 'boolean' | 'password' | 'email' | 'select';
   required?: boolean;
-  options?: { value: number, label: string }[]
+  options?: { value: string | number, label: string }[]
   multiple?: boolean
+}
+
+export type Order = {
+  id: number;
+  clientId: number | null;
+  productIds: number[];
+  totalPrice: number;
+  createdAt: string;
 }
 
 export type Invoice = {
@@ -39,13 +48,16 @@ export type Task = {
   title: string;
   description?: string;
   completed: boolean;
+  archived: boolean;
+  priority: "low" | "medium" | "high";
 }
 
 export type Event = {
   id: number;
   title: string;
-  category: "low" | "medium" | "high" | "";
+  category: 'review' | 'meeting' | 'design' | 'development' | 'release' | '';
   description?: string;
+  qNote?: string;
   startDate?: string;
   endDate?: string;
   allDay?: boolean;
@@ -77,30 +89,54 @@ export type ChartTypes = {
 }
 
 export type DashCardTypes = {
-  clientsChange: {
-    value: number,
-    percent: number,
-    direction: "up" | "down" | "stable";
-  };
-  revenueChange: {
-    value: number,
-    percent: number,
-    direction: "up" | "down" | "stable";
-  };
-  invoicesChange: {
-    value: number,
-    percent: number,
-    direction: "up" | "down" | "stable";
-  };
-  productsInfo: {
+  clients: {
     total: number;
+    change: {
+      value: number,
+      percent: number,
+      direction: "up" | "down" | "stable";
+    }
   };
-  eventsInfo: {
-    upcoming: number;
-    next: string
+  revenue: {
+    total: number,
+    change: {
+      value: number,
+      percent: number,
+      direction: "up" | "down" | "stable";
+    }
+  };
+  invoices: {
+    total: number,
+    change: {
+      value: number,
+      percent: number,
+      direction: "up" | "down" | "stable";
+    }
+  };
+  products: {
+    total: number;
+    change: {
+      value: number,
+      percent: number,
+      direction: "up" | "down" | "stable",
+    }
+  };
+  pendingOrders: {
+    total: number;
+    change: {
+      value: number,
+      percent: number,
+      direction: "up" | "down" | "stable";
+    }
+  }
+  events: {
+    total: number;
+    upcoming: Event[]
   }
   topProducts: {
     product: string;
     quantity: number;
   }[];
 };
+
+export type MetricsPeriod = '6months' | 'year' | 'all'

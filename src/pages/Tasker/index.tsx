@@ -1,17 +1,17 @@
 import { type DragStartEvent, type DragEndEvent, DndContext, DragOverlay, closestCenter } from "@dnd-kit/core";
-import { TaskAltSharp, ForwardSharp, FormatListBulleted, DeleteSweep } from "@mui/icons-material";
-import { Typography, Box, Grid, Modal, Paper, CircularProgress } from "@mui/material";
+import { Typography, Box, Grid, Modal, Paper, CircularProgress, Collapse, Button } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { useState, useRef } from "react";
-import { ConfirmDialog, AddBtn, TaskContainer, DraggableTask, TaskForm } from "../../components";
+import { ConfirmDialog, AddBtn, TaskContainer, DraggableTask, TaskForm, ArchivedTask } from "../../components";
 import { useDynamicQuery } from "../../hooks";
 import type { Task } from "../../types";
 
 const Tasker = () => {
     const [open, setOpen] = useState(false);
-    const [optionsTaskID, setOptionsTaskID] = useState<number | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
+    const [showArchived, setShowArchived] = useState(false);
     const [taskData, setTaskData] = useState<Task | null>(null);
     const [activeTaskID, setActiveTaskID] = useState<string | null>(null);
     const requestAction = useRef<(() => void) | null>(null);
@@ -26,10 +26,13 @@ const Tasker = () => {
         title: "",
         description: "",
         completed: false,
+        archived: false,
+        priority: "low",
     };
 
-    const todo = data?.filter(task => !task.completed) || [];
-    const done = data?.filter(task => task.completed) || [];
+    const todo = data?.filter(task => !task.completed && !task.archived) || [];
+    const done = data?.filter(task => task.completed && !task.archived) || [];
+    const archived = data?.filter(task => task.archived) || [];
 
     const mutation = useMutation({
         mutationFn: async (task: Task) => {
@@ -42,7 +45,6 @@ const Tasker = () => {
             return response.json();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['tasks'] });
             setTaskData(emptyTask);
         },
     });
@@ -81,9 +83,6 @@ const Tasker = () => {
 
         onSuccess: () => {
             enqueueSnackbar("Task updated successfully", { variant: "success" });
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['tasks'] });
         }
     });
 
@@ -95,10 +94,7 @@ const Tasker = () => {
             });
             if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
             return response.json();
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['tasks'] });
-        },
+        }
     });
 
     const handleOpen = () => setOpen(true);
@@ -106,8 +102,6 @@ const Tasker = () => {
         setOpen(false);
         setTaskData(emptyTask);
     };
-
-    const handleOptionsTaskID = (taskID: number | null) => setOptionsTaskID(taskID);
 
     const handleOpenDialogPayload = (action: () => void) => {
         requestAction.current = action
@@ -134,9 +128,12 @@ const Tasker = () => {
         if (!taskData) return
         try {
             await mutation.mutateAsync(taskData)
-            enqueueSnackbar('Created successfully', { variant: 'success' })
+
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+
+            enqueueSnackbar('Task created successfully', { variant: 'success' })
         } catch (error) {
-            enqueueSnackbar('Error', { variant: 'error' })
+            enqueueSnackbar('Error creating task', { variant: 'error' })
         }
     }
 
@@ -144,18 +141,24 @@ const Tasker = () => {
         try {
             if (!taskData) return
             await updateMutation.mutateAsync(taskData)
-            enqueueSnackbar('Updated successfully', { variant: 'success' })
+
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+
+            enqueueSnackbar('Task updated successfully', { variant: 'success' })
         } catch (error) {
-            enqueueSnackbar('Error', { variant: 'error' })
+            enqueueSnackbar('Error updating task', { variant: 'error' })
         }
     }
 
     const handleDelete = async (taskID: number) => {
         try {
             await deleteMutation.mutateAsync(taskID)
-            enqueueSnackbar('Deleted successfully', { variant: 'success' })
+
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+
+            enqueueSnackbar('Task deleted successfully', { variant: 'success' })
         } catch (error) {
-            enqueueSnackbar('Error', { variant: 'error' })
+            enqueueSnackbar('Error deleting task', { variant: 'error' })
         }
     }
 
@@ -163,32 +166,75 @@ const Tasker = () => {
     const handleCompleteAll = async () => {
         try {
             await Promise.all(
-                todo.map(task =>
-                    fetch(`${TASKS_ENDPOINT}/${task.id}`, {
+                todo.map(async task => {
+                    const res = await fetch(`${TASKS_ENDPOINT}/${task.id}`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ ...task, completed: true }),
-                    }).then(res => {
-                        if (!res.ok) throw new Error('Error actualizando tarea');
-                        return res.json();
                     })
-                )
+                    if (!res.ok) throw new Error('Error updating task');
+                    const data = await res.json();
+                    return data;
+                })
             );
+
             queryClient.invalidateQueries({ queryKey: ['tasks'] });
-            enqueueSnackbar("Todas las tareas completadas", { variant: "success" });
+
+            enqueueSnackbar("All tasks completed successfully", { variant: "success" });
         } catch (error) {
-            enqueueSnackbar("Error completando tareas", { variant: "error" });
+            enqueueSnackbar("Error completing tasks", { variant: "error" });
         }
     };
 
-
-    const handleDeleteCompleted = async () => {
+    const handleArchiveAll = async () => {
         try {
-            await Promise.all(done.map(task => deleteMutation.mutateAsync(task.id)));
+            await Promise.all(
+                done.map(async task => {
+                    const res = await fetch(`${TASKS_ENDPOINT}/${task.id}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ ...task, archived: true }),
+                    })
+                    if (!res.ok) throw new Error('Error actualizando tarea');
+                    const data = await res.json();
+                    return data;
+                })
+            );
+
             queryClient.invalidateQueries({ queryKey: ['tasks'] });
-            enqueueSnackbar('Tareas completadas eliminadas', { variant: 'success' });
+
+            enqueueSnackbar("All archived tasks completed successfully", { variant: "success" });
+        } catch (error) {
+            enqueueSnackbar("Error archiving tasks", { variant: "error" });
+        }
+    };
+
+    const handleDeleteArchive = async () => {
+        try {
+            await Promise.all(archived.map(task => deleteMutation.mutateAsync(task.id)));
+
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+
+            enqueueSnackbar('All archived tasks deleted successfully', { variant: 'success' });
         } catch {
-            enqueueSnackbar('Error eliminando tareas', { variant: 'error' });
+            enqueueSnackbar('Error deleting archived tasks', { variant: 'error' });
+        }
+    };
+
+    const handleRestoreFromArchive = async (taskID: number) => {
+        try {
+            const res = await fetch(`${TASKS_ENDPOINT}/${taskID}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...data?.find(task => task.id === taskID), completed: false, archived: false }),
+            })
+
+            if (!res.ok) throw new Error('Error restoring task');
+
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+            enqueueSnackbar('Task restored successfully', { variant: 'success' });
+        } catch {
+            enqueueSnackbar('Error restoring task', { variant: 'error' });
         }
     };
 
@@ -228,8 +274,8 @@ const Tasker = () => {
         return data?.find(task => task.id === id);
     };
 
-    if (isLoading) return <Typography variant="h5"><CircularProgress /></Typography>;
-    if (error) return <Typography variant="h5">{(error as Error).message}</Typography>;
+    if (isLoading) return <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}><CircularProgress size={60} /></Box>
+    if (error) return <Typography variant='h1' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>{(error as Error).message}</Typography>
 
     return (
         <Box sx={{
@@ -237,8 +283,7 @@ const Tasker = () => {
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            position: "relative",
         }}
         >
             <ConfirmDialog
@@ -264,68 +309,131 @@ const Tasker = () => {
                 />
             </Modal>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
-                <Box sx={{ mb: 6, width: "90%", display: "flex", justifyContent: "space-between" }}>
-                    <Typography variant="h3">Tasker</Typography>
-                    <AddBtn onClick={() => { setTaskData(emptyTask); handleOpen(); }} />
+                <Box sx={{ mb: 5, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <Typography variant="h1" sx={{ color: 'text.primary' }}>Tasker</Typography>
+                    <AddBtn onClick={() => { setTaskData(emptyTask); handleOpen(); }} text="Task" />
                 </Box>
-                <Grid container sx={{ width: "90%", height: "100%", justifyContent: "space-between", alignItems: "center" }}>
-                    <TaskContainer
-                        id="todo"
-                        title="To Do"
-                        icon={<TaskAltSharp sx={{ fontSize: 30 }} />}
-                        tasks={todo}
-                        button={<ForwardSharp sx={{ fontSize: 50, cursor: "pointer" }} />}
-                        action={() => handleOpenDialogPayload(handleCompleteAll)}
-                        handleDelete={(id) => handleOpenDialogPayload(() => handleDelete(id))}
-                        handleEdit={(taskID) => handleEdit(taskID)}
-                        optionsTaskID={optionsTaskID}
-                        handleOptionsTaskID={(id) => handleOptionsTaskID(id)}
-                    />
-                    <Box sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        flex: 0.25,
-                        textAlign: "center",
-                        color: "grey",
-                        opacity: 0.3,
-                        fontWeight: "lighter",
-                        gap: 4,
-                        p: 10,
-                        transition: "opacity 1s ease",
-                        '&:hover': { opacity: 1 }
-                    }}>
-                        <Typography variant="h6" fontSize={16}>
-                            Drag and drop tasks to move them between the completed or to do section
-                        </Typography>
-                        <Typography variant="h6" fontSize={16}>
-                            Press the <ForwardSharp sx={{ fontSize: 25, verticalAlign: 'bottom' }} /> button to complete all tasks
-                        </Typography>
-                        <Typography variant="h6" fontSize={16}>
-                            Press the <DeleteSweep sx={{ fontSize: 25, verticalAlign: 'bottom' }} /> button to delete all completed tasks
-                        </Typography>
-                    </Box>
-                    <TaskContainer
-                        id="done"
-                        title="Completed"
-                        icon={<FormatListBulleted sx={{ fontSize: 30 }} />}
-                        tasks={done}
-                        button={<DeleteSweep sx={{ fontSize: 50, cursor: "pointer" }} />}
-                        action={() => handleOpenDialogPayload(handleDeleteCompleted)}
-                        handleDelete={(taskID) => handleOpenDialogPayload(() => handleDelete(taskID))}
-                        handleEdit={(taskID) => handleEdit(taskID)}
-                        optionsTaskID={optionsTaskID}
-                        handleOptionsTaskID={(id) => handleOptionsTaskID(id)}
-                    />
-                </Grid>
-
+                {!data ? (
+                    <Typography variant='h3' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No Tasks</Typography>
+                ) : (
+                    <>
+                        <Box sx={{ display: "flex", alignItems: "center", mt: -3.5 }}>
+                            <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
+                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "25px", color: 'priorityStyles.high.color' }}>{todo?.length} </Typography>
+                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "12px", color: 'text.secondary', letterSpacing: '1px' }}>PENDING</Typography>
+                            </Box>
+                            <Box sx={{ width: '1px', height: '16px', backgroundColor: 'rgb(240 237 241 / 0.25)', mx: 2 }} />
+                            <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
+                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "25px", color: 'priorityStyles.medium.color' }}>{done?.length + archived?.length} </Typography>
+                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "12px", color: 'text.secondary', letterSpacing: '1px' }}>COMPLETED</Typography>
+                            </Box>
+                        </Box>
+                        <Grid container sx={{ width: "100%", height: "50%", justifyContent: "space-between", gap: 5, alignItems: "center", mt: 7 }}>
+                            <TaskContainer
+                                id="todo"
+                                title="To Do"
+                                tasks={todo}
+                                actionLabel="complete all"
+                                action={() => handleOpenDialogPayload(handleCompleteAll)}
+                                handleDelete={(id) => handleOpenDialogPayload(() => handleDelete(id))}
+                                handleEdit={(taskID) => handleEdit(taskID)}
+                            />
+                            <TaskContainer
+                                id="done"
+                                title="Completed"
+                                tasks={done}
+                                actionLabel="archive all"
+                                action={() => handleOpenDialogPayload(handleArchiveAll)}
+                                handleDelete={(taskID) => handleOpenDialogPayload(() => handleDelete(taskID))}
+                                handleEdit={(taskID) => handleEdit(taskID)}
+                            />
+                        </Grid>
+                    </>
+                )}
                 <DragOverlay>
-                    <Paper sx={{ cursor: "grabbing", opacity: 0.5 }}>
+                    <Paper sx={{ cursor: "grabbing", opacity: 0.7 }}>
                         {activeTaskID && <DraggableTask task={handleTaskFind(Number(activeTaskID))!} />}
                     </Paper>
                 </DragOverlay>
             </DndContext>
-        </Box>
+            <Box sx={{
+                width: "100%",
+                borderRadius: "14px",
+                backgroundColor: "background.paper",
+                display: "flex",
+                flexDirection: "column",
+                mt: 15,
+                p: 3
+            }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                    <Box onClick={() => setShowArchived(!showArchived)} sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        cursor: "pointer",
+                        '&:hover .MuiSvgIcon-root': {
+                            color: 'text.primary',
+                        },
+                        '&:hover .MuiTypography-root': {
+                            color: 'text.primary',
+                        }
+                    }}>
+                        {showArchived ? <ExpandLess sx={{ color: 'text.secondary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} /> : <ExpandMore sx={{ color: 'text.secondary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />}
+                        <Typography variant="h2" sx={{ fontWeight: '600', fontSize: '18px', color: 'text.primary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }}>Archived Tasks</Typography>
+                    </Box>
+                    <Button
+                        onClick={() => handleOpenDialogPayload(handleDeleteArchive)}
+                        variant="text"
+                        disableRipple
+                        sx={{
+                            fontSize: '11px',
+                            px: 2.5,
+                            py: 1,
+                            borderRadius: '10px',
+                            backgroundColor: 'background.alt',
+                            fontWeight: 700,
+                            color: 'text.secondary',
+                            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                            '&:hover': {
+                                color: 'priorityStyles.high.color',
+                                backgroundColor: 'background.paper2',
+                            },
+                        }}
+                    >
+                        EMPTY ARCHIVE
+                    </Button>
+                </Box>
+                <Collapse in={showArchived} sx={{
+                    width: "100%",
+                    overflowY: "auto",
+                    maxHeight: "60vh",
+                    scrollbarWidth: "none",
+                    maskImage: `linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    black 10%,
+                    black 90%,
+                    transparent 100%
+                )`,
+                    WebkitMaskImage: `linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    black 10%,
+                    black 90%,
+                    transparent 100%
+                )`,
+                    '&::-webkit-scrollbar': {
+                        display: 'none',
+                    },
+                }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 3.5, pb: 3.5 }}>
+                        {archived.map((task) => (
+                            <ArchivedTask key={task.id} task={task} handleRestoreFromArchive={() => handleOpenDialogPayload(() => handleRestoreFromArchive(task.id))} handleDelete={() => handleOpenDialogPayload(() => handleDelete(task.id))} />
+                        ))}
+                    </Box>
+                </Collapse>
+            </Box>
+        </Box >
     );
 };
 

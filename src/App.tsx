@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import Router from './routes'
 import { ColorModeProvider } from './context/ColorModeContext'
 import { AuthProvider } from './context/AuthContext'
-import './App.css'
 
 function App() {
 

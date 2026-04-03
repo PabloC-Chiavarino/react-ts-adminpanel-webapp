@@ -1,65 +1,103 @@
 import type { Task } from '../../types'
 import { useDroppable } from '@dnd-kit/core'
 import DraggableTask from '../DraggableTask'
-import { Box, Typography, Paper, Grid, IconButton } from '@mui/material'
+import { Box, Typography, Paper, Button } from '@mui/material'
 const TaskContainer = ({
     id,
     title,
-    icon,
     tasks,
-    button,
+    actionLabel,
     action,
     handleDelete,
-    handleEdit,
-    optionsTaskID,
-    handleOptionsTaskID
+    handleEdit
 }: {
     id: string,
     title: string,
-    icon: React.ReactNode,
     tasks: Task[]
-    button: React.ReactNode,
+    actionLabel: string,
     action: () => void,
     handleDelete: (taskID: number) => void,
-    handleEdit: (taskID: number) => void,
-    optionsTaskID: number | null,
-    handleOptionsTaskID: (taskID: number | null) => void
+    handleEdit: (taskID: number) => void
 }) => {
     const { setNodeRef } = useDroppable({ id: id })
 
     return (
-        <Box sx={{ height: '100%', flex: 0.4, textAlign: 'center'}}>
+        <Box sx={{ height: '100%', flex: 0.5, textAlign: 'center' }}>
             <Box sx={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
                 width: '100%',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
             }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    {icon}
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', fontSize: '1.7rem' }}>{title}</Typography>
+                    <Box
+                        sx={{
+                            width: '.5rem',
+                            height: '.5rem',
+                            borderRadius: '50%',
+                            ml: 1,
+                            backgroundColor: title === 'To Do' ? 'priorityStyles.high.color' : 'priorityStyles.medium.color',
+                            boxShadow: title === 'To Do' ? '0 0 10px rgba(225, 98, 118, 0.6)' : '0 0 10px rgba(178,161,255,0.6)',
+                        }} />
+                    <Typography variant="h2" sx={{ fontWeight: '600', fontSize: '18px', color: 'text.primary', fontFamily: 'Manrope' }}>{title}</Typography>
                 </Box>
-                <IconButton onClick={action} sx={{ transition: 'all .25s ease-in-out', '&:hover': { color: 'var(--primary)', backgroundColor: 'transparent' } }}>
-                    {button}
-                </IconButton>
+                <Button
+                    onClick={action}
+                    variant="text"
+                    disableRipple
+                    sx={{
+                        p: 0,
+                        minWidth: 'auto',
+                        textTransform: 'none',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        color: 'text.secondary',
+                        transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                            color: title === 'To Do' ? 'priorityStyles.medium.color' : 'priorityStyles.high.color',
+                            backgroundColor: 'transparent',
+                        },
+                    }}
+                >
+                    {actionLabel.toUpperCase()}
+                </Button>
             </Box>
             <Paper sx={{
-                height: '85%',
+                mt: 0,
+                pt: 3.5,
+                pb: 3.5,
+                height: '100%',
                 overflowY: 'auto',
-                display: 'flex',
-                justifyContent: 'center'
+                scrollbarWidth: 'none',
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
+                maskImage: `linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    black 10%,
+                    black 85%,
+                    transparent 100%
+                )`,
+                WebkitMaskImage: `linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    black 10%,
+                    black 85%,
+                    transparent 100%
+                )`,
+
+                '&::-webkit-scrollbar': {
+                    display: 'none',
+                },
             }}
                 ref={setNodeRef}
             >
-                <Grid size={9} sx={{
+                <Box sx={{
                     flex: 1,
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
-                    padding: 2,
-                    height: '100%',
-                    overflowX: 'hidden'
                 }}>
                     {tasks.map((task) => (
                         <DraggableTask
@@ -67,11 +105,9 @@ const TaskContainer = ({
                             task={task}
                             handleEdit={handleEdit}
                             handleDelete={handleDelete}
-                            optionsTaskID={optionsTaskID}
-                            handleOptionsTaskID={handleOptionsTaskID}
                         />
                     ))}
-                </Grid>
+                </Box>
             </Paper>
         </Box>
     )

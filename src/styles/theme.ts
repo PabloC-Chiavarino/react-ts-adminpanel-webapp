@@ -2,17 +2,21 @@ import type { PaletteMode } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 
 const darkPalette = {
-    primary: { main: '#631fbdff' },
-    secondary: { main: '#611db9bb' },
+    primary: { main: '#7858f5' },
+    secondary: { main: '#613affbb' },
+    tertiary: { main: '#b2a1ff' },
 
     background: {
-        default: '#1f2029',
-        paper: '#2b2c3d',
+        default: '#0e0e11',
+        alt: '#3d3d494d',
+        alt2: '#201f23',
+        paper: '#131316',
+        paper2: '#19191d',
     },
 
     text: {
-        primary: '#e6ebffff',
-        secondary: '#a9b1d6',
+        primary: '#f0edf1',
+        secondary: '#959397',
     }
 };
 
@@ -35,14 +39,41 @@ export const getDesignTokens = (mode: PaletteMode) => ({
     palette: {
         mode,
         ...(mode === 'dark' ? darkPalette : lightPalette),
+        priorityStyles: {
+            high: {
+                bg: '#302127',
+                color: '#e16276'
+            },
+            medium: {
+                bg: '#282634',
+                color: '#b2a1ff'
+            },
+            low: {
+                bg: '#464556',
+                color: '#b8b7cb'
+            }
+        },
+        categoryStyles: {
+            review: {
+                color: '#62b8f5'
+            },
+            meeting: {
+                color: '#5dd6b5'
+            },
+            design: {
+                color: '#f0a05a'
+            },
+            development: {
+                color: '#b2a1ff'
+            },
+            release: {
+                color: '#e16276'
+            }
+        }
     },
     typography: {
-        fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-        h1: { fontWeight: 700 },
-        h2: { fontWeight: 700 },
-        h3: { fontWeight: 600 },
-        h4: { fontWeight: 600 },
-        h6: { fontWeight: 600 },
+        h1: { fontFamily: 'Manrope', fontWeight: 800, fontSize: '2.5rem', letterSpacing: "-0.05em", color: 'text.primary' },
+        fontFamily: '"Inter", sans-serif',
         button: { textTransform: 'none' as const, fontWeight: 600 },
     },
     components: {

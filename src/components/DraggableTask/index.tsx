@@ -1,98 +1,112 @@
 import { useDraggable } from '@dnd-kit/core'
 import type { Task } from '../../types'
-import { Collapse, IconButton, Paper, Typography, styled } from '@mui/material'
-import { Edit, Delete, AddCircle } from '@mui/icons-material'
+import { IconButton, Typography, Box } from '@mui/material'
+import { EditOutlined, DeleteOutlined } from '@mui/icons-material'
 
 const DraggableTask = ({
     task,
     handleEdit,
     handleDelete,
-    optionsTaskID,
-    handleOptionsTaskID
 }: {
     task: Task;
     handleEdit?: (taskID: number) => void;
     handleDelete?: (taskID: number) => void;
-    optionsTaskID?: number | null;
-    handleOptionsTaskID?: (taskID: number | null) => void
 }) => {
 
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
         id: task.id
     })
 
-    const TaskItem = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        flexShrink: 1,
-        boxShadow: '2px 2px 0px 1px rgba(0,0,0,0.6)',
-        border: '1px solid rgba(255,255,255,0.05)',
-        '&:hover': {
-            backgroundColor: theme.palette.secondary.main,
-            cursor: 'grab',
-        },
-    }))
-
     return (
-        <TaskItem
+        <Box
             sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                flexShrink: 1,
+                px: 2.5,
+                pt: 2.7,
+                pb: 4,
+                border: "1px solid transparent",
+                borderRadius: '14px',
+                justifyContent: 'space-between',
                 opacity: isDragging ? 0.5 : 1,
+                backgroundColor: task.completed === false ? 'background.paper2' : 'background.paper',
+                transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                 position: 'relative',
-                transition: 'opacity 0.25s ease, background-color 0.25s ease',
                 '&:hover': {
-                    color: 'primary.contrastText'
+                    cursor: 'grab',
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0px 8px 24px rgba(0,0,0,0.25)',
+                    backgroundColor: 'background.alt',
+                    border: "1px solid",
+                    borderColor: task.priority === 'high' ? 'priorityStyles.high.bg' : task.priority === 'medium' ? 'priorityStyles.medium.bg' : 'priorityStyles.low.bg'
                 },
-                '&:hover .MuiIconButton-root': {
+                '&:hover .task-actions': {
                     opacity: 1,
-                    backgroundColor: 'transparent',
-                    color: 'primary.contrastText'
                 }
             }}
             ref={setNodeRef}
             {...attributes}
             {...listeners}
         >
-            <IconButton
-                sx={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    opacity: 0,
-                    transition: 'color 0.3s ease',
-                    '&:hover': {
-                        color: 'black'
-                    }
-                }}
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={optionsTaskID !== task.id ? () => { handleOptionsTaskID?.(task.id) } : () => { handleOptionsTaskID?.(null) }}
-            >
-                <AddCircle sx={{ fontSize: 22 }} />
-            </IconButton>
-            <Collapse in={optionsTaskID === task.id} timeout={200} unmountOnExit>
-                <IconButton
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={() => { handleEdit?.(task.id) }}
-                >
-                    <Edit sx={{ fontSize: 27, '&:hover': { color: 'black' } }} />
-                </IconButton>
-                <IconButton
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={() => { handleDelete?.(task.id) }}
-                >
-                    <Delete sx={{
-                        fontSize: 27,
-                        transition: 'all 0.2s ease',
-                        '&:hover': {
-                            color: 'black'
-                        }
-                    }}
-                    />
-                </IconButton>
-            </Collapse>
-            <Typography variant="h6">{task.title}</Typography>
-            <Typography variant="body1">{task.description}</Typography>
-        </TaskItem>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, position: 'relative', mb: 1 }}>
+                <Box sx={{ width: '6px', height: '25px', borderRadius: '9999px', backgroundColor: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color' }} />
+                <Typography sx={{ fontSize: "10px", fontWeight: 700, color: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color' }}>{task.priority.toUpperCase()} PRIORITY</Typography>
+                <Box className='task-actions' sx={{ display: 'flex', gap: 0, opacity: 0, right: 0, position: 'absolute', transition: 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+                    {!task.completed && <IconButton
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onClick={() => { handleEdit?.(task.id) }}
+                        sx={{
+                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                            '&:hover': {
+                                backgroundColor: 'transparent',
+                            }
+                        }}
+                    >
+                        <EditOutlined sx={{
+                            width: 22,
+                            height: 22,
+                            color: 'text.secondary',
+                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                            transform: 'translateY(0px)',
+                            '&:hover': {
+                                color: 'text.primary',
+                                transform: 'translateY(-2px)'
+                            }
+                        }}
+                        />
+                    </IconButton>}
+                    <IconButton
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onClick={() => { handleDelete?.(task.id) }}
+                        sx={{
+                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                            '&:hover': {
+                                backgroundColor: 'transparent',
+                            }
+                        }}
+                    >
+                        <DeleteOutlined sx={{
+                            width: 22,
+                            height: 22,
+                            color: 'text.secondary',
+                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                            transform: 'translateY(0px)',
+                            '&:hover': {
+                                color: 'text.primary',
+                                transform: 'translateY(-2px)'
+                            }
+                        }}
+                        />
+                    </IconButton>
+                </Box>
+            </Box>
+            <Typography sx={{ fontSize: "18px", textAlign: 'left', fontWeight: "bold", textDecoration: task.completed ? "line-through" : "none" }}>
+                {task.title}
+            </Typography>
+            <Typography variant="body1" sx={{ fontSize: "14px", textAlign: 'left', fontStyle: 'oblique', color: 'text.secondary' }}>{task.description}</Typography>
+        </Box>
     )
 }
 

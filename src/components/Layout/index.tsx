@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { Box, Toolbar } from '@mui/material'
+import { Box } from '@mui/material'
 import { Sidebar, Topbar } from '../../components'
 import '../../index.css'
 
@@ -7,11 +7,17 @@ const Layout = () => {
 
     const { pathname } = useLocation()
 
-    const drawerWidth = 240
-    const topBarHeight = 35
+    const drawerWidth = 256
+    const topBarHeight = 64
 
     return (
-        <Box className='fade-in' sx={{ display: 'flex' }}>
+        <Box
+            className='fade-in'
+            sx={{
+                display: 'flex',
+                position: 'relative',
+            }}
+        >
             <Topbar />
             <Sidebar />
             <Box
@@ -19,17 +25,19 @@ const Layout = () => {
                 className='fade-in'
                 component="main"
                 sx={{
-                    flexGrow: 1,
-                    display: 'flex',
                     flexDirection: 'column',
+                    display: 'flex',
+                    flexGrow: 1,
+                    height: `calc(100vh - ${topBarHeight}px)`,
+                    width: `calc(100vw - ${drawerWidth}px)`,
+                    ml: `${drawerWidth}px`,
+                    mt: `${topBarHeight}px`,
+                    px: 5,
+                    pt: 6,
+                    pb: 2,
                     alignItems: 'center',
-                    width: `calc(100% - ${drawerWidth}px)`,
-                    height: `calc(100dvh - ${topBarHeight}px)`,
-                    marginLeft: `${drawerWidth}px`,
-                    paddingTop: `${topBarHeight}px`,
                 }}
             >
-                <Toolbar />
                 <Outlet />
             </Box>
         </Box>

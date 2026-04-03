@@ -58,7 +58,7 @@ const DynamicForm = <T extends Record<string, unknown>>(
             }}
         >
             <Typography variant="h6" sx={{ alignSelf: 'center', mb: 1.5, fontWeight: 'bold', fontSize: 22 }}>
-                New {title}
+                {existingUser ? `Edit ${title}` : `New ${title}`}
             </Typography>
             {fieldPairs.map((pair, pairIndex) => (
                 <Box
@@ -121,7 +121,7 @@ const DynamicForm = <T extends Record<string, unknown>>(
                     ))}
                 </Box>
             ))}
-            <Button type='submit' variant="contained" sx={{ width: '120px', height: '45px', mt: 1 }}>
+            <Button type='submit' variant="contained" sx={{ width: '105px', height: '48px', mt: 1, transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', '&:hover': { backgroundColor: 'secondary.main', }, '&:active': { transform: 'scale(0.95)', }, }}>
                 {existingUser ? 'UPDATE' : 'ADD'}
             </Button>
         </Box>
