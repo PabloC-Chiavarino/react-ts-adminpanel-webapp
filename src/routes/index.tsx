@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from '../components'
 import { useAuth } from '../context/AuthContext'
 import { Dashboard, Clients, Products, Invoices, Orders, Tasker, Calendar, Revenue, ClientsChart, InvoicesChart, MostSold, Login, UserProfile } from '../pages'
+import NotFound from '../pages/NotFound'
 
 const Router = () => {
     const { user } = useAuth()
@@ -23,6 +24,7 @@ const Router = () => {
                 <Route path='/analytics/invoices-per-month' element={<InvoicesChart />} />
                 <Route path='/analytics/clients-per-month' element={<ClientsChart />} />
                 <Route path='/analytics/most-sold' element={<MostSold />} />
+                <Route path='*' element={<NotFound />} />
             </Route>
         </Routes>
     )

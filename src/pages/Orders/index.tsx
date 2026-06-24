@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
-import { Box, Typography, Modal, IconButton, CircularProgress, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText } from '@mui/material'
+import { Box, Typography, Modal, IconButton, CircularProgress, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, useTheme } from '@mui/material'
 import type { SelectChangeEvent } from '@mui/material'
 import { EditOutlined, VisibilityOutlined, DeleteOutlined, PictureAsPdfOutlined, AddOutlined } from '@mui/icons-material'
 import { AddBtn, OrderForm, ConfirmDialog } from '../../components'
@@ -17,6 +17,8 @@ const Orders = () => {
     const [openEdit, setOpenEdit] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
     const [orderData, setOrderData] = useState<Order | null>(null)
+    const theme = useTheme()
+    const isDark = theme.palette.mode === 'dark'
 
     let requestAction = useRef<(() => void) | null>(null)
 
@@ -351,6 +353,8 @@ const Orders = () => {
                 <DataGrid
                     rows={data}
                     columns={columns}
+                    pageSizeOptions={[25, 50, 100]}
+                    initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
                     onRowClick={(params) => {
                         setOrderData(params.row)
                     }}
@@ -363,8 +367,8 @@ const Orders = () => {
                         width: '100%',
                         height: '100%',
                         borderRadius: "8px",
-                        boxShadow: "3px 3px 3px 0 rgba(0, 0, 0, 0.3)",
-                        border: "1px solid rgba(255, 255, 255, 0.02)",
+                        boxShadow: isDark ? "3px 3px 3px 0 rgba(0, 0, 0, 0.3)" : "1px 2px 8px rgba(0, 0, 0, 0.06)",
+                        border: isDark ? "1px solid rgba(255, 255, 255, 0.02)" : "1px solid rgba(0, 0, 0, 0.06)",
                         userSelect: 'none',
                         backgroundColor: 'background.paper',
                         '& .MuiDataGrid-virtualScroller': {

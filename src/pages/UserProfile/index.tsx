@@ -138,10 +138,6 @@ const UserProfile = () => {
                                 <Typography sx={{ fontWeight: 500 }}>{(userData as Record<string, unknown>)[field.name] as string || "-"}</Typography>
                             </Box>
                         ))}
-                        <Box sx={{ display: "flex", justifyContent: "space-between", py: 1 }}>
-                            <Typography sx={{ color: "text.secondary", fontSize: "14px" }}>Member Since</Typography>
-                            <Typography sx={{ fontWeight: 500 }}>{userData.createdAt}</Typography>
-                        </Box>
                     </Box>
                 )}
             </Paper>

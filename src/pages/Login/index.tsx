@@ -59,7 +59,7 @@ const Login = () => {
                         autoFocus
                         autoComplete='new-password'
                         value={user}
-                        placeholder='user: admin'
+                        placeholder='admin'
                         onChange={(e) => setUser(e.target.value)}
                     />
                     <TextField
@@ -73,9 +73,12 @@ const Login = () => {
                         id="password"
                         autoComplete='new-password'
                         value={password}
-                        placeholder='password: admin'
+                        placeholder='admin'
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <Typography variant="body2" sx={{ mt: 1, textAlign: 'center', color: 'text.secondary', fontSize: '13px' }}>
+                        user: admin · password: admin
+                    </Typography>
                     <Button
                         type="submit"
                         fullWidth

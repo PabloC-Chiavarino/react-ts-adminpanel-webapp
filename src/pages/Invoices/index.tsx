@@ -6,7 +6,7 @@ import type { Invoice, User, Product, Field } from '../../types'
 import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
-import { Box, Typography, Modal, IconButton, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, CircularProgress } from '@mui/material'
+import { Box, Typography, Modal, IconButton, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, CircularProgress, useTheme } from '@mui/material'
 import { DeleteOutlined, VisibilityOutlined, AddOutlined, PictureAsPdfOutlined } from '@mui/icons-material'
 import { ConfirmDialog, InvoiceForm, AddBtn } from '../../components'
 import { API_BASE_URL } from '../../config'
@@ -14,6 +14,8 @@ export const Invoices = () => {
     const [open, setOpen] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
     const [invoiceData, setInvoiceData] = useState<Invoice | null>(null)
+    const theme = useTheme()
+    const isDark = theme.palette.mode === 'dark'
 
     let requestAction = useRef<(() => void) | null>(null)
 
@@ -314,13 +316,15 @@ export const Invoices = () => {
                 <DataGrid
                     rows={data}
                     columns={columns}
+                    pageSizeOptions={[25, 50, 100]}
+                    initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
                     onRowClick={(params) => { setInvoiceData(params.row) }}
                     sx={{
                         width: '100%',
                         height: '100%',
                         borderRadius: "8px",
-                        boxShadow: "3px 3px 3px 0 rgba(0, 0, 0, 0.3)",
-                        border: "1px solid rgba(255, 255, 255, 0.02)",
+                        boxShadow: isDark ? "3px 3px 3px 0 rgba(0, 0, 0, 0.3)" : "1px 2px 8px rgba(0, 0, 0, 0.06)",
+                        border: isDark ? "1px solid rgba(255, 255, 255, 0.02)" : "1px solid rgba(0, 0, 0, 0.06)",
                         userSelect: 'none',
                         backgroundColor: 'background.paper',
                         '& .MuiDataGrid-virtualScroller': {
