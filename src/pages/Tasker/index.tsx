@@ -311,7 +311,7 @@ const Tasker = () => {
             </Modal>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
                 <Box sx={{ mb: 5, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Typography variant="h1" sx={{ color: 'text.primary' }}>Tasker</Typography>
+                    <Typography variant="h1" className="dash-page-title" sx={{ color: 'text.primary', fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Tasker</Typography>
                     <AddBtn onClick={() => { setTaskData(emptyTask); handleOpen(); }} text="Task" />
                 </Box>
                 {!data ? (
@@ -329,7 +329,7 @@ const Tasker = () => {
                                 <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "12px", color: 'text.secondary', letterSpacing: '1px' }}>COMPLETED</Typography>
                             </Box>
                         </Box>
-                        <Grid container sx={{ width: "100%", height: "50%", justifyContent: "space-between", gap: 5, alignItems: "center", mt: 7 }}>
+                        <Grid container className="tasker-grid" sx={{ width: "100%", height: { xs: "auto", sm: "50%", lg: "45%" }, display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between", gap: { xs: 2, sm: 5 }, alignItems: "center", mt: 7 }}>
                             <TaskContainer
                                 id="todo"
                                 title="To Do"
@@ -363,8 +363,8 @@ const Tasker = () => {
                 backgroundColor: "background.paper",
                 display: "flex",
                 flexDirection: "column",
-                mt: 15,
-                p: 3
+                mt: { xs: 15, lg: 10 },
+                p: { lg: 2.5 }
             }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
                     <Box onClick={() => setShowArchived(!showArchived)} sx={{
@@ -380,16 +380,16 @@ const Tasker = () => {
                         }
                     }}>
                         {showArchived ? <ExpandLess sx={{ color: 'text.secondary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} /> : <ExpandMore sx={{ color: 'text.secondary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />}
-                        <Typography variant="h2" sx={{ fontWeight: '600', fontSize: '18px', color: 'text.primary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }}>Archived Tasks</Typography>
+                        <Typography variant="h2" className="dash-section-title" sx={{ fontWeight: '600', fontSize: { lg: '16px' }, color: 'text.primary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }}>Archived Tasks</Typography>
                     </Box>
                     <Button
                         onClick={() => handleOpenDialogPayload(handleDeleteArchive)}
                         variant="text"
                         disableRipple
                         sx={{
-                            fontSize: '11px',
-                            px: 2.5,
-                            py: 1,
+                            fontSize: { lg: '10px' },
+                            px: { lg: 2 },
+                            py: { lg: 0.8 },
                             borderRadius: '10px',
                             backgroundColor: 'background.alt',
                             fontWeight: 700,
@@ -427,7 +427,7 @@ const Tasker = () => {
                         display: 'none',
                     },
                 }}>
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 3.5, pb: 3.5 }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: { lg: 1.5 }, pt: 3.5, pb: 3.5 }}>
                         {archived.map((task) => (
                             <ArchivedTask key={task.id} task={task} handleRestoreFromArchive={() => handleOpenDialogPayload(() => handleRestoreFromArchive(task.id))} handleDelete={() => handleOpenDialogPayload(() => handleDelete(task.id))} />
                         ))}

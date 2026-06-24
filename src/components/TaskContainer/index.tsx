@@ -22,7 +22,7 @@ const TaskContainer = ({
     const { setNodeRef } = useDroppable({ id: id })
 
     return (
-        <Box sx={{ height: '100%', flex: 0.5, textAlign: 'center' }}>
+        <Box sx={{ height: '100%', flex: { xs: 'none', sm: 0.5, md: 0.40, lg: 0.5 }, maxWidth: { md: '360px' }, textAlign: 'center', minHeight: { xs: 200, sm: 'auto' } }}>
             <Box sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -68,6 +68,7 @@ const TaskContainer = ({
                 pt: 3.5,
                 pb: 3.5,
                 height: '100%',
+                maxHeight: { xs: '50vh', sm: 'none' },
                 overflowY: 'auto',
                 scrollbarWidth: 'none',
                 backgroundColor: 'transparent',
@@ -97,7 +98,7 @@ const TaskContainer = ({
                     flex: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 2,
+                    gap: { lg: 1.5 },
                 }}>
                     {tasks.map((task) => (
                         <DraggableTask

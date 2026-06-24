@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import Router from './routes'
 import { ColorModeProvider } from './context/ColorModeContext'
 import { AuthProvider } from './context/AuthContext'
+import { SidebarProvider } from './context/SidebarContext'
 
 function App() {
 
@@ -16,7 +17,9 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <AuthProvider>
-              <Router />
+              <SidebarProvider>
+                <Router />
+              </SidebarProvider>
             </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>

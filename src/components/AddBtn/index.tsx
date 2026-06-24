@@ -7,13 +7,13 @@ const AddBtn = ({ onClick, text }: { onClick: () => void, text: string }) => {
             onClick={onClick}
             startIcon={<Add />}
             sx={{
-                borderRadius: '12px',
+                borderRadius: { lg: '10px', xl: '12px' },
                 backgroundColor: 'tertiary.main',
                 color: 'background.paper2',
                 display: 'flex',
                 gap: 1,
-                py: '0.75rem',
-                px: '1.5rem',
+                py: { lg: '0.55rem', xl: '0.75rem' },
+                px: { lg: '1.1rem', xl: '1.5rem' },
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -33,10 +33,11 @@ const AddBtn = ({ onClick, text }: { onClick: () => void, text: string }) => {
             }}
         >
             <Typography
+                className="dash-btn-label"
                 sx={{
                     fontWeight: 500,
                     fontFamily: '"Inter", sans-serif',
-                    fontSize: '15px',
+                    fontSize: { lg: '13px', xl: '15px' },
                     whiteSpace: 'nowrap',
                 }}
             >

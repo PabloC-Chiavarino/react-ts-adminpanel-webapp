@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
-import { Box, Typography, Modal, IconButton, CircularProgress, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, useTheme } from '@mui/material'
+import { Box, Typography, Modal, IconButton, CircularProgress, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, useTheme, useMediaQuery } from '@mui/material'
 import type { SelectChangeEvent } from '@mui/material'
 import { EditOutlined, VisibilityOutlined, DeleteOutlined, PictureAsPdfOutlined, AddOutlined } from '@mui/icons-material'
 import { AddBtn, OrderForm, ConfirmDialog } from '../../components'
@@ -19,6 +19,7 @@ const Orders = () => {
     const [orderData, setOrderData] = useState<Order | null>(null)
     const theme = useTheme()
     const isDark = theme.palette.mode === 'dark'
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'))
 
     let requestAction = useRef<(() => void) | null>(null)
 
@@ -207,7 +208,7 @@ const Orders = () => {
             }
         },
         {
-            field: 'clientIdonly', headerName: 'Client ID', width: 130, flex: .2, renderCell: (params: GridRenderCellParams<Order>) => {
+            field: 'clientIdonly', headerName: 'Client ID', width: 130, flex: .2, hide: isXs, renderCell: (params: GridRenderCellParams<Order>) => {
 
                 return <span>ID <strong>{params?.row.clientId}</strong></span>
             }
@@ -259,7 +260,7 @@ const Orders = () => {
                 {orderData?.id !== 0 && openView === true
                     ? (
                         <Box sx={{
-                            width: '650px',
+                            width: { xs: '95%', sm: '90%', md: '650px' },
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
@@ -276,7 +277,7 @@ const Orders = () => {
                             zIndex: 100,
                         }}>
                             <DialogTitle>Order # {orderData?.id}</DialogTitle>
-                            <DialogContent>
+                            <DialogContent sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
                                 <Typography variant="body1" gutterBottom>
                                     <strong>Client ID:</strong> {orderData?.clientId}
                                 </Typography>
@@ -340,11 +341,11 @@ const Orders = () => {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: "center"
+                alignItems: "center",
+                flexWrap: 'wrap',
+                gap: 2,
             }}>
-                <Typography variant="h1">
-                    Orders
-                </Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Orders</Typography>
                 <AddBtn onClick={handleAddOrder} text="Order" />
             </Box>
             {!data ? (

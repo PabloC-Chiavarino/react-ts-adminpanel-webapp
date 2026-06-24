@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid, type GridRenderCellParams } from '@mui/x-data-grid'
-import { Box, Typography, Modal, IconButton, CircularProgress, useTheme } from '@mui/material'
+import { Box, Typography, Modal, IconButton, CircularProgress, useTheme, useMediaQuery } from '@mui/material'
 import { AddBtn, ConfirmDialog, ProductForm } from '../../components'
 import { EditOutlined, DeleteOutlined } from '@mui/icons-material'
 import { API_BASE_URL } from '../../config'
@@ -15,9 +15,10 @@ export const Products = () => {
     const [openDialog, setOpenDialog] = useState(false)
     const [productData, setProductData] = useState<Product | null>(null)
     const location = useLocation()
-    const foundProduct = location.state?.product
+    const foundProduct = location.state?.foundProduct
     const theme = useTheme()
     const isDark = theme.palette.mode === 'dark'
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'))
 
     let requestAction = useRef<(() => void) | null>(null)
 
@@ -170,7 +171,7 @@ export const Products = () => {
     const columns = [
         { field: 'id', headerName: 'ID', width: 70, flex: .1 },
         { field: 'name', headerName: 'Product', width: 130, flex: .4 },
-        { field: 'category', headerName: 'Category', width: 130, flex: .2 },
+        { field: 'category', headerName: 'Category', width: 130, flex: .2, hide: isXs },
         { field: 'price', headerName: 'Price', width: 130, flex: .2 },
         {
             field: 'stock', headerName: 'Stock', width: 130, flex: .2, renderCell: (params: GridRenderCellParams<Product>) => (
@@ -228,11 +229,11 @@ export const Products = () => {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: "center"
+                alignItems: "center",
+                flexWrap: 'wrap',
+                gap: 2,
             }}>
-                <Typography variant="h1">
-                    Products
-                </Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Products</Typography>
                 <AddBtn onClick={handleAddProduct} text="Product" />
             </Box>
             {!data ? (

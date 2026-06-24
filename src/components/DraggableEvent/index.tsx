@@ -22,7 +22,6 @@ const DraggableEvent = memo(({
         category: event.category
     }), [event.id, event.title, event.description, event.category])
 
-    // console.log('id:', event.id, '| category:', event.category, '| type:', typeof event.category) debug
     return (
         <Box
             className='draggableEl'
@@ -30,11 +29,11 @@ const DraggableEvent = memo(({
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 1,
+                gap: { lg: 0.9 },
                 flexShrink: 1,
-                px: 2.5,
-                pt: 2.7,
-                pb: 4,
+                px: { lg: 2.2 },
+                pt: { lg: 2.2 },
+                pb: { lg: 3.5 },
                 border: "1px solid transparent",
                 borderRadius: '14px',
                 justifyContent: 'space-between',
@@ -62,9 +61,9 @@ const DraggableEvent = memo(({
                 } : {},
             }}
         >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, position: 'relative', mb: 1 }}>
-                <Box sx={{ width: '6px', height: '25px', borderRadius: '9999px', backgroundColor: event.category === 'review' ? 'categoryStyles.review.color' : event.category === 'meeting' ? 'categoryStyles.meeting.color' : event.category === 'design' ? 'categoryStyles.design.color' : event.category === 'development' ? 'categoryStyles.development.color' : 'categoryStyles.release.color' }} />
-                <Typography sx={{ fontSize: "10px", fontWeight: 700, color: event.category === 'review' ? 'categoryStyles.review.color' : event.category === 'meeting' ? 'categoryStyles.meeting.color' : event.category === 'design' ? 'categoryStyles.design.color' : event.category === 'development' ? 'categoryStyles.development.color' : 'categoryStyles.release.color' }}>{event.category.toUpperCase()}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, position: 'relative', mb: 1, overflow: 'hidden' }}>
+                <Box sx={{ width: '6px', height: { lg: '22px' }, borderRadius: '9999px', backgroundColor: event.category === 'review' ? 'categoryStyles.review.color' : event.category === 'meeting' ? 'categoryStyles.meeting.color' : event.category === 'design' ? 'categoryStyles.design.color' : event.category === 'development' ? 'categoryStyles.development.color' : 'categoryStyles.release.color', flexShrink: 0 }} />
+                <Typography sx={{ fontSize: "10px", fontWeight: 700, color: event.category === 'review' ? 'categoryStyles.review.color' : event.category === 'meeting' ? 'categoryStyles.meeting.color' : event.category === 'design' ? 'categoryStyles.design.color' : event.category === 'development' ? 'categoryStyles.development.color' : 'categoryStyles.release.color', whiteSpace: 'nowrap' }}>{event.category.toUpperCase()}</Typography>
                 <Box className='task-actions' sx={{ display: 'flex', gap: 0, opacity: 0, right: 0, position: 'absolute', transition: 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                     <IconButton
                         onPointerDown={(e) => e.stopPropagation()}
@@ -114,10 +113,10 @@ const DraggableEvent = memo(({
                     </IconButton>
                 </Box>
             </Box>
-            <Typography sx={{ fontSize: "18px", textAlign: 'left', fontWeight: "bold" }}>
+            <Typography className="dash-item-title" sx={{ fontSize: { lg: "17px" }, textAlign: 'left', fontWeight: "bold", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {event.title}
             </Typography>
-            <Typography variant="body1" sx={{ fontSize: "14px", textAlign: 'left', fontStyle: 'oblique', color: 'text.secondary' }}>{event.description}</Typography>
+            <Typography variant="body1" className="dash-item-desc" sx={{ fontSize: { lg: "13.5px" }, textAlign: 'left', fontStyle: 'oblique', color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{event.description}</Typography>
         </Box>
     )
 })

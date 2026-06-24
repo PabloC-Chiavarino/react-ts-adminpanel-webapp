@@ -1,4 +1,4 @@
-import { DynamicComposedChart } from '../../components'
+import { DynamicComposedChart, MostSoldBarChart } from '../../components'
 
 const DynamicChart = ({
     data,
@@ -37,23 +37,7 @@ const DynamicChart = ({
             );
         case "mostSold":
             return (
-                <DynamicComposedChart
-                    data={data}
-                    barAreaName="Monthly Most Sold"
-                    lineName="Total Most Sold"
-                    type={type}
-                />
-                // <Box sx={{ width: '100%', height: '100%' }}>
-                //     <ResponsiveContainer width="100%" height="100%">
-                //         <BarChart data={data} layout="vertical" margin={{ left: 20 }}>
-                //             <XAxis type="number" dataKey="quantity" />
-                //             <YAxis type="category" dataKey="product" />
-                //             <Tooltip />
-                //             <Legend />
-                //             <Bar dataKey="Quantity" fill="#8884d8" />
-                //         </BarChart>
-                //     </ResponsiveContainer>
-                // </Box>
+                <MostSoldBarChart data={data} />
             );
         default:
             return null;

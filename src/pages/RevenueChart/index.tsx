@@ -23,7 +23,7 @@ const RevenueChart = () => {
             alignItems: "center",
         }}>
             <Box sx={{ mb: 6, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h1">{chartData.title}</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>{chartData.title}</Typography>
             </Box>
             {!data ? (
                 <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No revenue data</Typography>

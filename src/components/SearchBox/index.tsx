@@ -71,7 +71,7 @@ const SearchBox = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    width: '25vw',
+                    width: { xs: '50vw', sm: '25vw' },
                     maxWidth: '360px',
                     height: '40px',
                     padding: '0 12px 0 12px',
@@ -114,12 +114,12 @@ const SearchBox = () => {
             <Popover
                 open={showPopover}
                 anchorEl={anchorEl}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
                 slotProps={{
                     paper: {
                         sx: {
-                            width: '360px',
+                            width: { xs: '90vw', sm: '360px' },
                             maxHeight: '320px',
                             mt: 1,
                             borderRadius: '12px',

@@ -40,14 +40,16 @@ const DynamicForm = <T extends Record<string, unknown>>(
             onSubmit={existingUser && handleUpdate ? handleUpdate : handleSubmit}
             sx={{
                 pointerEvents: 'all',
-                width: '650px',
+                width: { xs: '95%', sm: '90%', md: '650px' },
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 position: 'absolute',
-                top: '50%',
+                top: { xs: '20px', md: '50%' },
                 left: '50%',
-                transform: 'translate(-50%, -50%)',
+                transform: { xs: 'translateX(-50%)', md: 'translate(-50%, -50%)' },
+                maxHeight: '90vh',
+                overflowY: 'auto',
                 gap: 3,
                 pt: 4,
                 pb: 5,
@@ -65,9 +67,10 @@ const DynamicForm = <T extends Record<string, unknown>>(
                     key={`pair-${pairIndex}`}
                     sx={{
                         display: 'flex',
+                        flexDirection: { xs: 'column', sm: 'row' },
                         width: '100%',
                         gap: 3,
-                        px: 4
+                        px: { xs: 2, sm: 4 }
                     }}
                 >
                     {pair.map((field, fieldIndex) => (

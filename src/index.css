@@ -11,6 +11,99 @@
     animation: fadeIn ease-in .3s forwards;
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+}
+
 body,html {
     user-select: none;
+    margin: 0;
+    padding: 0;
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+    .dashboard-grid {
+        grid-template-rows: minmax(175px, auto) minmax(225px, auto) minmax(180px, auto) !important;
+    }
+
+    .dash-stat-chart {
+        height: 30% !important;
+        top: 44% !important;
+        transform: translateY(-44%) !important;
+    }
+
+    .dash-revenue-chart {
+        height: 35% !important;
+    }
+
+    .dash-page-title {
+        font-size: 1.9rem !important;
+    }
+
+    .dash-card-title {
+        font-size: 16px !important;
+    }
+
+    .dash-performer-name,
+    .dash-event-title,
+    .dash-task-title {
+        font-size: 13px !important;
+    }
+
+    .dash-item-title {
+        font-size: 15px !important;
+    }
+
+    .dash-item-desc {
+        font-size: 12px !important;
+    }
+
+    .dash-section-title {
+        font-size: 14px !important;
+    }
+
+    .dash-btn-label {
+        font-size: 11px !important;
+    }
+
+    .dash-sidebar .MuiDrawer-paper {
+        width: 220px !important;
+    }
+
+    .dash-main-content {
+        width: calc(100% - 220px) !important;
+        margin-left: 220px !important;
+        padding-left: 28px !important;
+        padding-right: 28px !important;
+    }
+
+    .dash-stat-row {
+        gap: 14px !important;
+    }
+
+    .dash-revenue-stat-row {
+        gap: 24px !important;
+    }
+
+    .dash-event-item {
+        gap: 12px !important;
+        margin-top: 4px !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+    }
+
+    .tasker-grid {
+        gap: 16px !important;
+        flex-wrap: nowrap !important;
+    }
+}
+
+@media (max-width: 1199px) {
+    .hide-last-month {
+        display: none;
+    }
 }

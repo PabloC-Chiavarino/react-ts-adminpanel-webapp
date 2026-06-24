@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
-import { Box, Typography, Modal, IconButton, CircularProgress, useTheme } from '@mui/material'
+import { Box, Typography, Modal, IconButton, CircularProgress, useTheme, useMediaQuery } from '@mui/material'
 import { DeleteOutlined, EditOutlined } from '@mui/icons-material'
 import { AddBtn, UserForm, ConfirmDialog } from '../../components'
 import { API_BASE_URL } from '../../config'
@@ -17,6 +17,8 @@ const Clients = () => {
     const [clientData, setClientData] = useState<User | null>(null)
     const theme = useTheme()
     const isDark = theme.palette.mode === 'dark'
+    const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'))
 
     let requestAction = useRef<(() => void) | null>(null)
 
@@ -174,10 +176,10 @@ const Clients = () => {
     const columns = [
         { field: 'id', headerName: 'ID', width: 70, flex: .1 },
         { field: 'name', headerName: 'First name', width: 130, flex: .15 },
-        { field: 'lastName', headerName: 'Last name', width: 130, flex: .15 },
+        { field: 'lastName', headerName: 'Last name', width: 130, flex: .15, hide: isXs },
         { field: 'email', headerName: 'Email', width: 130, flex: .2 },
-        { field: 'address', headerName: 'Address', width: 130, flex: .15 },
-        { field: 'phone', headerName: 'Phone', width: 130, flex: .15 },
+        { field: 'address', headerName: 'Address', width: 130, flex: .15, hide: isMdDown },
+        { field: 'phone', headerName: 'Phone', width: 130, flex: .15, hide: isMdDown },
         {
             field: 'createdAt', headerName: 'Created At', width: 130, flex: .2, renderCell: (params: GridRenderCellParams<User>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
@@ -233,11 +235,11 @@ const Clients = () => {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: "center"
+                alignItems: "center",
+                flexWrap: 'wrap',
+                gap: 2,
             }}>
-                <Typography variant="h1">
-                    Clients
-                </Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Clients</Typography>
                 <AddBtn onClick={handleAddClient} text="Client" />
             </Box>
             {!data ? (

@@ -39,24 +39,32 @@ const lightPalette = {
     }
 };
 
+const darkPriorityStyles = {
+    high: { bg: '#302127', color: '#e16276' },
+    medium: { bg: '#282634', color: '#b2a1ff' },
+    low: { bg: '#464556', color: '#b8b7cb' },
+};
+
+const lightPriorityStyles = {
+    high: { bg: '#fce4ec', color: '#c62828' },
+    medium: { bg: '#ede7f6', color: '#4527a0' },
+    low: { bg: '#e8f5e9', color: '#2e7d32' },
+};
+
 export const getDesignTokens = (mode: PaletteMode) => ({
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            md: 900,
+            lg: 1024,
+            xl: 1536,
+        },
+    },
     palette: {
         mode,
         ...(mode === 'dark' ? darkPalette : lightPalette),
-        priorityStyles: {
-            high: {
-                bg: '#302127',
-                color: '#e16276'
-            },
-            medium: {
-                bg: '#282634',
-                color: '#b2a1ff'
-            },
-            low: {
-                bg: '#464556',
-                color: '#b8b7cb'
-            }
-        },
+        priorityStyles: mode === 'dark' ? darkPriorityStyles : lightPriorityStyles,
         categoryStyles: {
             review: {
                 color: '#62b8f5'

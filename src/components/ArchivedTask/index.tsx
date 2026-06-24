@@ -17,9 +17,9 @@ const ArchivedTask = ({
             alignItems: 'center',
             textAlign: 'center',
             flexShrink: 1,
-            pr: 2,
-            pl: 3,
-            py: 2,
+            pr: { lg: 1.5 },
+            pl: { lg: 2.5 },
+            py: { lg: 1.5 },
             border: "1px solid transparent",
             borderRadius: '16px',
             justifyContent: 'space-between',
@@ -32,13 +32,13 @@ const ArchivedTask = ({
                 borderColor: 'priorityStyles.low.bg'
             }
         }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: .3 }}>
-                <Box key={task.id} sx={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-                    <Typography sx={{ fontSize: "16px", fontWeight: "bold", color: 'text.secondary' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: .3, minWidth: 0, overflow: 'hidden' }}>
+                <Box key={task.id} sx={{ display: 'flex', gap: 4, alignItems: 'center', minWidth: 0 }}>
+                    <Typography className="dash-item-title" sx={{ fontSize: { lg: "14px" }, fontWeight: "bold", color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {task.title}
                     </Typography>
                 </Box>
-                <Typography variant="body1" sx={{ fontSize: "14px", fontStyle: 'oblique', color: 'text.secondary' }}>{task.description}</Typography>
+                <Typography variant="body1" className="dash-item-desc" sx={{ fontSize: { lg: "13px" }, fontStyle: 'oblique', color: 'text.secondary' }}>{task.description}</Typography>
             </Box>
             <Box className='task-actions' sx={{ display: 'flex', gap: 0 }}>
                 <IconButton

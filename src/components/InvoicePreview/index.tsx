@@ -5,7 +5,7 @@ const InvoicePreview = ({ formData, users, products }: { formData: Invoice, user
     return (
         <Box sx={{
                 pointerEvents: 'all',
-                width: '650px',
+                width: { xs: '95vw', sm: '90vw', md: '650px' },
                 height: '330px',
                 overflowY: 'hidden',
                 backgroundColor: 'background.paper',

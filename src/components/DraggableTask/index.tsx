@@ -22,11 +22,11 @@ const DraggableTask = ({
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 1,
+                gap: { lg: 0.9 },
                 flexShrink: 1,
-                px: 2.5,
-                pt: 2.7,
-                pb: 4,
+                px: { lg: 2.2 },
+                pt: { lg: 2.2 },
+                pb: { lg: 3.5 },
                 border: "1px solid transparent",
                 borderRadius: '14px',
                 justifyContent: 'space-between',
@@ -50,9 +50,9 @@ const DraggableTask = ({
             {...attributes}
             {...listeners}
         >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, position: 'relative', mb: 1 }}>
-                <Box sx={{ width: '6px', height: '25px', borderRadius: '9999px', backgroundColor: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color' }} />
-                <Typography sx={{ fontSize: "10px", fontWeight: 700, color: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color' }}>{task.priority.toUpperCase()} PRIORITY</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, position: 'relative', mb: 1, overflow: 'hidden' }}>
+                <Box sx={{ width: '6px', height: { lg: '22px' }, borderRadius: '9999px', backgroundColor: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color', flexShrink: 0 }} />
+                <Typography sx={{ fontSize: "10px", fontWeight: 700, color: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color', whiteSpace: 'nowrap' }}>{task.priority.toUpperCase()} PRIORITY</Typography>
                 <Box className='task-actions' sx={{ display: 'flex', gap: 0, opacity: 0, right: 0, position: 'absolute', transition: 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                     {!task.completed && <IconButton
                         onPointerDown={(e) => e.stopPropagation()}
@@ -102,10 +102,10 @@ const DraggableTask = ({
                     </IconButton>
                 </Box>
             </Box>
-            <Typography sx={{ fontSize: "18px", textAlign: 'left', fontWeight: "bold", textDecoration: task.completed ? "line-through" : "none" }}>
+            <Typography className="dash-item-title" sx={{ fontSize: { lg: "17px" }, textAlign: 'left', fontWeight: "bold", textDecoration: task.completed ? "line-through" : "none", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {task.title}
             </Typography>
-            <Typography variant="body1" sx={{ fontSize: "14px", textAlign: 'left', fontStyle: 'oblique', color: 'text.secondary' }}>{task.description}</Typography>
+            <Typography variant="body1" className="dash-item-desc" sx={{ fontSize: { lg: "13.5px" }, textAlign: 'left', fontStyle: 'oblique', color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.description}</Typography>
         </Box>
     )
 }

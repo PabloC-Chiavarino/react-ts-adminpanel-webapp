@@ -9,8 +9,8 @@ const Router = () => {
 
     return (
         <Routes>
-            <Route path='/login' element={!user ? <Login /> : <Navigate to='/dashboard' replace />} />
-            <Route path='/' element={user ? <Layout /> : <Navigate to='/login' replace />}>
+            <Route path='/login' element={user ? <Login /> : <Navigate to='/dashboard' replace />} />
+            <Route path='/' element={!user ? <Layout /> : <Navigate to='/login' replace />}>
                 <Route index element={<Navigate to='/dashboard' replace />} />
                 <Route path='profile' element={<UserProfile />} />
                 <Route path='dashboard' element={<Dashboard />} />

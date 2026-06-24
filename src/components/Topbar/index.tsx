@@ -1,13 +1,21 @@
 import { useAuth } from '../../context/AuthContext'
 import { SearchBox, UserMenu } from '../../components'
-import { AppBar, Toolbar, Box, IconButton, Typography } from '@mui/material'
-import { Brightness4, Brightness7 } from '@mui/icons-material'
+import { AppBar, Toolbar, Box, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Brightness4, Brightness7, Menu } from '@mui/icons-material'
 import { useColorMode } from '../../context/ColorModeContext'
+import { useSidebar } from '../../context/SidebarContext'
 import { useState } from 'react'
+
+const DRAWER_WIDTH = 256
+const COLLAPSED_WIDTH = 72
 
 const Topbar = () => {
     const { mode, toggleColorMode } = useColorMode()
-    const drawerWidth = 256
+    const theme = useTheme()
+    const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+    const { collapsed, toggleMobile, toggleCollapsed } = useSidebar()
+    const isCollapsed = !isMdDown && collapsed
+    const sidebarWidth = isMdDown ? 0 : (isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH)
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
@@ -26,8 +34,9 @@ const Topbar = () => {
         <AppBar
             position='fixed'
             sx={{
-                width: `calc(100% - ${drawerWidth}px)`,
+                width: `calc(100% - ${sidebarWidth}px)`,
                 zIndex: (theme) => theme.zIndex.drawer + 1,
+                transition: 'width 0.3s ease',
             }}
             elevation={0}
         >
@@ -39,12 +48,27 @@ const Topbar = () => {
                     borderBottom: '1px solid',
                 }}
             >
-                <SearchBox />
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
+                    {(isMdDown || isCollapsed) && (
+                        <IconButton
+                            onClick={isMdDown ? toggleMobile : toggleCollapsed}
+                            sx={{
+                                color: 'text.secondary',
+                                '&:hover': { backgroundColor: 'background.paper2' },
+                            }}
+                        >
+                            <Menu />
+                        </IconButton>
+                    )}
+                    <Box sx={{ flex: 1, maxWidth: 360 }}>
+                        <SearchBox />
+                    </Box>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
                     <IconButton onClick={toggleColorMode} sx={{
-                        width: '32px',
-                        height: '32px',
-                        p: 2.5,
+                        width: { xs: '36px', sm: '32px' },
+                        height: { xs: '36px', sm: '32px' },
+                        p: { xs: 1, sm: 2.5 },
                         color: 'text.secondary',
                         transition: 'all 0.2s ease',
                         '&:hover': {

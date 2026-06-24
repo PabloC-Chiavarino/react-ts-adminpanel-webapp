@@ -25,7 +25,7 @@ const UserMenu = ({ anchorEl, open, onClose, }: { anchorEl: HTMLElement | null; 
                     sx: {
                         borderRadius: 4,
                         mt: 3,
-                        width: '15vw',
+                        width: { xs: '200px', sm: '15vw' },
                         overflow: 'visible',
                         bgcolor: 'background.paper2',
                         border: '1px solid',

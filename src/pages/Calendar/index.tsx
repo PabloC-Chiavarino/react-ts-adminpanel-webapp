@@ -36,7 +36,7 @@ const Calendar = () => {
     };
 
     const events: Event[] = data?.filter(event => event.startDate === undefined) || [];
-    const scheuledEvents: Event[] = data?.filter(event => event.startDate !== undefined) || [];
+    const scheduledEvents: Event[] = data?.filter(event => event.startDate !== undefined) || [];
 
     useEffect(() => {
         const container = document.getElementById("event-container");
@@ -260,7 +260,7 @@ const Calendar = () => {
                 />
             </Modal>
             <Box sx={{ mb: 5, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h1">Calendar</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Calendar</Typography>
                 <AddBtn onClick={() => { setEventData(emptyEvent); handleOpen(); }} text="Event" />
             </Box>
             {data && (
@@ -276,7 +276,7 @@ const Calendar = () => {
                     </Box>
                 </Box>
             )}
-            <Grid sx={{ width: "100%", height: "75%", display: "flex", justifyContent: "space-between", alignItems: "center", mt: 7, gap: 5 }}>
+            <Grid sx={{ width: "100%", height: { xs: "auto", md: "75%", lg: "70%" }, display: "flex", flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: { xs: "stretch", md: "center" }, mt: { xs: 3, md: 7 }, gap: { xs: 3, md: 5, lg: 2 } }}>
                 {!data ? (
                     <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No events data</Typography>
                 ) : (
@@ -289,8 +289,8 @@ const Calendar = () => {
                     />
                 )}
                 <Box sx={{
-                    flex: .75,
-                    height: "120%",
+                    flex: { xs: 1, md: .75 },
+                    height: { xs: 400, md: "120%", lg: "100%" },
                     mt: 0,
                     borderRadius: 4,
                     overflow: "hidden",
@@ -314,8 +314,8 @@ const Calendar = () => {
                     '& .fc-col-header-cell a': { color: 'inherit', textDecoration: 'none' },
 
                     '& .fc-daygrid-day-frame': {
-                        minHeight: '140px',
-                        minWidth: '120px',
+                        minHeight: { xs: '80px', md: '140px', lg: '120px' },
+                        minWidth: { xs: '0px', md: '120px' },
                         backgroundColor: 'background.paper',
                     },
 
@@ -329,19 +329,20 @@ const Calendar = () => {
                     // hoy
                     '& .fc-day-today': { backgroundColor: 'transparent !important' },
                     '& .fc-day-today .fc-daygrid-day-number': {
-                        color: 'white',
+                        color: 'common.white',
                         fontWeight: 600,
                     },
 
                     // toolbar
                     '& .fc .fc-toolbar.fc-header-toolbar': {
-                        padding: '20px 20px',
+                        padding: { xs: '10px', md: '20px 20px' },
                         backgroundColor: 'background.paper',
-                        mb: 0
+                        mb: 0,
+                        flexWrap: 'wrap',
                     },
 
                     // título toolbar
-                    '& .fc-toolbar-title': { fontSize: '15px', fontWeight: 600, margin: 0, padding: 0 },
+                    '& .fc-toolbar-title': { fontSize: { xs: '13px', md: '15px' }, fontWeight: 600, margin: 0, padding: 0 },
 
                     // botones prev/next/today/vistas
                     '& .fc-button': {
@@ -349,15 +350,16 @@ const Calendar = () => {
                         border: '1px solid rgba(0,0,0,0.12) !important',
                         borderRadius: 2,
                         boxShadow: 'none !important',
-                        fontSize: '12px',
-                        padding: '4px 10px',
+                        fontSize: { xs: '10px', md: '12px' },
+                        padding: { xs: '3px 6px', md: '4px 10px' },
                         color: 'text.secondary !important',
                         textTransform: 'capitalize',
                     },
                     '& .fc-button:hover': { background: 'background.paper2 !important' },
                     '& .fc-button-active': {
                         borderColor: 'primary.main !important',
-                        color: 'white !important',
+                        backgroundColor: 'primary.main !important',
+                        color: 'common.white !important',
                     },
 
                     // eventos
@@ -409,7 +411,7 @@ const Calendar = () => {
                         selectable={true}
                         eventDrop={(info) => handleDrop(info)}
                         drop={(info) => handleDrop(info)}
-                        events={scheuledEvents?.map(event => ({
+                        events={scheduledEvents?.map(event => ({
                             id: event.id.toString(),
                             title: event.title,
                             start: event.startDate,

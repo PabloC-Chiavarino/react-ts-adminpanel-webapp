@@ -6,7 +6,7 @@ import type { Invoice, User, Product, Field } from '../../types'
 import { useSnackbar } from 'notistack'
 import { useDynamicQuery } from '../../hooks'
 import { DataGrid } from '@mui/x-data-grid'
-import { Box, Typography, Modal, IconButton, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, CircularProgress, useTheme } from '@mui/material'
+import { Box, Typography, Modal, IconButton, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, CircularProgress, useTheme, useMediaQuery } from '@mui/material'
 import { DeleteOutlined, VisibilityOutlined, AddOutlined, PictureAsPdfOutlined } from '@mui/icons-material'
 import { ConfirmDialog, InvoiceForm, AddBtn } from '../../components'
 import { API_BASE_URL } from '../../config'
@@ -16,6 +16,7 @@ export const Invoices = () => {
     const [invoiceData, setInvoiceData] = useState<Invoice | null>(null)
     const theme = useTheme()
     const isDark = theme.palette.mode === 'dark'
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'))
 
     let requestAction = useRef<(() => void) | null>(null)
 
@@ -177,7 +178,7 @@ export const Invoices = () => {
             }
         },
         {
-            field: 'clientIdonly', headerName: 'Client ID', flex: .2, renderCell: (params: GridRenderCellParams<Invoice>) => {
+            field: 'clientIdonly', headerName: 'Client ID', flex: .2, hide: isXs, renderCell: (params: GridRenderCellParams<Invoice>) => {
 
                 return <span>ID <strong>{params?.row.clientId}</strong></span>
 
@@ -226,7 +227,7 @@ export const Invoices = () => {
             <Modal open={open} onClose={handleClose} >
                 {invoiceData?.id !== 0 ? (
                     <Box sx={{
-                        width: '650px',
+                        width: { xs: '95%', sm: '90%', md: '650px' },
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -243,7 +244,7 @@ export const Invoices = () => {
                         zIndex: 100,
                     }}>
                         <DialogTitle>Invoice # {invoiceData?.id}</DialogTitle>
-                        <DialogContent>
+                        <DialogContent sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
                             <Typography variant="body1" gutterBottom>
                                 <strong>Client ID:</strong> {invoiceData?.clientId}
                             </Typography>
@@ -303,11 +304,11 @@ export const Invoices = () => {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: "center"
+                alignItems: "center",
+                flexWrap: 'wrap',
+                gap: 2,
             }}>
-                <Typography variant="h1">
-                    Invoices
-                </Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Invoices</Typography>
                 <AddBtn onClick={handleAddInvoice} text="Invoice" />
             </Box>
             {!data ? (

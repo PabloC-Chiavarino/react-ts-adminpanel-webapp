@@ -77,11 +77,10 @@ const UserProfile = () => {
 
     return (
         <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-            <Typography variant="h1" sx={{ mb: 5 }}>
-                My Account
+            <Typography variant="h1" className="dash-page-title" sx={{ mb: 5, fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>
             </Typography>
             <Paper sx={{ width: "100%", maxWidth: "700px", p: 4, borderRadius: "16px" }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, flexWrap: 'wrap', gap: 2 }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                         <Box sx={{
                             width: "60px",
@@ -114,7 +113,7 @@ const UserProfile = () => {
 
                 {isEditing ? (
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                        <Box sx={{ display: "flex", gap: 2 }}>
+                        <Box sx={{ display: "flex", flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
                             <TextField name="name" label="Name" size="small" value={formData.name ?? ""} onChange={handleChange} sx={{ flex: 1 }} />
                             <TextField name="lastName" label="Last Name" size="small" value={formData.lastName ?? ""} onChange={handleChange} sx={{ flex: 1 }} />
                         </Box>
@@ -133,9 +132,9 @@ const UserProfile = () => {
                 ) : (
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                         {fields.map((field) => (
-                            <Box key={field.name} sx={{ display: "flex", justifyContent: "space-between", py: 1, borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-                                <Typography sx={{ color: "text.secondary", fontSize: "14px" }}>{field.label}</Typography>
-                                <Typography sx={{ fontWeight: 500 }}>{(userData as Record<string, unknown>)[field.name] as string || "-"}</Typography>
+                            <Box key={field.name} sx={{ display: "flex", justifyContent: "space-between", py: 1, borderBottom: "1px solid rgba(0,0,0,0.06)", gap: 2 }}>
+                                <Typography sx={{ color: "text.secondary", fontSize: "14px", flexShrink: 0 }}>{field.label}</Typography>
+                                <Typography sx={{ fontWeight: 500, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{(userData as Record<string, unknown>)[field.name] as string || "-"}</Typography>
                             </Box>
                         ))}
                     </Box>

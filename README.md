@@ -1,7 +1,7 @@
 # React TS Admin Panel Webapp
 
-This is a React TypeScript project for an admin panel/dashboard application.  
-It uses MUI for UI components, React Router for navigation, and Redux Toolkit for state management.
+This is a React TypeScript project for an admin panel/dashboard application.
+It uses MUI for UI components, React Router for navigation, and TanStack React Query for server state management.
 
 ## Setup
 
@@ -22,7 +22,8 @@ npm run dev
 - User-friendly admin dashboard
 - Sidebar navigation
 - Data grids with MUI Data Grid
-- State management with Redux Toolkit
+- Server state management with TanStack React Query
+- Client state with React Context
 - Routing with React Router DOM
 
 ## License

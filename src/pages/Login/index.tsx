@@ -40,11 +40,12 @@ const Login = () => {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    width: '35%',
-                    transform: 'translateY(-30%)'
+                    width: '100%',
+                    maxWidth: 400,
+                    px: 2,
                 }}
             >
-                <Typography variant="h1" fontSize={34} textAlign="center" mb={5}>
+                <Typography variant="h1" fontSize={34} textAlign="center" mb={{ xs: 3, sm: 5 }}>
                     Nexo
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate>
@@ -83,7 +84,7 @@ const Login = () => {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 6, height: '48px', backgroundColor: 'primary.main', '&:hover': { backgroundColor: 'secondary.main' } }}
+                        sx={{ mt: { xs: 3, sm: 6 }, height: '48px', backgroundColor: 'primary.main', '&:hover': { backgroundColor: 'secondary.main' } }}
                     >
                         Iniciar Sesión
                     </Button>
