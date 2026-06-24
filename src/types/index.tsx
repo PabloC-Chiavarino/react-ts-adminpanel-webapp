@@ -115,19 +115,9 @@ export type DashCardTypes = {
   };
   products: {
     total: number;
-    change: {
-      value: number,
-      percent: number,
-      direction: "up" | "down" | "stable",
-    }
   };
   pendingOrders: {
     total: number;
-    change: {
-      value: number,
-      percent: number,
-      direction: "up" | "down" | "stable";
-    }
   }
   events: {
     total: number;

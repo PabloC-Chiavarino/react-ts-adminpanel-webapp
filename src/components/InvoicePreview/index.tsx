@@ -8,7 +8,7 @@ const InvoicePreview = ({ formData, users, products }: { formData: Invoice, user
                 width: '650px',
                 height: '330px',
                 overflowY: 'hidden',
-                backgroundColor: '#fff',
+                backgroundColor: 'background.paper',
                 borderRadius: '8px',
                 position: 'absolute',
                 bottom: 0,

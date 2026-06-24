@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { ResponsiveContainer, ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, Line, Area } from "recharts";
 
 const DynamicComposedChart = ({
@@ -13,6 +13,8 @@ const DynamicComposedChart = ({
     type: string
 }
 ) => {
+    const theme = useTheme();
+
     return (
         <Box sx={{
             width: '100%',
@@ -35,11 +37,11 @@ const DynamicComposedChart = ({
                     <Tooltip />
                     <Legend />
                     {type === "revenue" ? (
-                        <Area dataKey="value" fill="#8884d8" name={barAreaName} />
+                        <Area dataKey="value" fill={theme.palette.primary.main} name={barAreaName} />
                     ) : (
-                        <Bar dataKey="value" barSize={150} fill="#82ca9d" name={barAreaName} />
+                        <Bar dataKey="value" barSize={150} fill={theme.palette.secondary.main} name={barAreaName} />
                     )}
-                    <Line type="monotone" dataKey="cumulative" stroke="#82ca9d" strokeWidth={3} name={lineName} />
+                    <Line type="monotone" dataKey="cumulative" stroke={theme.palette.secondary.main} strokeWidth={3} name={lineName} />
                 </ComposedChart>
             </ResponsiveContainer>
         </Box >

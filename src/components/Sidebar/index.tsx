@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Drawer, Box, List, ListItemButton, ListItemIcon, ListItemText, Typography, Collapse } from '@mui/material'
-import logo from '../../assets/icons/logo.png'
+import { Drawer, Box, List, ListItemButton, ListItemIcon, ListItemText, Typography, Collapse, useTheme } from '@mui/material'
+import logo from '../../assets/Icons/logo.png'
 import {
     DashboardOutlined,
     People,
@@ -23,6 +23,8 @@ import {
 export const Sidebar = () => {
     const [analyticsOpen, setAnalyticsOpen] = useState(false)
     const location = useLocation()
+    const theme = useTheme()
+    const isDark = theme.palette.mode === 'dark'
 
     const menuItems = [
         { text: 'Dashboard', icon: <DashboardOutlined />, path: '/dashboard' },
@@ -49,7 +51,9 @@ export const Sidebar = () => {
                 borderRight: 'none',
                 width: `${drawerWidth}px`,
                 backgroundColor: 'background.default',
-                boxShadow: '40px 0 60px -15px rgba(178, 161, 255, 0.06)',
+                boxShadow: isDark
+                    ? '40px 0 60px -15px rgba(178, 161, 255, 0.06)'
+                    : '4px 0 24px -4px rgba(0, 0, 0, 0.07)',
                 zIndex: 1500,
             },
         }}>
@@ -109,7 +113,7 @@ export const Sidebar = () => {
                             borderRadius: '12px',
                             transition: 'all .6s ease',
                             '&:hover': {
-                                backgroundColor: '#19191d',
+                                backgroundColor: 'background.paper2',
                                 '& .MuiListItemIcon-root': {
                                     color: 'text.primary',
                                 },
@@ -173,7 +177,7 @@ export const Sidebar = () => {
                         borderRadius: '12px',
                         transition: 'all .6s ease',
                         '&:hover': {
-                            backgroundColor: '#19191d',
+                            backgroundColor: 'background.paper2',
                             '& .MuiListItemIcon-root': {
                                 color: 'text.primary',
                             },
@@ -239,7 +243,7 @@ export const Sidebar = () => {
                                     borderRadius: '12px',
                                     transition: 'all .6s ease',
                                     '&:hover': {
-                                        backgroundColor: '#19191d',
+                                        backgroundColor: 'background.paper2',
                                         '& .MuiListItemIcon-root': {
                                             color: 'text.primary',
                                         },

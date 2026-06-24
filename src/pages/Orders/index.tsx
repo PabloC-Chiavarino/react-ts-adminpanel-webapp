@@ -10,6 +10,7 @@ import type { SelectChangeEvent } from '@mui/material'
 import { EditOutlined, VisibilityOutlined, DeleteOutlined, PictureAsPdfOutlined, AddOutlined } from '@mui/icons-material'
 import { AddBtn, OrderForm, ConfirmDialog } from '../../components'
 import type { User } from '../../types'
+import { API_BASE_URL } from '../../config'
 
 const Orders = () => {
     const [openView, setOpenView] = useState(false)
@@ -19,9 +20,9 @@ const Orders = () => {
 
     let requestAction = useRef<(() => void) | null>(null)
 
-    const ORDERS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/pendingOrders'
-    const USERS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/users'
-    const PRODUCTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/products'
+    const ORDERS_ENDPOINT = `${API_BASE_URL}/pendingOrders`
+    const USERS_ENDPOINT = `${API_BASE_URL}/users`
+    const PRODUCTS_ENDPOINT = `${API_BASE_URL}/products`
 
     const queryClient = useQueryClient()
 
@@ -57,7 +58,7 @@ const Orders = () => {
 
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['users'] })
+            queryClient.invalidateQueries({ queryKey: ['pendingOrders'] })
             setOrderData(emptyOrder);
         },
         onError: (error) => {
@@ -83,7 +84,7 @@ const Orders = () => {
 
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['users'] })
+            queryClient.invalidateQueries({ queryKey: ['pendingOrders'] })
         },
         onError: (error) => {
             console.error(error)
@@ -101,7 +102,7 @@ const Orders = () => {
             return response.json()
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['users'] })
+            queryClient.invalidateQueries({ queryKey: ['pendingOrders'] })
         },
         onError: (error) => {
             console.error(error)

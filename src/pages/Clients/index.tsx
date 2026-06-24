@@ -9,6 +9,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import { Box, Typography, Modal, IconButton, CircularProgress } from '@mui/material'
 import { DeleteOutlined, EditOutlined } from '@mui/icons-material'
 import { AddBtn, UserForm, ConfirmDialog } from '../../components'
+import { API_BASE_URL } from '../../config'
 
 const Clients = () => {
     const [open, setOpen] = useState(false)
@@ -17,7 +18,7 @@ const Clients = () => {
 
     let requestAction = useRef<(() => void) | null>(null)
 
-    const USERS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/users'
+    const USERS_ENDPOINT = `${API_BASE_URL}/users`
     const queryClient = useQueryClient()
     const { enqueueSnackbar } = useSnackbar()
     const { data, isLoading, error } = useDynamicQuery<User[]>(['users'], USERS_ENDPOINT)

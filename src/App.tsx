@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SnackbarProvider } from 'notistack'
 import { BrowserRouter } from 'react-router-dom'
@@ -7,7 +8,7 @@ import { AuthProvider } from './context/AuthContext'
 
 function App() {
 
-  const queryClient = new QueryClient()
+  const queryClient = useMemo(() => new QueryClient(), [])
 
   return (
     <ColorModeProvider>

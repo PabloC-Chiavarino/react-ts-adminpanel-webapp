@@ -22,7 +22,7 @@ const AddBtn = ({ onClick, text }: { onClick: () => void, text: string }) => {
                 },
                 '&:hover': {
                     backgroundColor: 'primary.main',
-                    color: '#ffffff',
+                    color: 'common.white',
                 },
                 '&:active': {
                     transform: 'scale(0.97)',

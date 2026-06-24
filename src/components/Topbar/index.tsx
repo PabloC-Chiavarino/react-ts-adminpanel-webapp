@@ -36,7 +36,7 @@ const Topbar = () => {
                     justifyContent: 'space-between',
                     backgroundColor: 'background.default',
                     transition: 'background-color 0.2s ease',
-                    borderBottom: '1px solid rgba(53, 53, 64, 0.4)',
+                    borderBottom: '1px solid',
                 }}
             >
                 <SearchBox />

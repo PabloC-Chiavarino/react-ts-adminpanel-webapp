@@ -1,7 +1,7 @@
 import type { DashCardTypes, ChartTypes, Task } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { useDynamicQuery } from "../../hooks"
-import { Box, Paper, Typography, CircularProgress, List, ListItem } from "@mui/material"
+import { Box, Paper, Typography, CircularProgress, List, ListItem, useTheme } from "@mui/material"
 import { ResponsiveContainer, LineChart, Line, Tooltip, XAxis, AreaChart, Area } from "recharts";
 import {
     TrendingDown,
@@ -18,26 +18,29 @@ import {
     TaskOutlined,
     NotesOutlined
 } from "@mui/icons-material";
+import { API_BASE_URL } from '../../config';
 
 export const Dashboard = () => {
 
-    const DASHCALCS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/dashCalcs';
-    const CHARTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/charts';
-    const TASKS_ENDPOINT = "https://mock-data-api-vntk.onrender.com/tasks";
+    const DASHCALCS_ENDPOINT = `${API_BASE_URL}/dashCalcs`;
+    const CHARTS_ENDPOINT = `${API_BASE_URL}/charts`;
+    const TASKS_ENDPOINT = `${API_BASE_URL}/tasks`;
 
     const { data: dashData, isLoading: dashLoading, error: dashError } = useDynamicQuery<DashCardTypes>(['calcs'], DASHCALCS_ENDPOINT)
     const { data: chartsData, isLoading: chartsLoading, error: chartsdashError } = useDynamicQuery<ChartTypes>(['charts'], CHARTS_ENDPOINT)
     const { data: tasksData, isLoading: tasksLoading, error: tasksError } = useDynamicQuery<Task[]>(['tasks'], TASKS_ENDPOINT)
 
     const navigate = useNavigate();
+    const theme = useTheme();
+    const isDark = theme.palette.mode === 'dark';
 
     const commonCardStyle = {
         display: "flex",
         flexDirection: "column",
         borderRadius: "16px",
         bgcolor: "background.paper",
-        boxShadow: "1px 1px 1px 0 rgba(0, 0, 0, 0.3)",
-        border: "1px solid rgba(255, 255, 255, 0.02)",
+        boxShadow: isDark ? "1px 1px 1px 0 rgba(0, 0, 0, 0.3)" : "0 1px 4px rgba(0, 0, 0, 0.06)",
+        border: isDark ? "1px solid rgba(255, 255, 255, 0.02)" : "1px solid rgba(0, 0, 0, 0.04)",
         cursor: "pointer",
         position: "relative",
         overflow: "hidden",
@@ -172,13 +175,13 @@ export const Dashboard = () => {
                                     <ResponsiveContainer width="100%" height="100%">
                                         <LineChart data={chartsData?.invoices}>
                                             <XAxis dataKey="month" hide />
-                                            <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
+                                            <Line type="monotone" dataKey="value" stroke="primary.main" strokeWidth={2} />
                                             <Tooltip labelFormatter={(label) => `${label}`} />
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </Box>
                                 <Box sx={{ position: "absolute", bottom: "10px", right: "10px" }}>
-                                    <Typography sx={{ mr: "10px", display: "flex", alignItems: "center", gap: "5px", fontSize: "14px" }} variant="body1" color={dashData?.invoices.change.direction === "up" ? "green" : dashData?.invoices.change.direction === "down" ? "#ff0000b9" : "grey"}>
+                                    <Typography sx={{ mr: "10px", display: "flex", alignItems: "center", gap: "5px", fontSize: "14px" }} variant="body1" color={dashData?.invoices.change.direction === "up" ? "success.main" : dashData?.invoices.change.direction === "down" ? "error.main" : "text.secondary"}>
                                         {dashData?.invoices.change.percent}% {dashData?.invoices.change.direction === "up" ? <TrendingUp /> : dashData?.invoices.change.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
                                     </Typography>
                                 </Box>
@@ -253,13 +256,13 @@ export const Dashboard = () => {
                                     <ResponsiveContainer width="100%" height="100%">
                                         <LineChart data={chartsData?.clients}>
                                             <XAxis dataKey="month" hide />
-                                            <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
+                                            <Line type="monotone" dataKey="value" stroke="primary.main" strokeWidth={2} />
                                             <Tooltip labelFormatter={(label) => `${label}`} />
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </Box>
                                 <Box sx={{ position: "absolute", bottom: "10px", right: "10px" }}>
-                                    <Typography sx={{ mr: "10px", display: "flex", alignItems: "center", gap: "5px", fontSize: "14px" }} variant="body1" color={dashData?.clients.change.direction === "up" ? "green" : dashData?.clients.change.direction === "down" ? "#ff0000b9" : "grey"}>
+                                    <Typography sx={{ mr: "10px", display: "flex", alignItems: "center", gap: "5px", fontSize: "14px" }} variant="body1" color={dashData?.clients.change.direction === "up" ? "success.main" : dashData?.clients.change.direction === "down" ? "error.main" : "text.secondary"}>
                                         {dashData?.clients.change.percent}% {dashData?.clients.change.direction === "up" ? <TrendingUp /> : dashData?.clients.change.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
                                     </Typography>
                                 </Box>
@@ -432,13 +435,13 @@ export const Dashboard = () => {
                                         <AreaChart data={chartsData?.revenue}>
                                             <defs>
                                                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="0%" stopColor="#998AFFFF" stopOpacity={0.35} />
-                                                    <stop offset="50%" stopColor="#998AFFFF" stopOpacity={0.12} />
-                                                    <stop offset="100%" stopColor="#998AFFFF" stopOpacity={0} />
+                                                    <stop offset="0%" stopColor="primary.main" stopOpacity={0.35} />
+                                                    <stop offset="50%" stopColor="primary.main" stopOpacity={0.12} />
+                                                    <stop offset="100%" stopColor="primary.main" stopOpacity={0} />
                                                 </linearGradient>
                                             </defs>
                                             <XAxis dataKey="month" hide />
-                                            <Area type="monotone" dataKey="value" stroke="#998AFFFF" strokeWidth={1.8} fill="url(#colorRevenue)" />
+                                            <Area type="monotone" dataKey="value" stroke="primary.main" strokeWidth={1.8} fill="url(#colorRevenue)" />
                                             <Tooltip
                                                 labelFormatter={(label) => `${label}`}
                                             />
@@ -446,14 +449,14 @@ export const Dashboard = () => {
                                     </ResponsiveContainer>
                                 </Box>
                                 <Box sx={{ position: "absolute", bottom: "10px", right: "10px" }}>
-                                    <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px", fontSize: "14px" }} variant="body1" color={dashData?.revenue.change.direction === "up" ? "green" : dashData?.revenue.change.direction === "down" ? "#ff0000b9" : "grey"}>
+                                    <Typography sx={{ mb: "5px", mr: "10px", alignSelf: "end", display: "flex", alignItems: "center", gap: "5px", fontSize: "14px" }} variant="body1" color={dashData?.revenue.change.direction === "up" ? "success.main" : dashData?.revenue.change.direction === "down" ? "error.main" : "text.secondary"}>
                                         {dashData?.revenue.change.percent} % {dashData?.revenue.change.direction === "up" ? <TrendingUp /> : dashData?.revenue.change.direction === "down" ? <TrendingDown /> : <TrendingFlat />} last month
                                     </Typography>
                                 </Box>
                             </>
                         )}
                 </Paper>
-                <Paper onClick={() => navigate("/users")} sx={{ ...commonCardStyle, gridColumn: "span 3", gridRow: "2", position: "relative" }}>
+                <Paper onClick={() => navigate("/clients")} sx={{ ...commonCardStyle, gridColumn: "span 3", gridRow: "2", position: "relative" }}>
                     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingInline: "20px", width: "100%", position: "absolute", top: "15px" }}>
                         <Box>
                             <Typography variant="h2" sx={{ fontSize: "20px", fontWeight: "bold" }}>
@@ -675,7 +678,7 @@ export const Dashboard = () => {
                                                             backgroundColor: `priorityStyles.${task.priority}.bg`,
                                                             color: `priorityStyles.${task.priority}.color`,
                                                             borderRadius: "9999px",
-                                                            boxShadow: "0px 2px 4px #00000014, 0px 0px 0px #171a1f00"
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.08)",
                                                         }}>
                                                             <Typography sx={{ fontSize: "10px", fontWeight: 700 }}>{task.priority.toUpperCase()}</Typography>
                                                         </Box>
@@ -691,9 +694,9 @@ export const Dashboard = () => {
                                             py: .7,
                                             textAlign: 'center',
                                             mt: 2.5,
-                                            background: '#2b2945',
+                                            background: 'background.paper2',
                                             borderRadius: "16px",
-                                            boxShadow: "0px 2px 4px #00000014, 0px 0px 0px #171a1f00"
+                                            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.08)"
                                         }}>
                                             <Typography sx={{ fontSize: "12px", color: "tertiary.main", fontWeight: "600" }}>{tasksData?.filter(t => !t.completed).length === 0
                                                 ? "No tasks"

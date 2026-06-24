@@ -9,6 +9,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import { Box, Typography, Modal, IconButton, DialogActions, DialogContent, DialogTitle, Divider, List, ListItem, ListItemText, CircularProgress } from '@mui/material'
 import { DeleteOutlined, VisibilityOutlined, AddOutlined, PictureAsPdfOutlined } from '@mui/icons-material'
 import { ConfirmDialog, InvoiceForm, AddBtn } from '../../components'
+import { API_BASE_URL } from '../../config'
 export const Invoices = () => {
     const [open, setOpen] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
@@ -16,9 +17,9 @@ export const Invoices = () => {
 
     let requestAction = useRef<(() => void) | null>(null)
 
-    const INVOICES_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/invoices'
-    const USERS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/users'
-    const PRODUCTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/products'
+    const INVOICES_ENDPOINT = `${API_BASE_URL}/invoices`
+    const USERS_ENDPOINT = `${API_BASE_URL}/users`
+    const PRODUCTS_ENDPOINT = `${API_BASE_URL}/products`
 
     const queryClient = useQueryClient()
 

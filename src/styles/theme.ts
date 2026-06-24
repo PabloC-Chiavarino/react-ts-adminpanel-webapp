@@ -23,15 +23,19 @@ const darkPalette = {
 const lightPalette = {
     primary: { main: '#7388faff' },
     secondary: { main: '#6177f8ff' },
+    tertiary: { main: '#5c6bc0' },
 
     background: {
-        default: '#f1f1f1ff',
+        default: '#fafbfd',
         paper: '#ffffffff',
+        alt: '#f4f5f9',
+        alt2: '#f0f1f5',
+        paper2: '#ffffff',
     },
 
     text: {
         primary: '#1f2937',
-        secondary: '#bdbdbdff',
+        secondary: '#666666',
     }
 };
 

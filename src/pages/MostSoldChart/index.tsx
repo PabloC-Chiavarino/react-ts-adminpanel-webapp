@@ -2,9 +2,10 @@ import { Box, Typography, CircularProgress } from "@mui/material"
 import { useDynamicQuery } from "../../hooks"
 import type { ChartTypes } from "../../types"
 import { DynamicChart } from "../../components"
+import { API_BASE_URL } from '../../config'
 
 const MostSoldChart = () => {
-    const CHARTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/charts'
+    const CHARTS_ENDPOINT = `${API_BASE_URL}/charts`
     const { data, isLoading, error } = useDynamicQuery<ChartTypes>(['charts'], CHARTS_ENDPOINT)
 
     const chartData = { type: "mostSold", title: "Most Sold", data: data?.mostSold }

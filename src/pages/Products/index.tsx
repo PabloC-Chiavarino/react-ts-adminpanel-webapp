@@ -8,6 +8,7 @@ import { DataGrid, type GridRenderCellParams } from '@mui/x-data-grid'
 import { Box, Typography, Modal, IconButton, CircularProgress } from '@mui/material'
 import { AddBtn, ConfirmDialog, ProductForm } from '../../components'
 import { EditOutlined, DeleteOutlined } from '@mui/icons-material'
+import { API_BASE_URL } from '../../config'
 export const Products = () => {
 
     const [open, setOpen] = useState(false)
@@ -27,7 +28,7 @@ export const Products = () => {
         createdAt: ''
     }
 
-    const PRODUCTS_ENDPOINT = 'https://mock-data-api-vntk.onrender.com/products'
+    const PRODUCTS_ENDPOINT = `${API_BASE_URL}/products`
     const queryClient = useQueryClient()
     const { data, isLoading, error } = useDynamicQuery<Product[]>(['products'], PRODUCTS_ENDPOINT)
     const { enqueueSnackbar } = useSnackbar()

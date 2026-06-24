@@ -7,6 +7,7 @@ import { useState, useRef } from "react";
 import { ConfirmDialog, AddBtn, TaskContainer, DraggableTask, TaskForm, ArchivedTask } from "../../components";
 import { useDynamicQuery } from "../../hooks";
 import type { Task } from "../../types";
+import { API_BASE_URL } from '../../config';
 
 const Tasker = () => {
     const [open, setOpen] = useState(false);
@@ -16,7 +17,7 @@ const Tasker = () => {
     const [activeTaskID, setActiveTaskID] = useState<string | null>(null);
     const requestAction = useRef<(() => void) | null>(null);
 
-    const TASKS_ENDPOINT = "https://mock-data-api-vntk.onrender.com/tasks";
+    const TASKS_ENDPOINT = `${API_BASE_URL}/tasks`;
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
     const { data, isLoading, error } = useDynamicQuery<Task[]>(['tasks'], TASKS_ENDPOINT);

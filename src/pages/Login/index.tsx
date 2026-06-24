@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { Container, Box, TextField, Button, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
+import { API_BASE_URL } from '../../config'
 
 const Login = () => {
     const [user, setUser] = useState('')
@@ -12,7 +13,7 @@ const Login = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         try {
-            const response = await fetch('https://mock-data-api-vntk.onrender.com/login', {
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

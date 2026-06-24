@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { Box, Grid, Modal, Typography } from "@mui/material";
+import { Box, Grid, Modal, Typography, useTheme } from "@mui/material";
 import { type SelectChangeEvent, CircularProgress } from '@mui/material';
 import type { EventDropArg } from "@fullcalendar/core";
 import type { Event } from "../../types";
@@ -11,6 +11,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin, { Draggable, type DropArg } from "@fullcalendar/interaction";
 import { ConfirmDialog, EventForm, AddBtn, EventContainer } from "../../components";
+import { API_BASE_URL } from '../../config';
 
 const Calendar = () => {
     const [eventData, setEventData] = useState<Event | null>(null);
@@ -20,8 +21,10 @@ const Calendar = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [isOverContainer, setIsOverContainer] = useState(false);
     const dragListenerRef = useRef<((e: MouseEvent) => void) | null>(null);
+    const theme = useTheme();
+    const isDark = theme.palette.mode === 'dark';
 
-    const EVENTS_ENDPOINT = "https://mock-data-api-vntk.onrender.com/events";
+    const EVENTS_ENDPOINT = `${API_BASE_URL}/events`;
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
     const { data, isLoading, error } = useDynamicQuery<Event[]>(['events'], EVENTS_ENDPOINT);
@@ -58,7 +61,7 @@ const Calendar = () => {
             return response.json();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [EVENTS_ENDPOINT] });
+            queryClient.invalidateQueries({ queryKey: ['events'] });
             setEventData(emptyEvent);
         },
     });
@@ -291,12 +294,12 @@ const Calendar = () => {
                     mt: 0,
                     borderRadius: 4,
                     overflow: "hidden",
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-                    border: '1px solid rgba(42,42,42,0.5)',
+                    boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 2px 12px rgba(0,0,0,0.06)',
+                    border: isDark ? '1px solid rgba(0,0,0,0.12)' : '1px solid rgba(0,0,0,0.06)',
 
                     // grilla
                     '& .fc-scrollgrid': { border: 'none' },
-                    '& .fc-scrollgrid td, & .fc-scrollgrid th': { border: '1px solid rgba(42,42,42,0.5)', },
+                    '& .fc-scrollgrid td, & .fc-scrollgrid th': { border: '1px solid rgba(0,0,0,0.12)', },
 
                     // cabecera días
                     '& .fc-col-header-cell': {
@@ -305,7 +308,7 @@ const Calendar = () => {
                         fontSize: '11px',
                         fontWeight: 600,
                         letterSpacing: '0.08em',
-                        color: '#555',
+                        color: 'text.secondary',
                         backgroundColor: 'background.paper',
                     },
                     '& .fc-col-header-cell a': { color: 'inherit', textDecoration: 'none' },
@@ -319,7 +322,7 @@ const Calendar = () => {
                     // números de día
                     '& .fc-daygrid-day-number': {
                         fontSize: '13px',
-                        color: '#555',
+                        color: 'text.secondary',
                         padding: '6px 10px',
                     },
 
@@ -343,17 +346,17 @@ const Calendar = () => {
                     // botones prev/next/today/vistas
                     '& .fc-button': {
                         background: 'transparent !important',
-                        border: '1px solid rgba(42,42,42,0.5) !important',
+                        border: '1px solid rgba(0,0,0,0.12) !important',
                         borderRadius: 2,
                         boxShadow: 'none !important',
                         fontSize: '12px',
                         padding: '4px 10px',
-                        color: '#888 !important',
+                        color: 'text.secondary !important',
                         textTransform: 'capitalize',
                     },
-                    '& .fc-button:hover': { background: '#1a1a1a !important' },
+                    '& .fc-button:hover': { background: 'background.paper2 !important' },
                     '& .fc-button-active': {
-                        borderColor: '#444 !important',
+                        borderColor: 'primary.main !important',
                         color: 'white !important',
                     },
 
@@ -390,7 +393,7 @@ const Calendar = () => {
 
                     // puntitos (more events)
                     '& .fc-daygrid-event-dot': { display: 'none' },
-                    '& .fc-daygrid-more-link': { fontSize: '11px', color: '#666' },
+                    '& .fc-daygrid-more-link': { fontSize: '11px', color: 'text.secondary' },
                 }}>
                     <FullCalendar
                         headerToolbar={{

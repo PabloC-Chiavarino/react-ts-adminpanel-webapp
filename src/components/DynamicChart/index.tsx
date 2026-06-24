@@ -1,5 +1,3 @@
-import { Box } from "@mui/material";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { DynamicComposedChart } from '../../components'
 
 const DynamicChart = ({
