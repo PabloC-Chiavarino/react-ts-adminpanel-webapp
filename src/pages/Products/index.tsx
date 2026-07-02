@@ -20,7 +20,7 @@ export const Products = () => {
     const isDark = theme.palette.mode === 'dark'
     const isXs = useMediaQuery(theme.breakpoints.down('sm'))
 
-    let requestAction = useRef<(() => void) | null>(null)
+    const requestAction = useRef<(() => void) | null>(null)
 
     const emptyProduct: Product = {
         id: 0,
@@ -139,7 +139,7 @@ export const Products = () => {
         try {
             await mutation.mutateAsync(productData)
             enqueueSnackbar('Created successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -149,7 +149,7 @@ export const Products = () => {
         try {
             await updateMutation.mutateAsync(productData)
             enqueueSnackbar('Updated successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -158,7 +158,7 @@ export const Products = () => {
         try {
             deleteMutation.mutateAsync(productData!.id)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -233,7 +233,7 @@ export const Products = () => {
                 flexWrap: 'wrap',
                 gap: 2,
             }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Products</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Products</Typography>
                 <AddBtn onClick={handleAddProduct} text="Product" />
             </Box>
             {!data ? (

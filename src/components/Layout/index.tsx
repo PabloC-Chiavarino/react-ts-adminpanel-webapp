@@ -11,7 +11,7 @@ const TOPBAR_HEIGHT = 64
 const Layout = () => {
     const { pathname } = useLocation()
     const theme = useTheme()
-    const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+    const isMdDown = useMediaQuery(theme.breakpoints.down('lg'))
     const { collapsed } = useSidebar()
     const isCollapsed = !isMdDown && collapsed
 

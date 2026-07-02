@@ -117,7 +117,7 @@ const Calendar = () => {
         try {
             await mutation.mutateAsync(eventData)
             enqueueSnackbar('Created successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -127,26 +127,30 @@ const Calendar = () => {
             if (!eventData) return
             await updateMutation.mutateAsync(eventData)
             enqueueSnackbar('Updated successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
+
+    const handleEventFind = useCallback((id: number) => {
+        return data?.find(task => task.id === id);
+    }, [data]);
 
     const handleEdit = useCallback((eventID: number) => {
         const task = handleEventFind(eventID)
         if (!task) return
         setEventData(task)
         handleOpen()
-    }, [data])
+    }, [handleEventFind])
 
     const handleDelete = useCallback((eventID: number) => {
         try {
             deleteMutation.mutate(eventID)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
-    }, [data])
+    }, [deleteMutation, enqueueSnackbar])
 
     const handleDeleteWithDialog = useCallback((eventID: number) => {
         handleOpenDialogPayload(() => handleDelete(eventID))
@@ -172,10 +176,6 @@ const Calendar = () => {
             };
         });
     }
-
-    const handleEventFind = (id: number) => {
-        return data?.find(task => task.id === id);
-    };
 
     const handleDrop = (info: EventDropArg | DropArg) => {
         let eventID: number;
@@ -260,7 +260,7 @@ const Calendar = () => {
                 />
             </Modal>
             <Box sx={{ mb: 5, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Calendar</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Calendar</Typography>
                 <AddBtn onClick={() => { setEventData(emptyEvent); handleOpen(); }} text="Event" />
             </Box>
             {data && (
@@ -276,7 +276,7 @@ const Calendar = () => {
                     </Box>
                 </Box>
             )}
-            <Grid sx={{ width: "100%", height: { xs: "auto", md: "75%", lg: "70%" }, display: "flex", flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: { xs: "stretch", md: "center" }, mt: { xs: 3, md: 7 }, gap: { xs: 3, md: 5, lg: 2 } }}>
+            <Grid sx={{ width: "100%", height: { xs: "auto", sm: "80%", md: "75%", lg: "70%" }, display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between", alignItems: { xs: "stretch", sm: "center", md: "center" }, mt: { xs: 3, md: 7 }, gap: { xs: 3, sm: 4, md: 5, lg: 2 } }}>
                 {!data ? (
                     <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No events data</Typography>
                 ) : (
@@ -290,7 +290,7 @@ const Calendar = () => {
                 )}
                 <Box sx={{
                     flex: { xs: 1, md: .75 },
-                    height: { xs: 400, md: "120%", lg: "100%" },
+                    height: { xs: 400, sm: 500, md: "120%", lg: "100%" },
                     mt: 0,
                     borderRadius: 4,
                     overflow: "hidden",

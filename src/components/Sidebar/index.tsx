@@ -29,7 +29,7 @@ export const Sidebar = () => {
     const location = useLocation()
     const theme = useTheme()
     const isDark = theme.palette.mode === 'dark'
-    const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+    const isMdDown = useMediaQuery(theme.breakpoints.down('lg'))
     const { mobileOpen, collapsed, setMobileOpen } = useSidebar()
 
     const isCollapsed = !isMdDown && collapsed

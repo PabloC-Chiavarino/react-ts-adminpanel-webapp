@@ -12,7 +12,7 @@ const COLLAPSED_WIDTH = 72
 const Topbar = () => {
     const { mode, toggleColorMode } = useColorMode()
     const theme = useTheme()
-    const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+    const isMdDown = useMediaQuery(theme.breakpoints.down('lg'))
     const { collapsed, toggleMobile, toggleCollapsed } = useSidebar()
     const isCollapsed = !isMdDown && collapsed
     const sidebarWidth = isMdDown ? 0 : (isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH)
@@ -60,7 +60,7 @@ const Topbar = () => {
                             <Menu />
                         </IconButton>
                     )}
-                    <Box sx={{ flex: 1, maxWidth: 360 }}>
+                    <Box sx={{ flex: 1, maxWidth: { sm: 280, md: 320, lg: 360 } }}>
                         <SearchBox />
                     </Box>
                 </Box>

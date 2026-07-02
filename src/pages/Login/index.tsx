@@ -29,7 +29,7 @@ const Login = () => {
             const data = await response.json()
             login(data.user)
 
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error al iniciar sesión', { variant: 'error' })
         }
     }

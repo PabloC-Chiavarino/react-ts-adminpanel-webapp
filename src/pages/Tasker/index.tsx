@@ -133,7 +133,7 @@ const Tasker = () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] });
 
             enqueueSnackbar('Task created successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error creating task', { variant: 'error' })
         }
     }
@@ -146,7 +146,7 @@ const Tasker = () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] });
 
             enqueueSnackbar('Task updated successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error updating task', { variant: 'error' })
         }
     }
@@ -158,7 +158,7 @@ const Tasker = () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] });
 
             enqueueSnackbar('Task deleted successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error deleting task', { variant: 'error' })
         }
     }
@@ -182,7 +182,7 @@ const Tasker = () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] });
 
             enqueueSnackbar("All tasks completed successfully", { variant: "success" });
-        } catch (error) {
+        } catch {
             enqueueSnackbar("Error completing tasks", { variant: "error" });
         }
     };
@@ -205,7 +205,7 @@ const Tasker = () => {
             queryClient.invalidateQueries({ queryKey: ['tasks'] });
 
             enqueueSnackbar("All archived tasks completed successfully", { variant: "success" });
-        } catch (error) {
+        } catch {
             enqueueSnackbar("Error archiving tasks", { variant: "error" });
         }
     };
@@ -311,7 +311,7 @@ const Tasker = () => {
             </Modal>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
                 <Box sx={{ mb: 5, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Typography variant="h1" className="dash-page-title" sx={{ color: 'text.primary', fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Tasker</Typography>
+                    <Typography variant="h1" className="dash-page-title" sx={{ color: 'text.primary', fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Tasker</Typography>
                     <AddBtn onClick={() => { setTaskData(emptyTask); handleOpen(); }} text="Task" />
                 </Box>
                 {!data ? (
@@ -329,7 +329,7 @@ const Tasker = () => {
                                 <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "12px", color: 'text.secondary', letterSpacing: '1px' }}>COMPLETED</Typography>
                             </Box>
                         </Box>
-                        <Grid container className="tasker-grid" sx={{ width: "100%", height: { xs: "auto", sm: "50%", lg: "45%" }, display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between", gap: { xs: 2, sm: 5 }, alignItems: "center", mt: 7 }}>
+                        <Grid container className="tasker-grid" sx={{ width: "100%", height: { xs: "auto", sm: "60%", md: "50%", lg: "45%" }, display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between", gap: { xs: 2, sm: 3, md: 5 }, alignItems: "center", mt: 7 }}>
                             <TaskContainer
                                 id="todo"
                                 title="To Do"
@@ -363,7 +363,7 @@ const Tasker = () => {
                 backgroundColor: "background.paper",
                 display: "flex",
                 flexDirection: "column",
-                mt: { xs: 15, lg: 10 },
+                mt: { xs: 10, sm: 8, lg: 10 },
                 p: { lg: 2.5 }
             }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>

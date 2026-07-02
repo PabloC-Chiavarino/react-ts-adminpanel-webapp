@@ -1,6 +1,6 @@
 import { Box, useTheme } from "@mui/material";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell } from "recharts";
-import type { ValueType, NameType } from "recharts/types/component/DefaultTooltipContent";
+import type { ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 const COLORS = ['#7858f5', '#613affbb', '#b2a1ff', '#5c6bc0', '#7388faff', '#6177f8ff'];
 
@@ -32,7 +32,7 @@ const MostSoldBarChart = ({ data }: { data: Array<{ product: string; quantity: n
                         tick={{ fontSize: 13, fill: theme.palette.text.primary }}
                     />
                     <Tooltip
-                        formatter={(value?: ValueType, _name?: NameType) => [`${value} units`, 'Quantity']}
+                        formatter={(value?: ValueType) => [`${value} units`, 'Quantity']}
                         contentStyle={{
                             borderRadius: '12px',
                             border: 'none',

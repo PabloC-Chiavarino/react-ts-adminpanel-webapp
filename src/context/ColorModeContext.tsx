@@ -9,11 +9,13 @@ interface ColorModeContextType {
     mode: PaletteMode;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ColorModeContext = createContext<ColorModeContextType>({
     toggleColorMode: () => { },
     mode: 'dark',
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useColorMode = () => useContext(ColorModeContext);
 
 interface ColorModeProviderProps {

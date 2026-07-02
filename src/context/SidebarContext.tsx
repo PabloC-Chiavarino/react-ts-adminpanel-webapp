@@ -18,6 +18,7 @@ const SidebarContext = createContext<SidebarContextType>({
     toggleCollapsed: () => {},
 })
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSidebar = () => useContext(SidebarContext)
 
 export const SidebarProvider = ({ children }: { children: ReactNode }) => {

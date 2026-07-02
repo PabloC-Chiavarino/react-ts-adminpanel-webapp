@@ -21,7 +21,7 @@ const Orders = () => {
     const isDark = theme.palette.mode === 'dark'
     const isXs = useMediaQuery(theme.breakpoints.down('sm'))
 
-    let requestAction = useRef<(() => void) | null>(null)
+    const requestAction = useRef<(() => void) | null>(null)
 
     const ORDERS_ENDPOINT = `${API_BASE_URL}/pendingOrders`
     const USERS_ENDPOINT = `${API_BASE_URL}/users`
@@ -117,7 +117,11 @@ const Orders = () => {
     const handleOpenEdit = () => setOpenEdit(true)
 
     const handleClose = () => {
-        openView ? setOpenView(false) : setOpenEdit(false)
+        if (openView) {
+            setOpenView(false)
+        } else {
+            setOpenEdit(false)
+        }
         setOrderData(emptyOrder)
     }
 
@@ -158,7 +162,7 @@ const Orders = () => {
             await mutation.mutateAsync(orderData)
             handleClose()
             enqueueSnackbar('Created successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -169,7 +173,7 @@ const Orders = () => {
             await updateMutation.mutateAsync(orderData)
             handleClose()
             enqueueSnackbar('Updated successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -178,7 +182,7 @@ const Orders = () => {
         try {
             await deleteMutation.mutateAsync(orderData!.id)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -345,7 +349,7 @@ const Orders = () => {
                 flexWrap: 'wrap',
                 gap: 2,
             }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Orders</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Orders</Typography>
                 <AddBtn onClick={handleAddOrder} text="Order" />
             </Box>
             {!data ? (

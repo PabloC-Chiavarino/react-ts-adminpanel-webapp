@@ -17,10 +17,9 @@ const Clients = () => {
     const [clientData, setClientData] = useState<User | null>(null)
     const theme = useTheme()
     const isDark = theme.palette.mode === 'dark'
-    const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
     const isXs = useMediaQuery(theme.breakpoints.down('sm'))
 
-    let requestAction = useRef<(() => void) | null>(null)
+    const requestAction = useRef<(() => void) | null>(null)
 
     const USERS_ENDPOINT = `${API_BASE_URL}/users`
     const queryClient = useQueryClient()
@@ -143,7 +142,7 @@ const Clients = () => {
             await mutation.mutateAsync(clientData)
             handleClose()
             enqueueSnackbar('Created successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -154,7 +153,7 @@ const Clients = () => {
             await updateMutation.mutateAsync(clientData)
             handleClose()
             enqueueSnackbar('Updated successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -163,7 +162,7 @@ const Clients = () => {
         try {
             await deleteMutation.mutateAsync(clientData!.id)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -178,8 +177,8 @@ const Clients = () => {
         { field: 'name', headerName: 'First name', width: 130, flex: .15 },
         { field: 'lastName', headerName: 'Last name', width: 130, flex: .15, hide: isXs },
         { field: 'email', headerName: 'Email', width: 130, flex: .2 },
-        { field: 'address', headerName: 'Address', width: 130, flex: .15, hide: isMdDown },
-        { field: 'phone', headerName: 'Phone', width: 130, flex: .15, hide: isMdDown },
+        { field: 'address', headerName: 'Address', width: 130, flex: .15 },
+        { field: 'phone', headerName: 'Phone', width: 130, flex: .15 },
         {
             field: 'createdAt', headerName: 'Created At', width: 130, flex: .2, renderCell: (params: GridRenderCellParams<User>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
@@ -239,7 +238,7 @@ const Clients = () => {
                 flexWrap: 'wrap',
                 gap: 2,
             }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Clients</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Clients</Typography>
                 <AddBtn onClick={handleAddClient} text="Client" />
             </Box>
             {!data ? (

@@ -8,7 +8,7 @@ const RevenueChart = () => {
     const CHARTS_ENDPOINT = `${API_BASE_URL}/charts`
     const { data, isLoading, error } = useDynamicQuery<ChartTypes>(['charts'], CHARTS_ENDPOINT)
 
-    const chartData = { type: "revenue", title: "Revenue", data: data?.revenue }
+    const chartData = { type: "revenue" as const, title: "Revenue" }
 
     if (isLoading) return <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}><CircularProgress size={60} /></Box>
     if (error) return <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>{error.message}</Typography>
@@ -22,14 +22,14 @@ const RevenueChart = () => {
             justifyContent: "center",
             alignItems: "center",
         }}>
-            <Box sx={{ mb: 6, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>{chartData.title}</Typography>
+            <Box sx={{ mb: { sm: 4, md: 6 }, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>{chartData.title}</Typography>
             </Box>
             {!data ? (
                 <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No revenue data</Typography>
             ) : (
                 <Box sx={{ width: "100%", height: "100%" }}>
-                    <DynamicChart data={chartData.data} type={chartData.type} />
+                    <DynamicChart data={data.revenue} type={chartData.type} />
                 </Box>
             )}
         </Box>

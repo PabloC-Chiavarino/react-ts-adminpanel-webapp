@@ -18,7 +18,7 @@ export const Invoices = () => {
     const isDark = theme.palette.mode === 'dark'
     const isXs = useMediaQuery(theme.breakpoints.down('sm'))
 
-    let requestAction = useRef<(() => void) | null>(null)
+    const requestAction = useRef<(() => void) | null>(null)
 
     const INVOICES_ENDPOINT = `${API_BASE_URL}/invoices`
     const USERS_ENDPOINT = `${API_BASE_URL}/users`
@@ -143,7 +143,7 @@ export const Invoices = () => {
         try {
             await mutation.mutateAsync(invoiceData)
             enqueueSnackbar('Created successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -153,7 +153,7 @@ export const Invoices = () => {
         try {
             await deleteMutation.mutateAsync(invoiceData!.id)
             enqueueSnackbar('Deleted successfully', { variant: 'success' })
-        } catch (error) {
+        } catch {
             enqueueSnackbar('Error', { variant: 'error' })
         }
     }
@@ -308,7 +308,7 @@ export const Invoices = () => {
                 flexWrap: 'wrap',
                 gap: 2,
             }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { lg: '2.2rem', xl: '2.5rem' } }}>Invoices</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Invoices</Typography>
                 <AddBtn onClick={handleAddInvoice} text="Invoice" />
             </Box>
             {!data ? (
