@@ -9,7 +9,7 @@ import { API_BASE_URL } from '../../config'
 
 const MIN_QUERY_LENGTH = 3
 
-const SearchBox = () => {
+const SearchBox = ({ onClose }: { onClose?: () => void }) => {
     const [query, setQuery] = useState('')
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
     const navigate = useNavigate()
@@ -40,6 +40,7 @@ const SearchBox = () => {
     const handleSelectProduct = (product: Product) => {
         setAnchorEl(null)
         setQuery('')
+        onClose?.()
         enqueueSnackbar(`Product: ${product.name}`, { variant: 'success' })
         navigate(`/products/`, { state: { foundProduct: product } })
     }
@@ -47,6 +48,7 @@ const SearchBox = () => {
     const handleSelectUser = (user: User) => {
         setAnchorEl(null)
         setQuery('')
+        onClose?.()
         enqueueSnackbar(`User: ${user.name} ${user.lastName}`, { variant: 'success' })
         navigate(`/clients/`, { state: { foundUser: user } })
     }
@@ -71,7 +73,7 @@ const SearchBox = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    width: { xs: '50vw', sm: '35vw' },
+                    width: { xs: '65vw', sm: '35vw' },
                     maxWidth: { sm: 320 },
                     height: '40px',
                     padding: '0 12px 0 12px',

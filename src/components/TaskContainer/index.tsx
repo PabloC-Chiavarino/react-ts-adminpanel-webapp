@@ -22,7 +22,7 @@ const TaskContainer = ({
     const { setNodeRef } = useDroppable({ id: id })
 
     return (
-        <Box sx={{ height: '100%', flex: { xs: 'none', sm: 0.50, md: 0.45, lg: 0.47 }, maxWidth: { md: '420px', lg: '480px' }, textAlign: 'center', minHeight: { xs: 200, sm: 'auto' } }}>
+        <Box sx={{ height: '100%', flex: { xs: 1, sm: 0.50, md: 0.45, lg: 0.47 }, maxWidth: { md: '420px', lg: '480px' }, textAlign: 'center', minHeight: 'auto', minWidth: 0, overflow: 'hidden' }}>
             <Box sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -40,7 +40,7 @@ const TaskContainer = ({
                             backgroundColor: title === 'To Do' ? 'priorityStyles.high.color' : 'priorityStyles.medium.color',
                             boxShadow: title === 'To Do' ? '0 0 10px rgba(225, 98, 118, 0.6)' : '0 0 10px rgba(178,161,255,0.6)',
                         }} />
-                    <Typography variant="h2" sx={{ fontWeight: '600', fontSize: '18px', color: 'text.primary', fontFamily: 'Manrope' }}>{title}</Typography>
+                    <Typography variant="h2" sx={{ fontWeight: '600', fontSize: { xs: '13px', sm: '18px' }, color: 'text.primary', fontFamily: 'Manrope' }}>{title}</Typography>
                 </Box>
                 <Button
                     onClick={action}
@@ -50,7 +50,7 @@ const TaskContainer = ({
                         p: 0,
                         minWidth: 'auto',
                         textTransform: 'none',
-                        fontSize: '11px',
+                        fontSize: { xs: '9px', sm: '11px' },
                         fontWeight: 700,
                         color: 'text.secondary',
                         transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)',
@@ -65,8 +65,8 @@ const TaskContainer = ({
             </Box>
             <Paper sx={{
                 mt: 0,
-                pt: 3.5,
-                pb: 3.5,
+                pt: { xs: 1.5, sm: 3.5 },
+                pb: { xs: 1.5, sm: 3.5 },
                 height: '100%',
                 maxHeight: { xs: '50vh', sm: 'none' },
                 overflowY: 'auto',
@@ -98,7 +98,7 @@ const TaskContainer = ({
                     flex: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: { sm: 1, md: 1.2, lg: 1.5 },
+                    gap: { xs: 0.8, sm: 1, md: 1.2, lg: 1.5 },
                 }}>
                     {tasks.map((task) => (
                         <DraggableTask

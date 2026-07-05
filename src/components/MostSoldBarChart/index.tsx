@@ -28,8 +28,8 @@ const MostSoldBarChart = ({ data }: { data: Array<{ product: string; quantity: n
                     <YAxis
                         type="category"
                         dataKey="product"
-                        width={120}
-                        tick={{ fontSize: 13, fill: theme.palette.text.primary }}
+                        width={window.innerWidth < 600 ? 80 : 120}
+                        tick={{ fontSize: window.innerWidth < 600 ? 11 : 13, fill: theme.palette.text.primary }}
                     />
                     <Tooltip
                         formatter={(value?: ValueType) => [`${value} units`, 'Quantity']}

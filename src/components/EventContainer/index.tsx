@@ -17,7 +17,7 @@ const EventContainer = memo(({
     isDragging: boolean
 }) => {
     return (
-        <Box sx={{ height: '100%', flex: { xs: 1, sm: 0.30, md: 0.25, lg: 0.20 }, textAlign: 'center', minHeight: { xs: 200, sm: 'auto' }, maxHeight: { xs: '35vh', md: 'none', lg: '40vh' } }} id="event-container">
+        <Box sx={{ height: 'auto', flex: { xs: 'none', sm: 0.30, md: 0.25, lg: 0.20 }, textAlign: 'center', minHeight: 'auto', maxHeight: { xs: '35vh', sm: '100%', md: '100%', lg: '40vh' }, minWidth: 0, overflow: 'hidden' }} id="event-container">
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
                 <Box
                     sx={{
@@ -28,13 +28,13 @@ const EventContainer = memo(({
                         backgroundColor: 'priorityStyles.medium.color',
                         boxShadow: '0 0 10px rgba(178,161,255,0.6)',
                     }} />
-                <Typography variant="h2" className="dash-section-title" sx={{ fontWeight: '600', fontSize: { sm: '13px', md: '14px', lg: '16px' }, color: 'text.primary', fontFamily: 'Manrope' }}>Unscheduled</Typography>
+                <Typography variant="h2" className="dash-section-title" sx={{ fontWeight: '600', fontSize: { xs: '11px', sm: '13px', md: '14px', lg: '16px' }, color: 'text.primary', fontFamily: 'Manrope' }}>Unscheduled</Typography>
             </Box>
             <Paper sx={{
                 mt: 1,
-                pt: { sm: 1.5, md: 1.8, lg: 2 },
-                pb: { sm: 1.5, md: 1.8, lg: 2 },
-                px: { sm: 1, md: 1.2, lg: 1.5 },
+                pt: { xs: 1, sm: 1.5, md: 1.8, lg: 2 },
+                pb: { xs: 1, sm: 1.5, md: 1.8, lg: 2 },
+                px: { xs: 0.8, sm: 1, md: 1.2, lg: 1.5 },
                 height: '100%',
                 overflowY: 'auto',
                 overflowX: 'hidden',
@@ -82,7 +82,7 @@ const EventContainer = memo(({
                     flex: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: { sm: 1, md: 1.2, lg: 1.5 },
+                    gap: { xs: 0.8, sm: 1, md: 1.2, lg: 1.5 },
                 }}>
                     {events?.map((event) => (
                         <DraggableEvent

@@ -17,9 +17,11 @@ const ArchivedTask = ({
             alignItems: 'center',
             textAlign: 'center',
             flexShrink: 1,
-            pr: { sm: 1, md: 1.2, lg: 1.5 },
-            pl: { sm: 1.8, md: 2, lg: 2.5 },
-            py: { sm: 1, md: 1.2, lg: 1.5 },
+            minWidth: 0,
+            overflow: 'hidden',
+            pr: { xs: 0.8, sm: 1, md: 1.2, lg: 1.5 },
+            pl: { xs: 1.2, sm: 1.8, md: 2, lg: 2.5 },
+            py: { xs: 0.8, sm: 1, md: 1.2, lg: 1.5 },
             border: "1px solid transparent",
             borderRadius: '16px',
             justifyContent: 'space-between',
@@ -33,14 +35,14 @@ const ArchivedTask = ({
             }
         }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: .3, minWidth: 0, overflow: 'hidden' }}>
-                <Box key={task.id} sx={{ display: 'flex', gap: 4, alignItems: 'center', minWidth: 0 }}>
-                    <Typography className="dash-item-title" sx={{ fontSize: { sm: '12px', md: '13px', lg: '14px' }, fontWeight: "bold", color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <Box key={task.id} sx={{ display: 'flex', gap: { xs: 1.5, sm: 4 }, alignItems: 'center', minWidth: 0 }}>
+                    <Typography className="dash-item-title" sx={{ fontSize: { xs: '11px', sm: '12px', md: '13px', lg: '14px' }, fontWeight: "bold", color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {task.title}
                     </Typography>
                 </Box>
-                <Typography variant="body1" className="dash-item-desc" sx={{ fontSize: { sm: '11px', md: '12px', lg: '13px' }, fontStyle: 'oblique', color: 'text.secondary' }}>{task.description}</Typography>
+                <Typography variant="body1" className="dash-item-desc" sx={{ fontSize: { xs: '10px', sm: '11px', md: '12px', lg: '13px' }, fontStyle: 'oblique', color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.description}</Typography>
             </Box>
-            <Box className='task-actions' sx={{ display: 'flex', gap: 0 }}>
+            <Box className='task-actions' sx={{ display: 'flex', gap: 0, flexShrink: 0 }}>
                 <IconButton
                     onPointerDown={(e) => e.stopPropagation()}
                     onClick={() => { handleRestoreFromArchive(task.id) }}
@@ -52,8 +54,8 @@ const ArchivedTask = ({
                     }}
                 >
                     <UnarchiveOutlined sx={{
-                        width: 22,
-                        height: 22,
+                        width: { xs: 18, sm: 22 },
+                        height: { xs: 18, sm: 22 },
                         color: 'text.secondary',
                         transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                         transform: 'scale(1)',
@@ -74,8 +76,8 @@ const ArchivedTask = ({
                     }}
                 >
                     <DeleteOutlined sx={{
-                        width: 22,
-                        height: 22,
+                        width: { xs: 18, sm: 22 },
+                        height: { xs: 18, sm: 22 },
                         color: 'text.secondary',
                         transform: 'scale(1)',
                         transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',

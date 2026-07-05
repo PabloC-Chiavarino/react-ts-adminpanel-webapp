@@ -99,7 +99,7 @@ export const Dashboard = () => {
             flexDirection: "column",
             alignItems: "flex-start",
         }}>
-            <Typography variant="h1" className="dash-page-title" sx={{ mb: 5, fontSize: { sm: '2.1rem', md: '2.4rem', lg: '2.4rem', xl: '2.5rem' } }}>
+            <Typography variant="h1" className="dash-page-title" sx={{ mb: 5, fontSize: { xs: '1.6rem', sm: '2.1rem', md: '2.4rem', lg: '2.4rem', xl: '2.5rem' } }}>
                 Dashboard
             </Typography>
             <Box

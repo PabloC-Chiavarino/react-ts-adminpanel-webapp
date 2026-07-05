@@ -1,7 +1,7 @@
 import { useAuth } from '../../context/AuthContext'
 import { SearchBox, UserMenu } from '../../components'
-import { AppBar, Toolbar, Box, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material'
-import { Brightness4, Brightness7, Menu } from '@mui/icons-material'
+import { AppBar, Toolbar, Box, IconButton, Typography, useMediaQuery, useTheme, Modal } from '@mui/material'
+import { Brightness4, Brightness7, Menu, Search } from '@mui/icons-material'
 import { useColorMode } from '../../context/ColorModeContext'
 import { useSidebar } from '../../context/SidebarContext'
 import { useState } from 'react'
@@ -13,12 +13,14 @@ const Topbar = () => {
     const { mode, toggleColorMode } = useColorMode()
     const theme = useTheme()
     const isMdDown = useMediaQuery(theme.breakpoints.down('lg'))
+    const isXsDown = useMediaQuery(theme.breakpoints.down('sm'))
     const { collapsed, toggleMobile, toggleCollapsed } = useSidebar()
     const isCollapsed = !isMdDown && collapsed
     const sidebarWidth = isMdDown ? 0 : (isCollapsed ? COLLAPSED_WIDTH : DRAWER_WIDTH)
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
+    const [openSearch, setOpenSearch] = useState(false)
 
     const { user } = useAuth()
 
@@ -60,9 +62,32 @@ const Topbar = () => {
                             <Menu />
                         </IconButton>
                     )}
-                    <Box sx={{ flex: 1, maxWidth: { sm: 280, md: 320, lg: 360 } }}>
-                        <SearchBox />
-                    </Box>
+                    {isXsDown ? (
+                        <>
+                            <IconButton onClick={() => setOpenSearch(true)} sx={{ color: 'text.secondary', '&:hover': { backgroundColor: 'background.paper2' } }}>
+                                <Search />
+                            </IconButton>
+                            <Modal open={openSearch} onClose={() => setOpenSearch(false)}>
+                                <Box sx={{
+                                    position: 'absolute' as const,
+                                    top: '50%', left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: '90vw',
+                                    maxWidth: 400,
+                                    p: 2,
+                                    borderRadius: 3,
+                                    backgroundColor: 'background.default',
+                                    boxShadow: 24,
+                                }}>
+                                    <SearchBox onClose={() => setOpenSearch(false)} />
+                                </Box>
+                            </Modal>
+                        </>
+                    ) : (
+                        <Box sx={{ flex: 1, maxWidth: { sm: 280, md: 320, lg: 360 } }}>
+                            <SearchBox />
+                        </Box>
+                    )}
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, sm: 1 } }}>
                     <IconButton onClick={toggleColorMode} sx={{

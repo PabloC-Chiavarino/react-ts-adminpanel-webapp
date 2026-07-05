@@ -169,12 +169,12 @@ export const Products = () => {
     }
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70, flex: .1 },
-        { field: 'name', headerName: 'Product', width: 130, flex: .4 },
-        { field: 'category', headerName: 'Category', width: 130, flex: .2, hide: isXs },
-        { field: 'price', headerName: 'Price', width: 130, flex: .2 },
+        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'name', headerName: 'Product', width: 130 },
+        { field: 'category', headerName: 'Category', width: 130, hide: isXs },
+        { field: 'price', headerName: 'Price', width: 130 },
         {
-            field: 'stock', headerName: 'Stock', width: 130, flex: .2, renderCell: (params: GridRenderCellParams<Product>) => (
+            field: 'stock', headerName: 'Stock', width: 130, renderCell: (params: GridRenderCellParams<Product>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                     <span>{params.row.stock}</span>
                     <Box sx={{ display: productData?.id === params.row.id ? 'flex' : 'none', alignItems: 'center' }}>
@@ -233,7 +233,7 @@ export const Products = () => {
                 flexWrap: 'wrap',
                 gap: 2,
             }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Products</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { xs: '1.4rem', sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Products</Typography>
                 <AddBtn onClick={handleAddProduct} text="Product" />
             </Box>
             {!data ? (
@@ -242,6 +242,8 @@ export const Products = () => {
                 <DataGrid
                     rows={data}
                     columns={columns}
+                    density="compact"
+                    getRowHeight={() => window.innerWidth < 600 ? 40 : 52}
                     pageSizeOptions={[25, 50, 100]}
                     initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
                     onRowClick={(params) => setProductData(params.row)}

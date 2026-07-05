@@ -94,3 +94,23 @@ body,html {
         display: none;
     }
 }
+
+@media (max-width: 599px) {
+    .tasker-grid {
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .dash-stat-row {
+        gap: 6px !important;
+    }
+
+    .dash-revenue-stat-row {
+        gap: 12px !important;
+    }
+
+    .dash-event-item {
+        gap: 6px !important;
+        padding: 4px 6px !important;
+    }
+}

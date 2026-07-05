@@ -77,9 +77,9 @@ const UserProfile = () => {
 
     return (
         <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-            <Typography variant="h1" className="dash-page-title" sx={{ mb: 5, fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>
+            <Typography variant="h1" className="dash-page-title" sx={{ mb: 5, fontSize: { xs: '1.4rem', sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>
             </Typography>
-            <Paper sx={{ width: "100%", maxWidth: { sm: '100%', md: '650px', lg: '600px', xl: '700px' }, p: { sm: 3, md: 3.5, lg: 3, xl: 4 }, borderRadius: "16px" }}>
+            <Paper sx={{ width: "100%", maxWidth: { sm: '100%', md: '650px', lg: '600px', xl: '700px' }, p: { xs: 2, sm: 3, md: 3.5, lg: 3, xl: 4 }, borderRadius: "16px" }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, flexWrap: 'wrap', gap: 2 }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                         <Box sx={{

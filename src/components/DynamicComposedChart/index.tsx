@@ -22,10 +22,10 @@ const DynamicComposedChart = ({
             '& .recharts-default-legend': {
                 display: 'flex',
                 justifyContent: 'center',
-                gap: '100px',
+                gap: { xs: '20px', sm: '50px', md: '100px' },
                 position: 'relative',
-                top: '50px',
-                fontSize: '18px',
+                top: { xs: '20px', sm: '35px', md: '50px' },
+                fontSize: { xs: '12px', sm: '14px', md: '18px' },
             }
         }}
         >

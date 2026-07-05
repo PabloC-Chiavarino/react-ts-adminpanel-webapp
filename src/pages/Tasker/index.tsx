@@ -310,8 +310,8 @@ const Tasker = () => {
                 />
             </Modal>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
-                <Box sx={{ mb: 5, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Typography variant="h1" className="dash-page-title" sx={{ color: 'text.primary', fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Tasker</Typography>
+                <Box sx={{ mb: 5, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: 'wrap', gap: 1 }}>
+                    <Typography variant="h1" className="dash-page-title" sx={{ color: 'text.primary', fontSize: { xs: '1.4rem', sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Tasker</Typography>
                     <AddBtn onClick={() => { setTaskData(emptyTask); handleOpen(); }} text="Task" />
                 </Box>
                 {!data ? (
@@ -320,16 +320,16 @@ const Tasker = () => {
                     <>
                         <Box sx={{ display: "flex", alignItems: "center", mt: -3.5 }}>
                             <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.high.color' }}>{todo?.length} </Typography>
-                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>PENDING</Typography>
+                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { xs: '18px', sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.high.color' }}>{todo?.length} </Typography>
+                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { xs: '9px', sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>PENDING</Typography>
                             </Box>
                             <Box sx={{ width: '1px', height: '16px', backgroundColor: 'rgb(240 237 241 / 0.25)', mx: 2 }} />
                             <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.medium.color' }}>{done?.length + archived?.length} </Typography>
-                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>COMPLETED</Typography>
+                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { xs: '18px', sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.medium.color' }}>{done?.length + archived?.length} </Typography>
+                                <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { xs: '9px', sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>COMPLETED</Typography>
                             </Box>
                         </Box>
-                        <Grid container className="tasker-grid" sx={{ width: "100%", height: { xs: "auto", sm: "60%", md: "50%", lg: "45%" }, display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "center", gap: { xs: 2, sm: 3, md: 5 }, alignItems: "stretch", mt: 7 }}>
+                        <Grid container className="tasker-grid" sx={{ width: "100%", height: { xs: "auto", sm: "60%", md: "50%", lg: "45%" }, minHeight: { xs: "calc(100vh - 200px)", sm: "auto" }, display: "flex", flexDirection: "row", justifyContent: "center", gap: { xs: 0.8, sm: 3, md: 5 }, alignItems: "stretch", mt: { xs: 3, sm: 7 }, overflow: "hidden", minWidth: 0 }}>
                             <TaskContainer
                                 id="todo"
                                 title="To Do"
@@ -363,8 +363,8 @@ const Tasker = () => {
                 backgroundColor: "background.paper",
                 display: "flex",
                 flexDirection: "column",
-                mt: { xs: 10, sm: 8, lg: 10 },
-                p: { sm: 1.5, md: 2, lg: 2.5 }
+                mt: { xs: 6, sm: 8, lg: 10 },
+                p: { xs: 1, sm: 1.5, md: 2, lg: 2.5 }
             }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
                     <Box onClick={() => setShowArchived(!showArchived)} sx={{
@@ -380,16 +380,16 @@ const Tasker = () => {
                         }
                     }}>
                         {showArchived ? <ExpandLess sx={{ color: 'text.secondary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} /> : <ExpandMore sx={{ color: 'text.secondary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }} />}
-                        <Typography variant="h2" className="dash-section-title" sx={{ fontWeight: '600', fontSize: { sm: '13px', md: '14px', lg: '16px' }, color: 'text.primary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }}>Archived Tasks</Typography>
+                        <Typography variant="h2" className="dash-section-title" sx={{ fontWeight: '600', fontSize: { xs: '11px', sm: '13px', md: '14px', lg: '16px' }, color: 'text.primary', transition: 'color 200ms cubic-bezier(0.4, 0, 0.2, 1)' }}>Archived Tasks</Typography>
                     </Box>
                     <Button
                         onClick={() => handleOpenDialogPayload(handleDeleteArchive)}
                         variant="text"
                         disableRipple
                         sx={{
-                            fontSize: { sm: '9px', md: '10px', lg: '10px' },
-                            px: { sm: 1.5, md: 1.8, lg: 2 },
-                            py: { sm: 0.6, md: 0.7, lg: 0.8 },
+                            fontSize: { xs: '8px', sm: '9px', md: '10px', lg: '10px' },
+                            px: { xs: 1, sm: 1.5, md: 1.8, lg: 2 },
+                            py: { xs: 0.5, sm: 0.6, md: 0.7, lg: 0.8 },
                             borderRadius: '10px',
                             backgroundColor: 'background.alt',
                             fontWeight: 700,
@@ -427,7 +427,7 @@ const Tasker = () => {
                         display: 'none',
                     },
                 }}>
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: { sm: 1, md: 1.2, lg: 1.5 }, pt: 3.5, pb: 3.5 }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 0.5, sm: 1, md: 1.2, lg: 1.5 }, pt: 3.5, pb: 3.5 }}>
                         {archived.map((task) => (
                             <ArchivedTask key={task.id} task={task} handleRestoreFromArchive={() => handleOpenDialogPayload(() => handleRestoreFromArchive(task.id))} handleDelete={() => handleOpenDialogPayload(() => handleDelete(task.id))} />
                         ))}

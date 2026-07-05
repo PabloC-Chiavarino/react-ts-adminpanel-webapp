@@ -59,7 +59,7 @@ const DynamicForm = <T extends Record<string, unknown>>(
                 zIndex: 100,
             }}
         >
-            <Typography variant="h6" sx={{ alignSelf: 'center', mb: 1.5, fontWeight: 'bold', fontSize: 22 }}>
+            <Typography variant="h6" sx={{ alignSelf: 'center', mb: 1.5, fontWeight: 'bold', fontSize: { xs: 18, sm: 22 } }}>
                 {existingUser ? `Edit ${title}` : `New ${title}`}
             </Typography>
             {fieldPairs.map((pair, pairIndex) => (
@@ -69,7 +69,7 @@ const DynamicForm = <T extends Record<string, unknown>>(
                         display: 'flex',
                         flexDirection: { xs: 'column', sm: 'row' },
                         width: '100%',
-                        gap: 3,
+                gap: { xs: 2, sm: 3 },
                         px: { xs: 2, sm: 4 }
                     }}
                 >

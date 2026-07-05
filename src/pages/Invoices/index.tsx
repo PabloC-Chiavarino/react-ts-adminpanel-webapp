@@ -168,9 +168,9 @@ export const Invoices = () => {
     }, [usersData])
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70, flex: .1 },
+        { field: 'id', headerName: 'ID', width: 70 },
         {
-            field: 'clientId', headerName: 'Client', width: 130, flex: .4, renderCell: (params: GridRenderCellParams<Invoice>) => {
+            field: 'clientId', headerName: 'Client', width: 130, renderCell: (params: GridRenderCellParams<Invoice>) => {
 
                 const client = usersMap.get(params.row.clientId)
 
@@ -178,15 +178,15 @@ export const Invoices = () => {
             }
         },
         {
-            field: 'clientIdonly', headerName: 'Client ID', flex: .2, hide: isXs, renderCell: (params: GridRenderCellParams<Invoice>) => {
+            field: 'clientIdonly', headerName: 'Client ID', width: 130, hide: isXs, renderCell: (params: GridRenderCellParams<Invoice>) => {
 
                 return <span>ID <strong>{params?.row.clientId}</strong></span>
 
             }
         },
-        { field: 'totalPrice', headerName: 'Total', width: 100, flex: .2 },
+        { field: 'totalPrice', headerName: 'Total', width: 100 },
         {
-            field: 'createdAt', headerName: 'Created At', width: 100, flex: .2, renderCell: (params: GridRenderCellParams<Invoice>) => (
+            field: 'createdAt', headerName: 'Created At', width: 100, renderCell: (params: GridRenderCellParams<Invoice>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                     <span>{params.row.id}</span>
                     <Box sx={{ display: invoiceData?.id === params.row.id ? 'block' : 'none', paddingLeft: "20px" }}>
@@ -308,7 +308,7 @@ export const Invoices = () => {
                 flexWrap: 'wrap',
                 gap: 2,
             }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Invoices</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { xs: '1.4rem', sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Invoices</Typography>
                 <AddBtn onClick={handleAddInvoice} text="Invoice" />
             </Box>
             {!data ? (
@@ -317,6 +317,8 @@ export const Invoices = () => {
                 <DataGrid
                     rows={data}
                     columns={columns}
+                    density="compact"
+                    getRowHeight={() => window.innerWidth < 600 ? 40 : 52}
                     pageSizeOptions={[25, 50, 100]}
                     initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
                     onRowClick={(params) => { setInvoiceData(params.row) }}

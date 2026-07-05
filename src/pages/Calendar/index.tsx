@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { Box, Grid, Modal, Typography, useTheme } from "@mui/material";
+import { Box, Grid, Modal, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { type SelectChangeEvent, CircularProgress } from '@mui/material';
 import type { EventDropArg } from "@fullcalendar/core";
 import type { Event } from "../../types";
@@ -23,6 +23,7 @@ const Calendar = () => {
     const dragListenerRef = useRef<((e: MouseEvent) => void) | null>(null);
     const theme = useTheme();
     const isDark = theme.palette.mode === 'dark';
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
     const EVENTS_ENDPOINT = `${API_BASE_URL}/events`;
     const queryClient = useQueryClient();
@@ -231,7 +232,8 @@ const Calendar = () => {
     return (
         <Box sx={{
             width: "100%",
-            height: "100%",
+            height: { xs: "auto", sm: "100%" },
+            minHeight: { xs: "100%", sm: "auto" },
             display: "flex",
             flexDirection: "column"
         }}
@@ -259,24 +261,24 @@ const Calendar = () => {
                     }}
                 />
             </Modal>
-            <Box sx={{ mb: 5, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Calendar</Typography>
+            <Box sx={{ mb: 5, width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: 'wrap', gap: 1 }}>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { xs: '1.4rem', sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Calendar</Typography>
                 <AddBtn onClick={() => { setEventData(emptyEvent); handleOpen(); }} text="Event" />
             </Box>
             {data && (
                 <Box sx={{ display: "flex", alignItems: "center", mt: -3.5 }}>
                     <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.high.color' }}>{data?.filter(event => event.startDate).length} </Typography>
-                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>UPCOMING</Typography>
+                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { xs: '18px', sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.high.color' }}>{data?.filter(event => event.startDate).length} </Typography>
+                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { xs: '9px', sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>UPCOMING</Typography>
                     </Box>
                     <Box sx={{ width: '1px', height: '16px', backgroundColor: 'rgb(240 237 241 / 0.25)', mx: 2 }} />
                     <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.medium.color' }}>{data?.filter(event => !event.startDate).length} </Typography>
-                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>UNSCHEDULED</Typography>
+                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { xs: '18px', sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.medium.color' }}>{data?.filter(event => !event.startDate).length} </Typography>
+                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { xs: '9px', sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>UNSCHEDULED</Typography>
                     </Box>
                 </Box>
             )}
-            <Grid sx={{ width: "100%", height: { xs: "auto", sm: "80%", md: "80%", lg: "75%" }, display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "center", alignItems: { xs: "stretch", sm: "stretch" }, mt: { xs: 3, md: 7 }, gap: { xs: 3, sm: 4, md: 5, lg: 2 } }}>
+            <Grid sx={{ width: "100%", height: { xs: "auto", sm: "80%", md: "80%", lg: "75%" }, display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "center", alignItems: "stretch", mt: { xs: 3, md: 7 }, gap: { xs: 0.8, sm: 4, md: 5, lg: 2 }, overflow: { xs: "visible", sm: "hidden" }, minWidth: 0 }}>
                 {!data ? (
                     <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No events data</Typography>
                 ) : (
@@ -289,11 +291,12 @@ const Calendar = () => {
                     />
                 )}
                 <Box sx={{
-                    flex: { xs: 1, md: .80 },
-                    height: { xs: 400, sm: 500, md: "85%", lg: "100%" },
+                    flex: { xs: 1, sm: 1, md: .80 },
+                    minHeight: { xs: "40vh", sm: "100%", md: "85%", lg: "100%" },
                     mt: 0,
                     borderRadius: 4,
-                    overflow: "hidden",
+                    minWidth: 0,
+                    overflow: { xs: "visible", sm: "hidden" },
                     boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 2px 12px rgba(0,0,0,0.06)',
                     border: isDark ? '1px solid rgba(0,0,0,0.12)' : '1px solid rgba(0,0,0,0.06)',
 
@@ -314,7 +317,7 @@ const Calendar = () => {
                     '& .fc-col-header-cell a': { color: 'inherit', textDecoration: 'none' },
 
                     '& .fc-daygrid-day-frame': {
-                        minHeight: { xs: '80px', md: '140px', lg: '120px' },
+                        minHeight: { xs: 'auto', md: '140px', lg: '120px' },
                         backgroundColor: 'background.paper',
                     },
 
@@ -409,7 +412,7 @@ const Calendar = () => {
                             center: 'title',
                             right: 'dayGridMonth,timeGridWeek,timeGridDay'
                         }}
-                        height={"100%"}
+                        height={isXs ? undefined : "100%"}
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                         initialView="dayGridMonth"
                         editable={true}

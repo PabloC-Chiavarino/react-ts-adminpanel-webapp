@@ -202,9 +202,9 @@ const Orders = () => {
     }, [usersData])
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70, flex: .1 },
+        { field: 'id', headerName: 'ID', width: 70 },
         {
-            field: 'clientId', headerName: 'Client', width: 130, flex: .4, renderCell: (params: GridRenderCellParams<Order>) => {
+            field: 'clientId', headerName: 'Client', width: 130, renderCell: (params: GridRenderCellParams<Order>) => {
 
                 const client = params.row.clientId != null ? usersMap?.get(params.row.clientId) : null
 
@@ -212,14 +212,14 @@ const Orders = () => {
             }
         },
         {
-            field: 'clientIdonly', headerName: 'Client ID', width: 130, flex: .2, hide: isXs, renderCell: (params: GridRenderCellParams<Order>) => {
+            field: 'clientIdonly', headerName: 'Client ID', width: 130, hide: isXs, renderCell: (params: GridRenderCellParams<Order>) => {
 
                 return <span>ID <strong>{params?.row.clientId}</strong></span>
             }
         },
-        { field: 'totalPrice', headerName: 'Total', width: 100, flex: .2 },
+        { field: 'totalPrice', headerName: 'Total', width: 100 },
         {
-            field: 'createdAt', headerName: 'Created At', width: 100, flex: .2, renderCell: (params: GridRenderCellParams<Order>) => (
+            field: 'createdAt', headerName: 'Created At', width: 100, renderCell: (params: GridRenderCellParams<Order>) => (
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                     <span>{params.row.id}</span>
                     <Box sx={{ display: orderData?.id === params.row.id ? 'flex' : 'none', alignItems: 'center' }}>
@@ -349,7 +349,7 @@ const Orders = () => {
                 flexWrap: 'wrap',
                 gap: 2,
             }}>
-                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Orders</Typography>
+                <Typography variant="h1" className="dash-page-title" sx={{ fontSize: { xs: '1.4rem', sm: '1.6rem', md: '1.9rem', lg: '2.2rem', xl: '2.5rem' } }}>Orders</Typography>
                 <AddBtn onClick={handleAddOrder} text="Order" />
             </Box>
             {!data ? (
@@ -358,6 +358,8 @@ const Orders = () => {
                 <DataGrid
                     rows={data}
                     columns={columns}
+                    density="compact"
+                    getRowHeight={() => window.innerWidth < 600 ? 40 : 52}
                     pageSizeOptions={[25, 50, 100]}
                     initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
                     onRowClick={(params) => {
