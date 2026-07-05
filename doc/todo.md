@@ -13,7 +13,7 @@ tablet: 600-899px - LISTO (Nexus 7, Galaxy Tab S4, iPad, Kindle Fire HDX)
 - Page titles: responsive typography (1.6rem - 2.5rem)
 - Componentes: AddBtn, SearchBox, Topbar con valores sm/md
 - Calendar: layout row en tablets
-- Tasker: gap y height ajustados
+- Tasker: gap y height ajustados, stats bar responsive, DraggableTask/ArchivedTask con sm/md, touch-friendly action buttons
 
 small-desktop: 1024-1199px - LISTO
 - Sidebar: hamburger (temporary drawer) via lg breakpoint

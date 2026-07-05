@@ -266,17 +266,17 @@ const Calendar = () => {
             {data && (
                 <Box sx={{ display: "flex", alignItems: "center", mt: -3.5 }}>
                     <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "25px", color: 'priorityStyles.high.color' }}>{data?.filter(event => event.startDate).length} </Typography>
-                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "12px", color: 'text.secondary', letterSpacing: '1px' }}>UPCOMING</Typography>
+                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.high.color' }}>{data?.filter(event => event.startDate).length} </Typography>
+                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>UPCOMING</Typography>
                     </Box>
                     <Box sx={{ width: '1px', height: '16px', backgroundColor: 'rgb(240 237 241 / 0.25)', mx: 2 }} />
                     <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
-                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "25px", color: 'priorityStyles.medium.color' }}>{data?.filter(event => !event.startDate).length} </Typography>
-                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: "12px", color: 'text.secondary', letterSpacing: '1px' }}>UNSCHEDULED</Typography>
+                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '20px', md: '22px', lg: '25px' }, color: 'priorityStyles.medium.color' }}>{data?.filter(event => !event.startDate).length} </Typography>
+                        <Typography variant='h2' sx={{ fontWeight: "bold", fontSize: { sm: '10px', md: '11px', lg: '12px' }, color: 'text.secondary', letterSpacing: '1px' }}>UNSCHEDULED</Typography>
                     </Box>
                 </Box>
             )}
-            <Grid sx={{ width: "100%", height: { xs: "auto", sm: "80%", md: "75%", lg: "70%" }, display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between", alignItems: { xs: "stretch", sm: "center", md: "center" }, mt: { xs: 3, md: 7 }, gap: { xs: 3, sm: 4, md: 5, lg: 2 } }}>
+            <Grid sx={{ width: "100%", height: { xs: "auto", sm: "80%", md: "80%", lg: "75%" }, display: "flex", flexDirection: { xs: "column", sm: "row" }, justifyContent: "center", alignItems: { xs: "stretch", sm: "stretch" }, mt: { xs: 3, md: 7 }, gap: { xs: 3, sm: 4, md: 5, lg: 2 } }}>
                 {!data ? (
                     <Typography variant='h2' sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", fontWeight: "bold", fontSize: "24px", mb: 15 }}>No events data</Typography>
                 ) : (
@@ -289,8 +289,8 @@ const Calendar = () => {
                     />
                 )}
                 <Box sx={{
-                    flex: { xs: 1, md: .75 },
-                    height: { xs: 400, sm: 500, md: "120%", lg: "100%" },
+                    flex: { xs: 1, md: .80 },
+                    height: { xs: 400, sm: 500, md: "85%", lg: "100%" },
                     mt: 0,
                     borderRadius: 4,
                     overflow: "hidden",
@@ -315,7 +315,6 @@ const Calendar = () => {
 
                     '& .fc-daygrid-day-frame': {
                         minHeight: { xs: '80px', md: '140px', lg: '120px' },
-                        minWidth: { xs: '0px', md: '120px' },
                         backgroundColor: 'background.paper',
                     },
 
@@ -396,6 +395,13 @@ const Calendar = () => {
                     // puntitos (more events)
                     '& .fc-daygrid-event-dot': { display: 'none' },
                     '& .fc-daygrid-more-link': { fontSize: '11px', color: 'text.secondary' },
+
+                    // small-desktop: celdas más chicas para que quepan 5 filas
+                    '@media (min-width: 1024px) and (max-width: 1199px)': {
+                        '& .fc-daygrid-day-frame': {
+                            minHeight: '100px !important',
+                        },
+                    },
                 }}>
                     <FullCalendar
                         headerToolbar={{

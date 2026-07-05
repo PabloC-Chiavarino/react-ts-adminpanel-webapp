@@ -2,6 +2,7 @@ import { useDraggable } from '@dnd-kit/core'
 import type { Task } from '../../types'
 import { IconButton, Typography, Box } from '@mui/material'
 import { EditOutlined, DeleteOutlined } from '@mui/icons-material'
+import { useMediaQuery, useTheme } from '@mui/material'
 
 const DraggableTask = ({
     task,
@@ -13,6 +14,9 @@ const DraggableTask = ({
     handleDelete?: (taskID: number) => void;
 }) => {
 
+    const theme = useTheme()
+    const isTouchDevice = useMediaQuery(theme.breakpoints.down('lg'))
+
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
         id: task.id
     })
@@ -22,11 +26,12 @@ const DraggableTask = ({
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: { lg: 0.9 },
+                gap: { sm: 0.6, md: 0.7, lg: 0.9 },
                 flexShrink: 1,
-                px: { lg: 2.2 },
-                pt: { lg: 2.2 },
-                pb: { lg: 3.5 },
+                width: '100%',
+                px: { sm: 1.6, md: 1.8, lg: 2.2 },
+                pt: { sm: 1.6, md: 1.8, lg: 2.2 },
+                pb: { sm: 2.5, md: 3, lg: 3.5 },
                 border: "1px solid transparent",
                 borderRadius: '14px',
                 justifyContent: 'space-between',
@@ -51,9 +56,9 @@ const DraggableTask = ({
             {...listeners}
         >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, position: 'relative', mb: 1, overflow: 'hidden' }}>
-                <Box sx={{ width: '6px', height: { lg: '22px' }, borderRadius: '9999px', backgroundColor: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color', flexShrink: 0 }} />
-                <Typography sx={{ fontSize: "10px", fontWeight: 700, color: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color', whiteSpace: 'nowrap' }}>{task.priority.toUpperCase()} PRIORITY</Typography>
-                <Box className='task-actions' sx={{ display: 'flex', gap: 0, opacity: 0, right: 0, position: 'absolute', transition: 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+                <Box sx={{ width: '6px', height: { sm: '16px', md: '18px', lg: '22px' }, borderRadius: '9999px', backgroundColor: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color', flexShrink: 0 }} />
+                <Typography sx={{ fontSize: { sm: '9px', md: '10px', lg: '10px' }, fontWeight: 700, color: task.completed ? 'text.disabled' : task.priority === 'high' ? 'priorityStyles.high.color' : task.priority === 'medium' ? 'priorityStyles.medium.color' : 'priorityStyles.low.color', whiteSpace: 'nowrap' }}>{task.priority.toUpperCase()} PRIORITY</Typography>
+                <Box className='task-actions' sx={{ display: 'flex', gap: 0, opacity: isTouchDevice ? 1 : 0, right: 0, position: 'absolute', transition: 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                     {!task.completed && <IconButton
                         onPointerDown={(e) => e.stopPropagation()}
                         onClick={() => { handleEdit?.(task.id) }}
@@ -91,8 +96,8 @@ const DraggableTask = ({
                             width: 22,
                             height: 22,
                             color: 'text.secondary',
-                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                             transform: 'translateY(0px)',
+                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                             '&:hover': {
                                 color: 'text.primary',
                                 transform: 'translateY(-2px)'
@@ -102,10 +107,10 @@ const DraggableTask = ({
                     </IconButton>
                 </Box>
             </Box>
-            <Typography className="dash-item-title" sx={{ fontSize: { lg: "17px" }, textAlign: 'left', fontWeight: "bold", textDecoration: task.completed ? "line-through" : "none", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <Typography className="dash-item-title" sx={{ fontSize: { sm: '14px', md: '15px', lg: '17px' }, textAlign: 'left', fontWeight: "bold", textDecoration: task.completed ? "line-through" : "none", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {task.title}
             </Typography>
-            <Typography variant="body1" className="dash-item-desc" sx={{ fontSize: { lg: "13.5px" }, textAlign: 'left', fontStyle: 'oblique', color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.description}</Typography>
+            <Typography variant="body1" className="dash-item-desc" sx={{ fontSize: { sm: '11px', md: '12px', lg: '13.5px' }, textAlign: 'left', fontStyle: 'oblique', color: 'text.secondary', whiteSpace: 'normal', wordBreak: 'break-word' }}>{task.description}</Typography>
         </Box>
     )
 }
